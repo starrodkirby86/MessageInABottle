@@ -3,6 +3,3 @@ Hello github!
 Hello World!
 
 Hello from Siberia
-
-
-Hello from csc 150
