@@ -33,14 +33,14 @@ public class LogInActivityFragment extends Fragment {
         return view;
     }
 
-    public class logInClick implements View.OnClickListener {
+    public class logInClick implements View.OnClickListener { //when user clicks
         private EditText username;
         private EditText password;
-        public logInClick(EditText u, EditText p) {
+        public logInClick(EditText u, EditText p) { // retrieves username and password
             this.username = u;
             this.password = p;
         }
-        public logInClick() {
+        public logInClick() { // for anonymous entry
             this.username = null;
             this.password = null;
         }
