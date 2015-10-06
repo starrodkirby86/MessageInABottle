@@ -1,11 +1,10 @@
 package brennen.messageinabottle;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
 
 public class Login extends AppCompatActivity {
 
@@ -16,6 +15,7 @@ public class Login extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -24,7 +24,13 @@ public class Login extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        */
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Trying to get link to work: http://stackoverflow.com/questions/2734270/how-do-i-make-links-in-a-textview-clickable/2746708#2746708
+        TextView support= (TextView) findViewById(R.id.support);
+        support.setMovementMethod(LinkMovementMethod.getInstance());
     }
+
 
 }

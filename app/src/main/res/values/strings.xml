@@ -8,4 +8,5 @@
     <string name="title_activity_login">Login</string>
     <string name="username">Username (e.g. me@mytwitface.us.gov)</string>
     <string name="password">Password (e.g. 4Numb3rsOn Luggag3)</string>
+    <string name="support"> <a href="http://www.google.com">NEED HELP? CLICK HERE!</a></string>
 </resources>

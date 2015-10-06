@@ -2,11 +2,11 @@
 <items version="2" >
 
     <item
-        jar="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/classes.jar"
+        jar="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/jars/classes.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
-        <dex dex="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/pre-dexed/debug/classes-3e96c11fac164d66b627715eef715bb597ead313.jar" />
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/pre-dexed/debug/classes-2356b319f5d354172cfa475a5c3eb0f1a129d18c.jar" />
     </item>
     <item
         jar="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/libs/internal_impl-23.0.1.jar"
@@ -16,6 +16,13 @@
         <dex dex="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/pre-dexed/debug/internal_impl-23.0.1-b02ccfe7dddcda1f4d961b095b5dfc7a0c89c268.jar" />
     </item>
     <item
+        jar="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/exploded-aar/com.android.support/design/23.0.1/jars/classes.jar"
+        jumboMode="false"
+        revision="23.0.1"
+        sha1="e5c61a3169221a89654ffcaaed47bba51cf071ad">
+        <dex dex="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/pre-dexed/debug/classes-acf3077ccf80a2aa3d86ef6432a2c0627a3303e8.jar" />
+    </item>
+    <item
         jar="/home/brennen/Programming/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.1/support-annotations-23.0.1.jar"
         jumboMode="false"
         revision="23.0.1"
@@ -23,18 +30,11 @@
         <dex dex="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/pre-dexed/debug/support-annotations-23.0.1-55551f5b8f73723389dff6a39f75122a6df7a331.jar" />
     </item>
     <item
-        jar="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/jars/classes.jar"
+        jar="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/classes.jar"
         jumboMode="false"
         revision="23.0.1"
-        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
-        <dex dex="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/pre-dexed/debug/classes-2356b319f5d354172cfa475a5c3eb0f1a129d18c.jar" />
-    </item>
-    <item
-        jar="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/exploded-aar/com.android.support/design/23.0.1/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.1"
-        sha1="e5c61a3169221a89654ffcaaed47bba51cf071ad">
-        <dex dex="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/pre-dexed/debug/classes-acf3077ccf80a2aa3d86ef6432a2c0627a3303e8.jar" />
+        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
+        <dex dex="/home/brennen/Programming/Android_Progs/MessageInABottle/app/build/intermediates/pre-dexed/debug/classes-3e96c11fac164d66b627715eef715bb597ead313.jar" />
     </item>
 
 </items>

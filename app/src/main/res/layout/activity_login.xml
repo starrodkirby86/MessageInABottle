@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:fitsSystemWindows="true"
     tools:context="brennen.messageinabottle.Login">
 
@@ -44,19 +45,39 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/password"
+            android:inputType="textPassword"
             />
     </TableRow>
 
     <TableRow
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         >
 
-        <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/support"
+            android:text="@string/support"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </TableRow>
 
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        >
 
+        <Button
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
+            />
+
+    </TableRow>
 
 
     <!--
