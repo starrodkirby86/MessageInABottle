@@ -9,4 +9,6 @@
     <string name="username">Username (e.g. me@mytwitface.gov)</string>
     <string name="password">Password (e.g. 4Numb3rsOn Luggag3)</string>
     <string name="support"> <a href="http://www.google.com">NEED HELP? CLICK HERE!</a></string>
+    <string name="title_activity_inventory">Inventory</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
