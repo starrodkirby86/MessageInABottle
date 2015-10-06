@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MessageInABottle</string>
+    <string name="action_settings">Settings</string>
+    <string name="Title">Message In A Bottle</string>
+    <string name="login">Login!</string>
+    <string name="or">or</string>
+    <string name="anonymous">Continue Anonymously</string>
+    <string name="title_activity_login">Login</string>
+    <string name="username">Username (e.g. me@mytwitface.us.gov)</string>
+    <string name="password">Password (e.g. 4Numb3rsOn Luggag3)</string>
+</resources>
