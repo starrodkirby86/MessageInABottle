@@ -15,7 +15,13 @@ import android.widget.Toast;
  * A placeholder fragment containing a simple view.
  */
 public class LogInActivityFragment extends Fragment {
+
+
     private String LOG_TAG = LogInActivityFragment.class.getSimpleName();
+
+
+
+
     public LogInActivityFragment() {
     }
 
