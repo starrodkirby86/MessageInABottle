@@ -62,10 +62,16 @@ public class MessageActivityFragment extends Fragment {
         cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(36.815512, -119.750583), 15);
         map.animateCamera(cameraUpdate);
 
+        //Grab TextView to update Coordinates --DEBUG ONLY
         final TextView locationText = (TextView) v.findViewById(R.id.currentLocation);
+        //Get LocationManager to update location
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        //Get LocationListener to change location on change (see class...)
         LocationListener locationListener = new currentLocationListener(locationText);
+
+        //Used to add permission for API 23 --TODO ADD INTEGRATION FOR API 23
         List<String> permissions = new ArrayList<>();
+        //Add access too fine Location
         permissions.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
         //TODO UNCOMMENT THIS TO INTEGRATE FOR API 23
@@ -74,27 +80,31 @@ public class MessageActivityFragment extends Fragment {
             // TODO: make checkSelfPermission for API 23 available for use if API 23, so permission can be accessed at run time
 //        }
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener); //currently an error for API 23
+        //Update location when changes
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener); //currently an error for API 23, runs okay for now. Will fix.
         return v;
     }
 
-
+    //For MapView to resume when parent view resumes
     @Override
     public void onResume() {
         mapView.onResume();
         super.onResume();
     }
+    //For MapView to destroy when parent view is destroyed
     @Override
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
     }
+    //For MapView to follow parent view on LowMemory
     @Override
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
     }
 
+    //When Permission is requested, this will determine what to do on the result
     @Override
     public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults) {
         switch (requestCode) {
@@ -105,7 +115,7 @@ public class MessageActivityFragment extends Fragment {
         }
     }
 
-
+    //TODO INTEGRATE IN
     @TargetApi(Build.VERSION_CODES.M)
     private void requestLocation(TextView locationText) {
         LocationListener locationListener = new currentLocationListener(locationText);
@@ -124,6 +134,8 @@ public class MessageActivityFragment extends Fragment {
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
+
+    //Location Listener to update location upon change
     private class currentLocationListener implements LocationListener {
         /*
             This class implements a location listener to grab the android device's
@@ -150,7 +162,7 @@ public class MessageActivityFragment extends Fragment {
             }
 
         }
-
+        //For LocationListener, doesn't need to be implemented further
         @Override
         public void onProviderDisabled(String provider) {}
         public void onProviderEnabled(String provider) {}
