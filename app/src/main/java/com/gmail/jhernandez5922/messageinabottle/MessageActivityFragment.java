@@ -1,19 +1,19 @@
 package com.gmail.jhernandez5922.messageinabottle;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,27 +23,44 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MessageActivityFragment extends Fragment {
+public class MessageActivityFragment extends Fragment
+    implements LocationListener {
 
+    /** MEMBER VARIABLES **/
+    private NavigableMap<Location, String> savedMessages;
+    private MapView mapView;
+    private GoogleMap map;
+    private Location currentLocation;
+    private CameraUpdate cameraUpdate;
+    private TextView message;
 
-    final int PERMISSION_LOCATION = 1;
-    MapView mapView;
-    GoogleMap map;
-    LocationManager locationManager;
-    CameraUpdate cameraUpdate;
+    /** CLASS CONSTANTS **/
+    //Constant for range of pickup
+    public static final double WITHIN_RANGE = 3.25;
+
+    //Constant for checking minimum accuracy to check for bottles
+    public static final double MIN_ACCURACY = 15;
+
+    //private final int PERMISSION_LOCATION = 1;
+
+    /** CONSTRUCTOR **/
     public MessageActivityFragment() {
+        savedMessages = new TreeMap<Location, String>(new LocationComparator()) {};
     }
 
+    /** FRAGMENT OVERRIDES **/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_message, container, false);
-
 
         //Find mapView in layout and create the view
         //see onCreate below
@@ -55,19 +72,11 @@ public class MessageActivityFragment extends Fragment {
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.setMyLocationEnabled(true);
 
-        //Initialize the map after GoogleMap is set up
-        MapsInitializer.initialize(this.getActivity());
-
-        //Updates location and zoom.
-        cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(36.815512, -119.750583), 15);
-        map.animateCamera(cameraUpdate);
-
         //Grab TextView to update Coordinates --DEBUG ONLY
-        final TextView locationText = (TextView) v.findViewById(R.id.currentLocation);
+        final TextView locationText = (TextView) v.findViewById(R.id.message_title);
         //Get LocationManager to update location
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         //Get LocationListener to change location on change (see class...)
-        LocationListener locationListener = new currentLocationListener(locationText);
 
         //Used to add permission for API 23 --TODO ADD INTEGRATION FOR API 23
         List<String> permissions = new ArrayList<>();
@@ -81,10 +90,40 @@ public class MessageActivityFragment extends Fragment {
 //        }
 
         //Update location when changes
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener); //currently an error for API 23, runs okay for now. Will fix.
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this); //currently an error for API 23, runs okay for now. Will fix.
+
+
+        //Initialize the map after GoogleMap is set up
+        MapsInitializer.initialize(this.getActivity());
+
+        //Updates location and zoom.
+        cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(36.815512, -119.750583), 15);
+        map.animateCamera(cameraUpdate);
+        final Button dropBottle = (Button) v.findViewById(R.id.drop_button);
+        dropBottle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //grab EditText that contains user message
+                EditText textView = (EditText)getActivity().findViewById(R.id.message_edit);
+                if (textView.getText().toString().trim().length() > 0) { //if contains characters, and not just whitespace
+                    //if location does not contain message at location
+                    if (!savedMessages.containsValue(textView.getText().toString())) {
+                        savedMessages.put(currentLocation, textView.getText().toString());
+                    }
+                    //Location occupied, remove than add message
+                    else if (savedMessages.containsValue(textView.getText().toString())) {
+                        savedMessages.values().removeAll(Collections.singleton(textView.getText().toString()));
+                        savedMessages.put(currentLocation, textView.getText().toString());
+                    }
+                }
+                else //No message inserted
+                    Toast.makeText(getContext(), "Enter a Message!", Toast.LENGTH_SHORT).show();
+            }
+        });
         return v;
     }
 
+    /** MapView OVERRIDES **/
     //For MapView to resume when parent view resumes
     @Override
     public void onResume() {
@@ -104,68 +143,73 @@ public class MessageActivityFragment extends Fragment {
         mapView.onLowMemory();
     }
 
-    //When Permission is requested, this will determine what to do on the result
+    /** LocationListener OVERRIDES **/
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+    public void onLocationChanged(Location location) {
+        if(location != null) {
+            Log.d("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude()); //print location in log
 
+            //Move map to new location [IS THIS NECESSARY], might be taxing on battery
+            cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+            map.animateCamera(cameraUpdate);
+
+            //update location
+            currentLocation = location;
+
+            //Grab textView to print message --DEBUG ONLY TODO ADD VIEW MESSAGE FRAGMENT
+            if (message == null)
+                message = (TextView) getActivity().findViewById(R.id.message_title);
+
+            //Check if location is accurate enough and there are messages to find
+            if (location.getAccuracy() < MIN_ACCURACY && location.getAccuracy() != 0 && !savedMessages.isEmpty()) {
+                //get next highest value
+                Location greaterLoc = savedMessages.ceilingKey(location);
+                //get next lowest value
+                Location lesserLoc = savedMessages.floorKey(location);
+                //check if value entry
+                double ceilDist = greaterLoc != null ? location.distanceTo(greaterLoc) : Double.MAX_VALUE;
+                double floorDist = lesserLoc != null ? location.distanceTo(lesserLoc) : Double.MAX_VALUE;
+                //if both are not valid exit --IS THIS NECESSARY, MIGHT BE REDUNDANT
+                if (ceilDist == floorDist && ceilDist == Double.MAX_VALUE)
+                    return;
+                //Pick the closer value
+                double lesser = ceilDist < floorDist ? ceilDist : floorDist;
+                //If within 3.25 meters
+                if (lesser < WITHIN_RANGE) {
+                    //change text to message --DEBUG ONLY TODO Implement View Message Fragment and write to it here
+                    message.setText(savedMessages.get(lesser == floorDist ? lesserLoc : greaterLoc));
+                }
+                else {
+                    //Revert message
+                    message.setText("Create A Message");
+                }
             }
+            else
+                //Revert message [Possibly redundant]
+                message.setText("Create A Message");
+
+
         }
+
     }
+    //For LocationListener, doesn't need to be implemented further
+    @Override
+    public void onProviderDisabled(String provider) {}
+    public void onProviderEnabled(String provider) {}
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
 
-    //TODO INTEGRATE IN
-    @TargetApi(Build.VERSION_CODES.M)
-    private void requestLocation(TextView locationText) {
-        LocationListener locationListener = new currentLocationListener(locationText);
-        List<String> permissions = new ArrayList<>();
-        permissions.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
-        if (getContext().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(permissions.toArray(new String[permissions.size()]), PERMISSION_LOCATION);
-//            // TODO: Consider calling
-//            //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for Activity#requestPermissions for more details.
-//            //return TODO;
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-    }
 
-    //Location Listener to update location upon change
-    private class currentLocationListener implements LocationListener {
-        /*
-            This class implements a location listener to grab the android device's
-            current location.
+//TODO Implement Runtime Permissions
+    //When Permission is requested, this will determine what to do on the result
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults) {
+//        switch (requestCode) {
+//            case PERMISSION_LOCATION:
+////                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+////
+////            }
+//        }
+//    }
 
-            This class overrides four functions inherited from LocationListener
-            --onLocationChange(Location location)
-            --onProviderDisabled(String provider)
-            --onProviderEnabled(String provider)
-            --onStatusChanged(String provider, int status, Bundle extras)
-         */
-        TextView currentLocation;
-        currentLocationListener(TextView l) {
-            currentLocation = l;
-        }
-        @Override
-        public void onLocationChanged(Location location) {
-            if(location != null) {
-                Log.d("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude());
-                currentLocation.setText(location.getLatitude() + ", " + location.getLongitude());
-                cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-                map.animateCamera(cameraUpdate);
 
-            }
-
-        }
-        //For LocationListener, doesn't need to be implemented further
-        @Override
-        public void onProviderDisabled(String provider) {}
-        public void onProviderEnabled(String provider) {}
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-    }
 }
