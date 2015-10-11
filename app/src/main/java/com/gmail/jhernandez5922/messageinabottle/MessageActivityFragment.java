@@ -106,11 +106,13 @@ public class MessageActivityFragment extends Fragment
                 //grab EditText that contains user message
                 EditText textView = (EditText)getActivity().findViewById(R.id.message_edit);
                 if (textView.getText().toString().trim().length() > 0) { //if contains characters, and not just whitespace
-                    //if location does not contain message at location
+                    //if location's message does not exist...
+                    //then save the message
                     if (!savedMessages.containsValue(textView.getText().toString())) {
                         savedMessages.put(currentLocation, textView.getText().toString());
                     }
-                    //Location occupied, remove than add message
+                    //else if Location occupied by another message, remove than add message
+                    //NOTE: TODO: REMOVE
                     else if (savedMessages.containsValue(textView.getText().toString())) {
                         savedMessages.values().removeAll(Collections.singleton(textView.getText().toString()));
                         savedMessages.put(currentLocation, textView.getText().toString());
@@ -120,11 +122,11 @@ public class MessageActivityFragment extends Fragment
                     Toast.makeText(getContext(), "Enter a Message!", Toast.LENGTH_SHORT).show();
             }
         });
-        return v;
+        return v; //return inflated view
     }
 
     /** MapView OVERRIDES **/
-    //For MapView to resume when parent view resumes
+    //For MapView to resume when parent view resumes - Jason
     @Override
     public void onResume() {
         mapView.onResume();
@@ -193,6 +195,7 @@ public class MessageActivityFragment extends Fragment
 
     }
     //For LocationListener, doesn't need to be implemented further
+    //MAYBES
     @Override
     public void onProviderDisabled(String provider) {}
     public void onProviderEnabled(String provider) {}
