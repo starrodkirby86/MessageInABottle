@@ -15,12 +15,10 @@ public class LocationComparator implements Comparator<Location> {
         double latDiff = lhs.getLatitude() - rhs.getLatitude();
         int lat = latDiff > 0 ? 1 : -1; //Set difference as 1 is greater, -1 is less
         int lon = longDiff > 0 ? 1 : -1;
-        if (longDiff == 0) { //if they are same
+        if (longDiff == 0) { //if longitude is the same, return latitude
             return latDiff == 0 ? 0 : lat; //if lat not same, use lat difference as indicator
         }
-        if (lat == lon) // if both greater or both less
-            return lat; //return -1 or 1
         else
-            return lon; //if not th
+            return lon; //if not return longitude
     }
 }
