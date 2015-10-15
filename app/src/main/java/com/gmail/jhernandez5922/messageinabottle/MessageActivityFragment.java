@@ -21,10 +21,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.ParseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
@@ -110,6 +113,16 @@ public class MessageActivityFragment extends Fragment
                     //then save the message
                     if (!savedMessages.containsValue(textView.getText().toString())) {
                         savedMessages.put(currentLocation, textView.getText().toString());
+
+                        //PARSE.COM:: SAVE DATA TO SERVER
+                        Map<String, String> dimensions = new HashMap<String, String>();
+                        // What type of news is this?
+                        dimensions.put("category", "politics");
+                        // Is it a weekday or the weekend?
+                        dimensions.put("dayType", "weekday");
+                        // Send the dimensions to Parse along with the 'read' event
+                        ParseAnalytics.trackEventInBackground("read", dimensions);
+                        //END PARSE.COM
                     }
                     //else if Location occupied by another message, remove than add message
                     //NOTE: TODO: REMOVE
