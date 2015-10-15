@@ -6,7 +6,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="create_button">Drop Bottle</string>
 
-
     <string name="google_maps_key" translatable="false" templateMergeStrategy="preserve">AIzaSyDdqcrLOV_2jR5mJKh1Us1iDDDfE-0WRlQ
     </string>
 </resources>
