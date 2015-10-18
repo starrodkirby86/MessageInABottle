@@ -72,7 +72,7 @@ public class LogInActivityFragment extends Fragment {
         //OnClickListener
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getActivity(), MessageActivity.class);//Intent to launch to MessageActivity
+            Intent intent = new Intent(getActivity(), Inventory.class);//Intent to launch to MessageActivity
 
             //Log In button pressed
             if (v.getId() == R.id.log_in) {
