@@ -25,9 +25,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -62,7 +63,6 @@ public class MessageActivityFragment extends Fragment
     /** CONSTRUCTOR **/
     public MessageActivityFragment() {
         savedMessages = new TreeMap<Location, String>(new LocationComparator()) {};
-
     }
 
     @Override
@@ -170,15 +170,25 @@ public class MessageActivityFragment extends Fragment
                 //grab EditText that contains user message
                 EditText textView = (EditText)getActivity().findViewById(R.id.message_edit);
                 if (textView.getText().toString().trim().length() > 0) { //if contains characters, and not just whitespace
-                    //if location does not contain message at location
-                    if (!savedMessages.containsValue(textView.getText().toString())) {
-                        savedMessages.put(currentLocation, textView.getText().toString());
-                    }
-                    //Location occupied, remove than add message
-                    else if (savedMessages.containsValue(textView.getText().toString())) {
-                        savedMessages.values().removeAll(Collections.singleton(textView.getText().toString()));
-                        savedMessages.put(currentLocation, textView.getText().toString());
-                    }
+
+                    ParseObject bottle = new ParseObject("bottle");
+                    ParseGeoPoint point = new ParseGeoPoint(0,0); //currentLocation.getLatitude(), currentLocation.getLongitude());
+                    bottle.put("location", point);
+                    bottle.put("message", textView.getText().toString());
+                    bottle.put("type", 0);
+                    //bottle.put("past", null);
+                    //bottle.put("content", null);
+
+                    bottle.saveInBackground();
+//                    //if location does not contain message at location
+//                    if (!savedMessages.containsValue(textView.getText().toString())) {
+//                        savedMessages.put(currentLocation, textView.getText().toString());
+//                    }
+//                    //Location occupied, remove than add message
+//                    else if (savedMessages.containsValue(textView.getText().toString())) {
+//                        savedMessages.values().removeAll(Collections.singleton(textView.getText().toString()));
+//                        savedMessages.put(currentLocation, textView.getText().toString());
+//                    }
                 }
                 else //No message inserted
                     Toast.makeText(getContext(), "Enter a Message!", Toast.LENGTH_SHORT).show();
