@@ -1,11 +1,17 @@
 package com.yarmatey.messageinabottle;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -38,6 +44,7 @@ public class Inventory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -50,6 +57,8 @@ public class Inventory extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.inventory_tabs);
+        tabLayout.setupWithViewPager(mViewPager);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +108,17 @@ public class Inventory extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            switch (position) {
+                case 0:
+                    return DriftingBottlesFragment.newInstance("Foo", "bar");
+                case 1:
+                    return StaticBottlesFragment.newInstance("Foo", "bar");
+                case 2:
+                    return PlaceholderFragment.newInstance(2);
+                default:
+                    return null;
+            }
+
         }
 
         @Override
@@ -112,11 +131,11 @@ public class Inventory extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "Ye Own Booty";
                 case 1:
-                    return "SECTION 2";
+                    return "Pirate Masts";
                 case 2:
-                    return "SECTION 3";
+                    return "Davy Jones' Locker";
             }
             return null;
         }
@@ -153,6 +172,31 @@ public class Inventory extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.fragment_inventory, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+
+            //Notification [DEBUG ONLY]
+
+            //Create an explicit intent to go to Inventory
+            Intent resultIntent = new Intent(getContext(), Inventory.class);
+            PendingIntent contentIntent = PendingIntent.getActivity(getContext(),
+                    0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            NotificationManager nm  = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+            Notification mBuilder =
+                    new NotificationCompat.Builder(getContext())
+                    .setContentIntent(contentIntent)
+                    .setSmallIcon(R.drawable.pirate_hat)
+                    .setWhen(System.currentTimeMillis())
+                    .setAutoCancel(true)
+                    .setContentTitle("Ye found me booty!")
+                    .setContentText("Check ye booty to see")
+                    .build();
+            nm.notify(0, mBuilder);
+
+
+
+
             return rootView;
         }
     }

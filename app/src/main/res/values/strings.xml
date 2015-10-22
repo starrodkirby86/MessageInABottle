@@ -12,4 +12,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="drifting_title">Here be ye loot</string>
+
 </resources>
