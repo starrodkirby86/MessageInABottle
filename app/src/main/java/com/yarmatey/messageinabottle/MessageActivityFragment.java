@@ -25,8 +25,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +55,7 @@ public class MessageActivityFragment extends Fragment
 
     /** CLASS CONSTANTS **/
     //Constant for range of pickup
-    public static final double RANGE = 7;
+    public static final double RANGE = .001;
 
     //Constant for checking minimum accuracy to check for bottles
     public static final double MIN_ACCURACY = 20;
@@ -172,7 +175,7 @@ public class MessageActivityFragment extends Fragment
                 if (textView.getText().toString().trim().length() > 0) { //if contains characters, and not just whitespace
 
                     ParseObject bottle = new ParseObject("bottle");
-                    ParseGeoPoint point = new ParseGeoPoint(0,0); //currentLocation.getLatitude(), currentLocation.getLongitude());
+                    ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
                     bottle.put("location", point);
                     bottle.put("message", textView.getText().toString());
                     bottle.put("type", 0);
@@ -232,39 +235,73 @@ public class MessageActivityFragment extends Fragment
             //update location
             currentLocation = location;
 
-            //Grab textView to print message --DEBUG ONLY TODO ADD VIEW MESSAGE FRAGMENT
-            if (message == null)
-                message = (TextView) getActivity().findViewById(R.id.message_title);
+            //Create a point that Parse knows what the location is.
+            ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude());
+            final ParseObject foundBottle = new ParseObject("bottle");
+            foundBottle.put("message","Create a Message!");
 
-            //Check if location is accurate enough and there are messages to find
-            if (location.getAccuracy() < MIN_ACCURACY && location.getAccuracy() != 0 && !savedMessages.isEmpty()) {
-                //get next highest value
-                Location greaterLoc = savedMessages.ceilingKey(location);
-                //get next lowest value
-                Location lesserLoc = savedMessages.floorKey(location);
-                //check if value entry
-                double ceilDist = greaterLoc != null ? location.distanceTo(greaterLoc) : Double.MAX_VALUE;
-                double floorDist = lesserLoc != null ? location.distanceTo(lesserLoc) : Double.MAX_VALUE;
-                //if both are not valid exit --IS THIS NECESSARY, MIGHT BE REDUNDANT
-                if (ceilDist == floorDist && ceilDist == Double.MAX_VALUE)
-                    return;
-                //Pick the closer value
-                double lesser = ceilDist < floorDist ? ceilDist : floorDist;
-                //If within 3.25 meters
-                if (lesser < RANGE) {
-                    //change text to message --DEBUG ONLY TODO Implement View Message Fragment and write to it here
-                    message.setText(savedMessages.get(lesser == floorDist ? lesserLoc : greaterLoc));
+            //Replicating the below code:
+            //ParseGeoPoint userLocation = (ParseGeoPoint) foundBottle.get("location");
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("bottle");
+            query.whereNear("location", point);
+            //Retrieve 1 Bottle. Do not proceed unto 2.
+            query.setLimit(1);
+            query.whereWithinKilometers("location", point, RANGE);
+            //Now to run the query:
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> localBottle, ParseException e) {
+                    if (e == null && !localBottle.isEmpty()) {
+                        Log.d("location", "Retrieved Lat: " + localBottle.get(0).getParseGeoPoint("location").getLatitude() + ", Lon: " + localBottle.get(0).getParseGeoPoint("location").getLongitude());
+                        foundBottle.put("location", localBottle.get(0).getParseGeoPoint("location"));
+                        foundBottle.put("message", localBottle.get(0).getString("message"));
+                        foundBottle.put("type", localBottle.get(0).getInt("type"));
+                        //message.setText(foundBottle.getString("message"));
+                        Toast.makeText(getContext(), foundBottle.getString("message"), Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (e == null) {
+                            Log.d("location", "No Bottles!");
+                        } else {
+                            Log.d("location", "Error: " + e.getMessage());
+                        }
+                    }
                 }
-                else {
-                    //Revert message
-                    message.setText("Create A Message");
-                }
-            }
-            else
-                //Revert message [Possibly redundant]
-                message.setText("Create A Message");
-
-
+            });
+            //message.setText(foundBottle.getString("message"));
+//
+//            //Grab textView to print message --DEBUG ONLY TODO ADD VIEW MESSAGE FRAGMENT
+//            if (message == null)ParseObject bottle = new ParseObject("bottle");
+//                message = (TextView) getActivity().findViewById(R.id.message_title);
+//
+//            //Check if location is accurate enough and there are messages to find
+//            if (location.getAccuracy() < MIN_ACCURACY && location.getAccuracy() != 0 && !savedMessages.isEmpty()) {
+//                //get next highest value
+//                Location greaterLoc = savedMessages.ceilingKey(location);
+//                //get next lowest value
+//                Location lesserLoc = savedMessages.floorKey(location);
+//                //check if value entry
+//                double ceilDist = greaterLoc != null ? location.distanceTo(greaterLoc) : Double.MAX_VALUE;
+//                double floorDist = lesserLoc != null ? location.distanceTo(lesserLoc) : Double.MAX_VALUE;
+//                //if both are not valid exit --IS THIS NECESSARY, MIGHT BE REDUNDANT
+//                if (ceilDist == floorDist && ceilDist == Double.MAX_VALUE)
+//                    return;
+//                //Pick the closer value
+//                double lesser = ceilDist < floorDist ? ceilDist : floorDist;
+//                //If within 3.25 meters
+//                if (lesser < RANGE) {
+//                    //change text to message --DEBUG ONLY TODO Implement View Message Fragment and write to it here
+//                    message.setText(savedMessages.get(lesser == floorDist ? lesserLoc : greaterLoc));
+//                }
+//                else {
+//                    //Revert message
+//                    message.setText("Create A Message");
+//                }
+//            }
+//            else
+//                //Revert message [Possibly redundant]
+//                message.setText("Create A Message");
+//
+//
         }
 
     }
