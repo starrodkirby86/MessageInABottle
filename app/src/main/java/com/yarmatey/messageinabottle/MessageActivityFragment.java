@@ -175,7 +175,7 @@ public class MessageActivityFragment extends Fragment
                 if (textView.getText().toString().trim().length() > 0) { //if contains characters, and not just whitespace
 
                     ParseObject bottle = new ParseObject("bottle");
-                    ParseGeoPoint point = new ParseGeoPoint(0,0); //currentLocation.getLatitude(), currentLocation.getLongitude());
+                    ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
                     bottle.put("location", point);
                     bottle.put("message", textView.getText().toString());
                     bottle.put("type", 0);
