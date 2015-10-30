@@ -1,27 +1,28 @@
 package com.yarmatey.messageinabottle;
 
 import android.location.Location;
+import android.util.Log;
 
-import java.util.Comparator;
+import com.google.android.gms.location.LocationListener;
 
 /**
  * Created by Jason on 10/10/2015.
  */
-public class LocationComparator implements Comparator<Location> {
+public class LocationComparator implements LocationListener {
+
+    /** CLASS CONSTANTS **/
+    //Constant for range of pickup
+    public static final double RANGE = 7;
+
+    //Constant for checking minimum accuracy to check for bottles
+    public static final double MIN_ACCURACY = 20;
 
     @Override
-    public int compare(Location lhs, Location rhs) {
-        double longDiff = lhs.getLongitude() - rhs.getLongitude();
-        double latDiff = lhs.getLatitude() - rhs.getLatitude();
-        int lat = latDiff > 0 ? 1 : -1; //Set difference as 1 is greater, -1 is less
-        int lon = longDiff > 0 ? 1 : -1;
-        if (longDiff == 0) { //if they are same
-            return latDiff == 0 ? 0 : lat; //if lat not same, use lat difference as indicator
-        }
-        if (lat == lon) // if both greater or both less
-            return lat; //return -1 or 1
-        else
-            return lon; //if not th
-    }
+    public void onLocationChanged(Location location) {
+        if(location != null) {
+            Log.i("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude()); //print location in log
 
+            //TODO ADD PARSE PICKUP HERE
+        }
+    }
 }

@@ -13,8 +13,10 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="4dp"
-            android:src="@drawable/pirate_hat" />
+            android:src="@drawable/pirate_hat"
+            android:contentDescription="@string/drifting_title" />
         <TextView
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop ="13dp"
@@ -25,7 +27,11 @@
     </LinearLayout>
 
     <!-- TODO: Update blank fragment layout -->
-    <ListView android:layout_width="match_parent" android:layout_height="match_parent"
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pirate_booty"
+        android:scrollbars="vertical"
         />
 
 </LinearLayout>

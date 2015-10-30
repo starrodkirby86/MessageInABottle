@@ -3,10 +3,11 @@ package com.yarmatey.messageinabottle;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +26,8 @@ public class DriftingBottlesFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -53,9 +55,14 @@ public class DriftingBottlesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+        else {
+            mParam1 = "Yo ho, a Pirate's life for me!";
+            mParam2 = "I be searchin' for booze n' booty, n' I be drunk as a sailor's mum!";
         }
     }
 
@@ -63,7 +70,18 @@ public class DriftingBottlesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_drifting_bottles, container, false);
+        View v =  inflater.inflate(R.layout.fragment_drifting_bottles, container, false);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.pirate_booty);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(layoutManager);
+        String [] set = new String[]{mParam1, mParam2};
+        mAdapter = new PirateBooty(set);
+
+        mRecyclerView.setAdapter(mAdapter);
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

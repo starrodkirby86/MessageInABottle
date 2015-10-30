@@ -2,6 +2,7 @@ package com.yarmatey.messageinabottle;
 
 import android.content.IntentSender;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,28 +26,29 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NavigableMap;
-import java.util.TreeMap;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MessageActivityFragment extends Fragment
-    implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+    implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener{
 
     /** MEMBER VARIABLES **/
-    private NavigableMap<Location, String> savedMessages;
     private MapView mapView;
     private GoogleMap map;
     private Location currentLocation;
     private CameraUpdate cameraUpdate;
     private TextView message;
     private GoogleApiClient mGoogleApiClient;
+    private LocationManager locationManager;
 
     private LocationRequest mLocationRequest;
 
@@ -61,9 +63,7 @@ public class MessageActivityFragment extends Fragment
     //private final int PERMISSION_LOCATION = 1;
 
     /** CONSTRUCTOR **/
-    public MessageActivityFragment() {
-        savedMessages = new TreeMap<Location, String>(new LocationComparator()) {};
-    }
+    public MessageActivityFragment() {}
 
     @Override
     public void onStart() {
@@ -89,7 +89,8 @@ public class MessageActivityFragment extends Fragment
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(1500);
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(
+        //TODO REIMPLMEMENT WHEN LOCATIONLISTENER IS UPDATED
+       LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
 
     }
@@ -220,53 +221,41 @@ public class MessageActivityFragment extends Fragment
     }
 
     /** LocationListener OVERRIDES **/
-    @Override
+    //@Override
     public void onLocationChanged(Location location) {
         if(location != null) {
             Log.i("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude()); //print location in log
-
             //Move map to new location [IS THIS NECESSARY], might be taxing on battery
             cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
             map.animateCamera(cameraUpdate);
-
             //update location
             currentLocation = location;
-
-            //Grab textView to print message --DEBUG ONLY TODO ADD VIEW MESSAGE FRAGMENT
-            if (message == null)
-                message = (TextView) getActivity().findViewById(R.id.message_title);
-
-            //Check if location is accurate enough and there are messages to find
-            if (location.getAccuracy() < MIN_ACCURACY && location.getAccuracy() != 0 && !savedMessages.isEmpty()) {
-                //get next highest value
-                Location greaterLoc = savedMessages.ceilingKey(location);
-                //get next lowest value
-                Location lesserLoc = savedMessages.floorKey(location);
-                //check if value entry
-                double ceilDist = greaterLoc != null ? location.distanceTo(greaterLoc) : Double.MAX_VALUE;
-                double floorDist = lesserLoc != null ? location.distanceTo(lesserLoc) : Double.MAX_VALUE;
-                //if both are not valid exit --IS THIS NECESSARY, MIGHT BE REDUNDANT
-                if (ceilDist == floorDist && ceilDist == Double.MAX_VALUE)
-                    return;
-                //Pick the closer value
-                double lesser = ceilDist < floorDist ? ceilDist : floorDist;
-                //If within 3.25 meters
-                if (lesser < RANGE) {
-                    //change text to message --DEBUG ONLY TODO Implement View Message Fragment and write to it here
-                    message.setText(savedMessages.get(lesser == floorDist ? lesserLoc : greaterLoc));
+            //Create a point that Parse knows what the location is.
+            ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude());
+            final ParseObject foundBottle = new ParseObject("bottle");
+            //Replicating the below code:
+            //ParseGeoPoint userLocation = (ParseGeoPoint) foundBottle.get("location");
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("bottle");
+            query.whereNear("location", point);
+            //Retrieve 1 Bottle. Do not proceed unto 2.
+            query.setLimit(1);
+            query.whereWithinKilometers("location", point, RANGE);
+            //Now to run the query:
+            query.findInBackground(new FindCallback<ParseObject>() {
+                @Override
+                public void done(List<ParseObject> localBottle, ParseException e) {
+                    if (e == null && !localBottle.isEmpty()) {
+                        Log.d("location", "Retrieved Lat: " + localBottle.get(0).getParseGeoPoint("location").getLatitude() + ", Lon: " + localBottle.get(0).getParseGeoPoint("location").getLongitude());
+                        foundBottle.put("location", localBottle.get(0).getParseGeoPoint("location"));
+                        foundBottle.put("message", localBottle.get(0).getString("message"));
+                        foundBottle.put("type", localBottle.get(0).getInt("type"));
+                    }
+                    else if (e != null) {
+                        Log.d("location", "Error: " + e.getMessage());
+                    }
                 }
-                else {
-                    //Revert message
-                    message.setText("Create A Message");
-                }
-            }
-            else
-                //Revert message [Possibly redundant]
-                message.setText("Create A Message");
-
-
+            });
         }
-
     }
 
 
