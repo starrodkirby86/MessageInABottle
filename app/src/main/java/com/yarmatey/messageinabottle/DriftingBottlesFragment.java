@@ -1,13 +1,23 @@
 package com.yarmatey.messageinabottle;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,33 +27,30 @@ import android.view.ViewGroup;
  * Use the {@link DriftingBottlesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DriftingBottlesFragment extends Fragment {
+public class DriftingBottlesFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ArrayList<String> data;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private OnFragmentInteractionListener mListener;
-
+    private List<String> set;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param data Parameter 1.
      * @return A new instance of fragment DriftingBottlesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DriftingBottlesFragment newInstance(String param1, String param2) {
+    public static DriftingBottlesFragment newInstance(ArrayList<String> data) {
         DriftingBottlesFragment fragment = new DriftingBottlesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putStringArrayList(ARG_PARAM1, data);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,12 +64,11 @@ public class DriftingBottlesFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            data = getArguments().getStringArrayList(ARG_PARAM1);
         }
         else {
-            mParam1 = "Yo ho, a Pirate's life for me!";
-            mParam2 = "I be searchin' for booze n' booty, n' I be drunk as a sailor's mum!";
+            data = new ArrayList<>();
+            data.add("Yo ho, a Pirate's life for me!");
         }
     }
 
@@ -77,9 +83,14 @@ public class DriftingBottlesFragment extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
-        String [] set = new String[]{mParam1, mParam2};
+        set = new LinkedList<>();
+        Inventory activity = (Inventory) getActivity();
+        data = activity.getBottleList();
+        if (data == null) {
+            data = new ArrayList<>();
+            data.add("Yo ho, a Pirate's life for me!");
+        }
         mAdapter = new PirateBooty(set);
-
         mRecyclerView.setAdapter(mAdapter);
         return v;
     }
@@ -91,12 +102,34 @@ public class DriftingBottlesFragment extends Fragment {
         }
     }
 
+    public void addBottle (String message) {
+        set.add(message);
+        mAdapter.notifyDataSetChanged();
 
+        //Create an explicit intent to go to Inventory
+        Intent resultIntent = new Intent(getContext(), Inventory.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(getContext(),
+                0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationManager nm  = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Notification mBuilder =
+                new NotificationCompat.Builder(getContext())
+                        .setContentIntent(contentIntent)
+                        .setSmallIcon(R.drawable.pirate_hat)
+                        .setWhen(System.currentTimeMillis())
+                        .setAutoCancel(true)
+                        .setContentTitle("Ye found me booty!")
+                        .setContentText("Check ye booty to see")
+                        .build();
+        nm.notify(0, mBuilder);
+    }
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
