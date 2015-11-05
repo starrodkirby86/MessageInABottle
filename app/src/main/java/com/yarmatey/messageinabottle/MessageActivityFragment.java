@@ -240,6 +240,7 @@ public class MessageActivityFragment extends Fragment
             query.setLimit(1);
             query.whereWithinKilometers("location", point, RANGE);
             //Now to run the query:
+            //NOTE: BELOW IS A SEPARATE THREAD
             query.findInBackground(new FindCallback<ParseObject>() {
                 @Override
                 public void done(List<ParseObject> localBottle, ParseException e) {
@@ -248,6 +249,7 @@ public class MessageActivityFragment extends Fragment
                         foundBottle.put("location", localBottle.get(0).getParseGeoPoint("location"));
                         foundBottle.put("message", localBottle.get(0).getString("message"));
                         foundBottle.put("type", localBottle.get(0).getInt("type"));
+                        //ParseObject.pin;
                         //message.setText(foundBottle.getString("message"));
                         //Toast.makeText(getContext(), foundBottle.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
@@ -259,6 +261,8 @@ public class MessageActivityFragment extends Fragment
                     }
                 }
             });
+            //NOTE: END OF SEPARATE THREAD
+
             //message.setText(foundBottle.getString("message"));
 //
 //            //Grab textView to print message --DEBUG ONLY TODO ADD VIEW MESSAGE FRAGMENT
