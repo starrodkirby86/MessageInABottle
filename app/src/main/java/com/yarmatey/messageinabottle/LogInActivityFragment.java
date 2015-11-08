@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 /**
@@ -33,10 +32,11 @@ public class LogInActivityFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_log_in, container, false);
 
         //Load in objects needed to log in
-        final Button button = (Button) view.findViewById(R.id.log_in);
+        final Button button = (Button) view.findViewById(R.id.bLogin);
+        final Button button2 = (Button) view.findViewById(R.id.register);
         final TextView anon = (TextView) view.findViewById(R.id.anon_log_in);
-        final EditText username = (EditText) view.findViewById(R.id.username);
-        final EditText password = (EditText) view.findViewById(R.id.password);
+        final EditText username = (EditText) view.findViewById(R.id.etUsername);
+        final EditText password = (EditText) view.findViewById(R.id.etPassword);
 
 
         //anonymous log in click
@@ -45,8 +45,26 @@ public class LogInActivityFragment extends Fragment {
         //log in with user/pass
         button.setOnClickListener(new logInClick(username, password));
 
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), RegisterActivity.class));
+            }
+        });
+
+
+
+
         return view;
     }
+
+
+
+//    private void displayUserDetails() {
+//        User user = UserLocalStore.getUserLoggedIn();
+//        username.setText();
+//    }
 
     public class logInClick implements View.OnClickListener { //when user clicks
         /*
@@ -56,9 +74,12 @@ public class LogInActivityFragment extends Fragment {
         //TODO Login with Facebook?
         //stores usernames
         //TODO add persistance for auto-login
-        private EditText username;
+  //      private EditText username;
         //stores password
-        private EditText password;
+   //     private EditText password;
+
+        EditText username; //changed
+        EditText password;
 
         //CONSTRUCTORS
         public logInClick(EditText u, EditText p) { // retrieves username and password
@@ -69,26 +90,46 @@ public class LogInActivityFragment extends Fragment {
             this.username = null;
             this.password = null;
         }
+
+        private boolean authenticate() {
+            return  UserLocalStore.getUserLoggedIn();
+        }
+        private void displayUserDetails() {
+            User user = UserLocalStore.getUserLoggedIn();
+
+            username.setText(user.username);
+            password.setText(user.password);
+        }
+
         //OnClickListener
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(getActivity(), Inventory.class);//Intent to launch to MessageActivity
+//            Intent intent2 = new Intent(getActivity(), RegisterActivity.class);
+
+            if(authenticate() == true) {
+                displayUserDetails();
+            }
 
             //Log In button pressed
-            if (v.getId() == R.id.log_in) {
+            if (v.getId() == R.id.bLogin) {
                 //parse log in info
-                String user = username.getText().toString();
-                String pass = password.getText().toString();
-                //TODO add check with server for valid user/pass
-                if (pass.length() > 0 &&
-                        user.length() > 0) {
-                    intent.putExtra("password", pass)
-                            .putExtra("username", user); //add user/pass to next screen [DO WE NEED PASSWORD?]
-                } else {
-                    Toast.makeText(getContext(), "Invalid Username / Password: Try Again", Toast.LENGTH_SHORT).show();
-                    return;
+
+                if(v.getId() == R.id.checkBox) {
+
+                    User user = new User(username, password);
+                    UserLocalStore.storeUserData(user);
+                    UserLocalStore.setUserLoggedIn(true);
                 }
+
+                startActivity(intent);
+
             }
+
+//            if(v.getId() == R.id.register) {
+//                startActivity(intent2);
+//            }
+
             startActivity(intent); //launch to next activity
         }
     }
