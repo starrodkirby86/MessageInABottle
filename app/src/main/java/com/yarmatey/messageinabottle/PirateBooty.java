@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.parse.ParseObject;
+
 import java.util.List;
 
 /**
@@ -14,7 +16,7 @@ import java.util.List;
  */
 public class PirateBooty extends RecyclerView.Adapter<PirateBooty.ViewHolder> {
 
-    private List<String> mDataSet;
+    private List<ParseObject> mDataSet;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -30,7 +32,7 @@ public class PirateBooty extends RecyclerView.Adapter<PirateBooty.ViewHolder> {
         }
     }
 
-    public PirateBooty(List<String> dataSet) {
+    public PirateBooty(List<ParseObject> dataSet) {
         this.mDataSet = dataSet;
     }
 
@@ -48,7 +50,7 @@ public class PirateBooty extends RecyclerView.Adapter<PirateBooty.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (!mDataSet.isEmpty()) {
             holder.titleText.setText("New Message");
-            holder.description.setText(mDataSet.get(position));
+            holder.description.setText(mDataSet.get(position).toString());
         }
         else {
             holder.titleText.setText("There be no message here!");

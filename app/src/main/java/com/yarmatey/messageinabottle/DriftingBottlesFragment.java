@@ -14,6 +14,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -38,7 +43,7 @@ public class DriftingBottlesFragment extends Fragment{
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private OnFragmentInteractionListener mListener;
-    private List<String> set;
+    private List<ParseObject> set;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -47,11 +52,11 @@ public class DriftingBottlesFragment extends Fragment{
      * @return A new instance of fragment DriftingBottlesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DriftingBottlesFragment newInstance(ArrayList<String> data) {
+    public static DriftingBottlesFragment newInstance(ArrayList<ParseObject> data) {
         DriftingBottlesFragment fragment = new DriftingBottlesFragment();
-        Bundle args = new Bundle();
-        args.putStringArrayList(ARG_PARAM1, data);
-        fragment.setArguments(args);
+        //Bundle args = new Bundle();
+        //args.put//StringArrayList(ARG_PARAM1, data);
+        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -79,18 +84,31 @@ public class DriftingBottlesFragment extends Fragment{
         View v =  inflater.inflate(R.layout.fragment_drifting_bottles, container, false);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.pirate_booty);
 
-        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(false);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         set = new LinkedList<>();
         Inventory activity = (Inventory) getActivity();
+        /*
         data = activity.getBottleList();
         if (data == null) {
             data = new ArrayList<>();
             data.add("Yo ho, a Pirate's life for me!");
         }
-        mAdapter = new PirateBooty(set);
+        */
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("bottle")
+                .fromLocalDatastore();
+        try {
+            //set = query.find();
+            mAdapter = new PirateBooty(query.find());
+            //Toast.makeText(getContext(), set.size(), Toast.LENGTH_SHORT).show();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "WOOT", Toast.LENGTH_SHORT).show();
+            mAdapter = new PirateBooty(new ArrayList<ParseObject>());
+        }
+        //mAdapter = new PirateBooty(set);
         mRecyclerView.setAdapter(mAdapter);
         return v;
     }
@@ -102,7 +120,7 @@ public class DriftingBottlesFragment extends Fragment{
         }
     }
 
-    public void addBottle (String message) {
+    public void addBottle (ParseObject message) {
         set.add(message);
         mAdapter.notifyDataSetChanged();
 
