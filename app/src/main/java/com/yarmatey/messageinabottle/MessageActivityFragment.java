@@ -176,7 +176,6 @@ public class MessageActivityFragment extends Fragment
                     bottle.put("type", 0);
                     //bottle.put("past", null);
                     //bottle.put("content", null);
-
                     bottle.saveInBackground();
 //                    //if location does not contain message at location
 //                    if (!savedMessages.containsValue(textView.getText().toString())) {
@@ -249,7 +248,11 @@ public class MessageActivityFragment extends Fragment
                         foundBottle.put("location", localBottle.get(0).getParseGeoPoint("location"));
                         foundBottle.put("message", localBottle.get(0).getString("message"));
                         foundBottle.put("type", localBottle.get(0).getInt("type"));
-                        //ParseObject.pin;
+                        try {
+                            ParseObject.pinAll(localBottle);
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
                         //message.setText(foundBottle.getString("message"));
                         //Toast.makeText(getContext(), foundBottle.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {

@@ -195,20 +195,15 @@ public class Inventory extends AppCompatActivity
                         foundBottle.put("message", message);
                         int type = localBottle.get(0).getInt("type");
                         foundBottle.put("type", type);
+                        foundBottle.pinInBackground();
                         foundBottle.saveInBackground();
-                        try {
-                            ParseObject.pinAll(localBottle);
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
-                            Toast.makeText(getApplicationContext(), "DX", Toast.LENGTH_SHORT).show();
-                        }
                         localBottle.get(0).deleteInBackground();
                         //message.setText(foundBottle.getString("message"));
                         Toast.makeText(getApplicationContext(), foundBottle.getString("message"), Toast.LENGTH_SHORT).show();
                         if (!bottleList.contains(foundBottle.get("message").toString())) {
                             bottleList.add(foundBottle);
                             if (driftingBottlesFragment != null) {
-                                driftingBottlesFragment.addBottle(foundBottle);
+                                driftingBottlesFragment.addBottle(localBottle.get(0));
                             }
                         }
                     } else {

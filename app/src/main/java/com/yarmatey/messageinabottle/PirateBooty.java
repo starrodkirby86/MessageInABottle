@@ -9,15 +9,14 @@ import android.widget.TextView;
 
 import com.parse.ParseObject;
 
-import java.util.List;
-
 /**
  * Created by Jason on 10/27/2015.
  */
-public class PirateBooty extends RecyclerView.Adapter<PirateBooty.ViewHolder> {
+public class PirateBooty extends ParseRecyclerQueryAdapter<ParseObject, PirateBooty.ViewHolder> {
 
-    private List<ParseObject> mDataSet;
-
+    public PirateBooty(String className, boolean hasStableIds) {
+        super(className, hasStableIds);
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -32,35 +31,20 @@ public class PirateBooty extends RecyclerView.Adapter<PirateBooty.ViewHolder> {
         }
     }
 
-    public PirateBooty(List<ParseObject> dataSet) {
-        this.mDataSet = dataSet;
-    }
 
     @Override
     public PirateBooty.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_view_list_item, parent, false);
-
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (!mDataSet.isEmpty()) {
-            holder.titleText.setText("New Message");
-            holder.description.setText(mDataSet.get(position).toString());
-        }
-        else {
-            holder.titleText.setText("There be no message here!");
-            holder.description.setText("Only be a pirate's tale.");
-        }
+        holder.titleText.setText("A message be waitin' for ye");
+        holder.description.setText(getItem(position).get("message").toString());
         holder.card.setCardBackgroundColor(R.color.colorAccent);
     }
-
-    public int getItemCount() {
-        return mDataSet.size();
-    }
-
 }

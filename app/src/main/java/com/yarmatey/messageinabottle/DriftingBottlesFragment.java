@@ -14,14 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.parse.ParseException;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -62,6 +58,7 @@ public class DriftingBottlesFragment extends Fragment{
 
     public DriftingBottlesFragment() {
         // Required empty public constructor
+        set = new ArrayList<>();
     }
 
     @Override
@@ -88,8 +85,6 @@ public class DriftingBottlesFragment extends Fragment{
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
-        set = new LinkedList<>();
-        Inventory activity = (Inventory) getActivity();
         /*
         data = activity.getBottleList();
         if (data == null) {
@@ -97,17 +92,7 @@ public class DriftingBottlesFragment extends Fragment{
             data.add("Yo ho, a Pirate's life for me!");
         }
         */
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("bottle")
-                .fromLocalDatastore();
-        try {
-            //set = query.find();
-            mAdapter = new PirateBooty(query.find());
-            //Toast.makeText(getContext(), set.size(), Toast.LENGTH_SHORT).show();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(), "WOOT", Toast.LENGTH_SHORT).show();
-            mAdapter = new PirateBooty(new ArrayList<ParseObject>());
-        }
+        mAdapter = new PirateBooty("ghost", false);
         //mAdapter = new PirateBooty(set);
         mRecyclerView.setAdapter(mAdapter);
         return v;
