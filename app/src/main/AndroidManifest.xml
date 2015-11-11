@@ -20,11 +20,11 @@
 
     <!-- END PERMISSIONS ! -->
     <application
+        android:name=".MessageInABottle"
         android:allowBackup="true"
         android:icon="@drawable/pirate_hat"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".MessageInABottle">
+        android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -46,7 +46,7 @@
         <activity
             android:name=".MessageActivity"
             android:label="@string/title_activity_message"
-            android:parentActivityName=".Inventory">
+            android:parentActivityName=".Inventory" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yarmatey.messageinabottle.Inventory" />
@@ -54,7 +54,15 @@
         <activity
             android:name=".Inventory"
             android:label="@string/title_activity_inventory"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".Inventory" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.yarmatey.messageinabottle.Inventory" />
         </activity>
     </application>
 

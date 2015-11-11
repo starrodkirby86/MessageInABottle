@@ -113,8 +113,14 @@ public class Inventory extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        //Handle specific cases of id clicks.
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            //Launch the Settings Activity
+            Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+            startActivity(intent);
+
             return true;
         }
 
