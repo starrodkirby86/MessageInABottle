@@ -4,7 +4,8 @@
 
     <header
         android:fragment="com.yarmatey.messageinabottle.SettingsActivity$GeneralPreferenceFragment"
-        android:title="@string/pref_header_general" android:icon="@drawable/ic_info_black_24dp" />
+        android:title="@string/pref_header_general"
+        android:icon="@drawable/ic_info_black_24dp" />
 
     <header
         android:fragment="com.yarmatey.messageinabottle.SettingsActivity$NotificationPreferenceFragment"
@@ -13,6 +14,13 @@
 
     <header
         android:fragment="com.yarmatey.messageinabottle.SettingsActivity$DataSyncPreferenceFragment"
-        android:title="@string/pref_header_data_sync" android:icon="@drawable/ic_sync_black_24dp" />
+        android:title="@string/pref_header_data_sync"
+        android:icon="@drawable/ic_sync_black_24dp" />
+
+    <header
+        android:fragment="com.yarmatey.messageinabottle.SettingsActivity$BottlesPreferenceFragment"
+        android:title="@string/pref_header_bottles"
+        android:icon="@drawable/floating_bottle"
+        />
 
 </preference-headers>
