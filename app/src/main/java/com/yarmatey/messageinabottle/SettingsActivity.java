@@ -38,6 +38,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* The below lines conflict with headers, but can be used for backwards compatability.
+        //Below three lines: Adds a fragment to the Settings Activity Screen.
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new GeneralPreferenceFragment())
+                .commit();
+        */
         setupActionBar();
     }
 
@@ -170,9 +177,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
      */
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
-                || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName)
+                //Default Fragments:
+                //|| GeneralPreferenceFragment.class.getName().equals(fragmentName)
+                //|| DataSyncPreferenceFragment.class.getName().equals(fragmentName)
+                //|| NotificationPreferenceFragment.class.getName().equals(fragmentName)
+                //Our Fragments
                 || BottlesPreferenceFragment.class.getName().equals(fragmentName);
     }
 
@@ -284,8 +293,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
+            bindPreferenceSummaryToValue(findPreference("pickupFreq_list"));
         }
 
         @Override

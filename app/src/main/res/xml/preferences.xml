@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Frequency of Bottle Pickup
+    -->
+    <ListPreference
+        android:key="pickupFreq_list"
+        android:title="@string/pickupFreq"
+        android:summary="@string/pickupFreq_description"
+        android:entries="@array/pickupFreq_titles"
+        android:entryValues="@array/pickupFreq_values"
+        android:defaultValue="60"/>
+
+
+</PreferenceScreen>

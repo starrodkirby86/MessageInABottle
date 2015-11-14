@@ -1,7 +1,7 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- These settings headers are only used on tablets. -->
-
+    <!-- Default Headers
     <header
         android:fragment="com.yarmatey.messageinabottle.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general"
@@ -16,11 +16,25 @@
         android:fragment="com.yarmatey.messageinabottle.SettingsActivity$DataSyncPreferenceFragment"
         android:title="@string/pref_header_data_sync"
         android:icon="@drawable/ic_sync_black_24dp" />
+        -->
 
     <header
         android:fragment="com.yarmatey.messageinabottle.SettingsActivity$BottlesPreferenceFragment"
         android:title="@string/pref_header_bottles"
         android:icon="@drawable/floating_bottle"
         />
+
+    <header
+        android:fragment="com.yarmatey.messageinabottle.InventoryFragment"
+        android:title='@string/userTutorial'
+        android:summary="@string/userTutorial_description"
+        />
+
+    <header
+        android:fragment="com.yarmatey.messageinabottle.LogInActivityFragment"
+        android:title="@string/socialLink"
+        android:summary="@string/socialLink_description"
+        />
+
 
 </preference-headers>

@@ -19,9 +19,34 @@
     <!-- Strings related to Settings -->
 
     <string name="pref_header_bottles">Bottle Settings</string>
-    <string name="pirate_mouth">Pirate\'s Mouth</string>
-        <string name="pirate_mouth_description">Enable adult language</string>
+        <string name="sailor_mouth">Sailor\'s Mouth</string>
+            <string name="sailor_mouth_description">Enable adult language</string>
 
+        <string name="discardWarning">Warning on Discard</string>
+            <string name="discardWarning_description">Display a pop-up to cancel discarding of bottles</string>
+
+
+        <string name="pickupFreq">Pickup Frequency</string>
+            <string name="pickupFreq_description">How often you check for bottles</string>
+            <string-array name="pickupFreq_titles">
+                <item>Sleepy Pirate</item>
+                <item>Awake Pirate</item>
+                <item>Caffeinated Pirate</item>
+            </string-array>
+            <string-array name="pickupFreq_values">
+                <item>60</item>
+                <item>6</item>
+                <item>.6</item>
+            </string-array>
+
+        <string name="maps">Enable Maps</string>
+            <string name="maps_description">Display a location when creating bottles</string>
+
+    <string name="userTutorial">Begin User Tutorial</string>
+        <string name="userTutorial_description">Opens up a new screen on how to use this app</string>
+
+    <string name="socialLink">Social Media Link</string>
+        <string name="socialLink_description">Opens up a new screen to link your social media and Message In A Bottle accounts</string>
     <!-- Example General settings -->
 
 
