@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -45,7 +44,6 @@ public class MessageActivityFragment extends Fragment
     private GoogleMap map;
     private Location currentLocation;
     private CameraUpdate cameraUpdate;
-    private TextView message;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
 
@@ -88,7 +86,7 @@ public class MessageActivityFragment extends Fragment
 
         //TODO REIMPLMEMENT WHEN LOCATIONLISTENER IS UPDATED
        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
+               mGoogleApiClient, mLocationRequest, this);
 
     }
 
@@ -120,6 +118,30 @@ public class MessageActivityFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_message, container, false);
+        mapDialog(v, savedInstanceState);
+        final Button dropBottle = (Button) v.findViewById(R.id.drop_button);
+        dropBottle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //grab EditText that contains user message
+                EditText textView = (EditText) getActivity().findViewById(R.id.message_edit);
+                if (textView.getText().toString().trim().length() > 0) { //if contains characters, and not just whitespace
+                    ParseObject bottle = new ParseObject("bottle");
+                    ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
+                    bottle.put("location", point);
+                    bottle.put("message", textView.getText().toString());
+                    bottle.put("type", 0);
+                    bottle.saveInBackground();
+                } else //No message inserted
+                    Toast.makeText(getContext(), "Enter a Message!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        return v;
+    }
+
+    public void mapDialog(View v, Bundle savedInstanceState) {
 
         //Find mapView in layout and create the view
         //see onCreate below
@@ -142,7 +164,7 @@ public class MessageActivityFragment extends Fragment
         //TODO UNCOMMENT THIS TO INTEGRATE FOR API 23
 //        if (getContext().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //            requestPermissions(permissions.toArray(new String[permissions.size()]), PERMISSION_LOCATION);
-            // TODO: make checkSelfPermission for API 23 available for use if API 23, so permission can be accessed at run time
+        // TODO: make checkSelfPermission for API 23 available for use if API 23, so permission can be accessed at run time
 //        }
         //Create a GoogleApiClient instance
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -161,41 +183,7 @@ public class MessageActivityFragment extends Fragment
         //Updates location and zoom.
         cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(36.815512, -119.750583), 15);
         map.animateCamera(cameraUpdate);
-        final Button dropBottle = (Button) v.findViewById(R.id.drop_button);
-        dropBottle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //grab EditText that contains user message
-                EditText textView = (EditText)getActivity().findViewById(R.id.message_edit);
-                if (textView.getText().toString().trim().length() > 0) { //if contains characters, and not just whitespace
-
-                    ParseObject bottle = new ParseObject("bottle");
-                    ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
-                    bottle.put("location", point);
-                    bottle.put("message", textView.getText().toString());
-                    bottle.put("type", 0);
-                    //bottle.put("past", null);
-                    //bottle.put("content", null);
-                    bottle.saveInBackground();
-//                    //if location does not contain message at location
-//                    if (!savedMessages.containsValue(textView.getText().toString())) {
-//                        savedMessages.put(currentLocation, textView.getText().toString());
-//                    }
-//                    //Location occupied, remove than add message
-//                    else if (savedMessages.containsValue(textView.getText().toString())) {
-//                        savedMessages.values().removeAll(Collections.singleton(textView.getText().toString()));
-//                        savedMessages.put(currentLocation, textView.getText().toString());
-//                    }
-                }
-                else //No message inserted
-                    Toast.makeText(getContext(), "Enter a Message!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        return v;
     }
-
     /** MapView OVERRIDES **/
     //For MapView to resume when parent view resumes
     @Override
@@ -264,58 +252,7 @@ public class MessageActivityFragment extends Fragment
                     }
                 }
             });
-            //NOTE: END OF SEPARATE THREAD
 
-            //message.setText(foundBottle.getString("message"));
-//
-//            //Grab textView to print message --DEBUG ONLY TODO ADD VIEW MESSAGE FRAGMENT
-//            if (message == null)ParseObject bottle = new ParseObject("bottle");
-//                message = (TextView) getActivity().findViewById(R.id.message_title);
-//
-//            //Check if location is accurate enough and there are messages to find
-//            if (location.getAccuracy() < MIN_ACCURACY && location.getAccuracy() != 0 && !savedMessages.isEmpty()) {
-//                //get next highest value
-//                Location greaterLoc = savedMessages.ceilingKey(location);
-//                //get next lowest value
-//                Location lesserLoc = savedMessages.floorKey(location);
-//                //check if value entry
-//                double ceilDist = greaterLoc != null ? location.distanceTo(greaterLoc) : Double.MAX_VALUE;
-//                double floorDist = lesserLoc != null ? location.distanceTo(lesserLoc) : Double.MAX_VALUE;
-//                //if both are not valid exit --IS THIS NECESSARY, MIGHT BE REDUNDANT
-//                if (ceilDist == floorDist && ceilDist == Double.MAX_VALUE)
-//                    return;
-//                //Pick the closer value
-//                double lesser = ceilDist < floorDist ? ceilDist : floorDist;
-//                //If within 3.25 meters
-//                if (lesser < RANGE) {
-//                    //change text to message --DEBUG ONLY TODO Implement View Message Fragment and write to it here
-//                    message.setText(savedMessages.get(lesser == floorDist ? lesserLoc : greaterLoc));
-//                }
-//                else {
-//                    //Revert message
-//                    message.setText("Create A Message");
-//                }
-//            }
-//            else
-//                //Revert message [Possibly redundant]
-//                message.setText("Create A Message");
-//
-//
         }
     }
-
-
-//TODO Implement Runtime Permissions
-    //When Permission is requested, this will determine what to do on the result
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String permission[], int[] grantResults) {
-//        switch (requestCode) {
-//            case PERMISSION_LOCATION:
-////                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
-////
-////            }
-//        }
-//    }
-
-
 }

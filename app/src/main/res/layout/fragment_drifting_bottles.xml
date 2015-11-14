@@ -1,16 +1,19 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yarmatey.messageinabottle.DriftingBottlesFragment"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/drifting_title_bar">
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="4dp"
             android:src="@drawable/pirate_hat"
@@ -30,8 +33,17 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/drifting_title_bar"
         android:id="@+id/pirate_booty"
         android:scrollbars="vertical"
         />
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:id="@android:id/empty"-->
+    <!--android:layout_below="@+id/drifting_title_bar"-->
+    <!--android:textSize="24sp"-->
+    <!--android:gravity="center_horizontal"-->
+        <!--android:text="Arrgh, thur be nothin' here. Ye scruvy dog"/>-->
 
-</LinearLayout>
+</RelativeLayout>

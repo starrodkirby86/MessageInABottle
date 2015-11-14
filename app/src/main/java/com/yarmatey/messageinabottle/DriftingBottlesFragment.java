@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,17 +28,11 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class DriftingBottlesFragment extends Fragment{
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private ArrayList<String> data;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    public PirateBooty mAdapter;
     private OnFragmentInteractionListener mListener;
-    private List<ParseObject> set;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -50,28 +43,14 @@ public class DriftingBottlesFragment extends Fragment{
     // TODO: Rename and change types and number of parameters
     public static DriftingBottlesFragment newInstance(ArrayList<ParseObject> data) {
         DriftingBottlesFragment fragment = new DriftingBottlesFragment();
-        //Bundle args = new Bundle();
-        //args.put//StringArrayList(ARG_PARAM1, data);
-        //fragment.setArguments(args);
         return fragment;
     }
 
-    public DriftingBottlesFragment() {
-        // Required empty public constructor
-        set = new ArrayList<>();
-    }
+    public DriftingBottlesFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            data = getArguments().getStringArrayList(ARG_PARAM1);
-        }
-        else {
-            data = new ArrayList<>();
-            data.add("Yo ho, a Pirate's life for me!");
-        }
     }
 
     @Override
@@ -80,20 +59,12 @@ public class DriftingBottlesFragment extends Fragment{
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_drifting_bottles, container, false);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.pirate_booty);
-
+        //TODO add empty view functionality
         mRecyclerView.setHasFixedSize(false);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
-        /*
-        data = activity.getBottleList();
-        if (data == null) {
-            data = new ArrayList<>();
-            data.add("Yo ho, a Pirate's life for me!");
-        }
-        */
         mAdapter = new PirateBooty("ghost", false);
-        //mAdapter = new PirateBooty(set);
         mRecyclerView.setAdapter(mAdapter);
         return v;
     }
@@ -105,9 +76,15 @@ public class DriftingBottlesFragment extends Fragment{
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     public void addBottle (ParseObject message) {
-        set.add(message);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyItemInserted(mAdapter.getItemCount());
+        mAdapter.loadObjects();
+
 
         //Create an explicit intent to go to Inventory
         Intent resultIntent = new Intent(getContext(), Inventory.class);
