@@ -42,11 +42,26 @@
         <string name="maps">Enable Maps</string>
             <string name="maps_description">Display a location when creating bottles</string>
 
+        <string name="filters">Create Filter </string>
+            <string name="filters_description">Add a filter to your list of view/hide bottles</string>
+
+    <string name="pirate">PIRATE MODE!</string>
+        <string name="pirate_description">BE A TRUE MATEY, YA LANDLUBBER</string>
+
+    <string name="color">Color Scheme</string>
+        <string name="color_description">Choose application colors</string>
+        <string-array name="color_titles">
+            <item>White and Blue</item>
+        </string-array>
+        <string-array name="color_values">
+            <item>default</item>
+        </string-array>
+
     <string name="userTutorial">Begin User Tutorial</string>
         <string name="userTutorial_description">Opens up a new screen on how to use this app</string>
 
     <string name="socialLink">Social Media Link</string>
-        <string name="socialLink_description">Opens up a new screen to link your social media and Message In A Bottle accounts</string>
+        <string name="socialLink_description">Opens up a new screen to link social media and Message In A Bottle accounts</string>
     <!-- Example General settings -->
 
 

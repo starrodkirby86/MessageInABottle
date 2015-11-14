@@ -24,6 +24,7 @@
         android:icon="@drawable/floating_bottle"
         />
 
+    <!-- These do not work as they do not bring up fragments that are not preference fragments correctly.
     <header
         android:fragment="com.yarmatey.messageinabottle.InventoryFragment"
         android:title='@string/userTutorial'
@@ -35,6 +36,7 @@
         android:title="@string/socialLink"
         android:summary="@string/socialLink_description"
         />
+        -->
 
 
 </preference-headers>
