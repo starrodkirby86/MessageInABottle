@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--One part backwards compatability, but mostly to make sure we have a working set of settings.-->
+    <!--One part backwards compatibility, but mostly to make sure we have a working set of settings.-->
     <PreferenceScreen
-        android:fragment="com.yarmatey.messageinabottle.SettingsActivity$BottlesPreferenceFragment"
         android:title="@string/pref_header_bottles"
         android:icon="@drawable/floating_bottle"
         >

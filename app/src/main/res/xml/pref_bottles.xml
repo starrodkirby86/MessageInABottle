@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    
+
     <!-- Warn on Discard
     -->
     <SwitchPreference
@@ -42,5 +42,10 @@
     <!-- Other Filters Menu
             Links to another menu that allows the user to type in filter entries.
     -->
+    <Preference
+        android:title="@string/filters"
+        android:summary="@string/filters_description"
+        android:fragment="com.yarmatey.messageinabottle.LogInActivityFragment"
+        />
 
 </PreferenceScreen>
