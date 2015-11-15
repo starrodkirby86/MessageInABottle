@@ -1,8 +1,10 @@
 package com.yarmatey.messageinabottle;
 
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -121,6 +123,14 @@ public class MessageActivityFragment extends Fragment
                              final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_message, container, false);
 
+        //Retrieve the preferences from this fragment's context.
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+        //Pull the map_switch and return false if this value does not exist (the default value)
+        boolean maps = preferences.getBoolean("map_switch", false);
+
+        if(maps){
+            Toast.makeText(getContext(), "Maps Works!", Toast.LENGTH_SHORT).show();
+        }
         //Find mapView in layout and create the view
         //see onCreate below
         mapView = (MapView) v.findViewById(R.id.mapview);

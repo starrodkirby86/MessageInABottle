@@ -12,7 +12,8 @@
             android:key="discardWarning_switch"
             android:title="@string/discardWarning"
             android:summary="@string/discardWarning_description"
-            android:defaultValue="true"/>
+            android:defaultValue="true"
+            android:persistent="true"/>
 
         <!-- Frequency of Bottle Pickup
         -->
@@ -22,7 +23,8 @@
             android:summary="@string/pickupFreq_description"
             android:entries="@array/pickupFreq_titles"
             android:entryValues="@array/pickupFreq_values"
-            android:defaultValue="60"/>
+            android:defaultValue="600"
+            android:persistent="true"/>
 
         <!-- Enable Maps
                 True: Can see Google Maps
@@ -32,7 +34,8 @@
             android:key="map_switch"
             android:title="@string/maps"
             android:summary="@string/maps_description"
-            android:defaultValue="false"/>
+            android:defaultValue="false"
+            android:persistent="true"/>
 
         <!-- Adult Language filter
                 True: Adult Language Allowed
@@ -42,7 +45,8 @@
             android:key="sailor_switch"
             android:title="@string/sailor_mouth"
             android:summary="@string/sailor_mouth_description"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            android:persistent="true" />
 
         <!-- Other Filters Menu
                 Links to another menu that allows the user to type in filter entries.
@@ -59,7 +63,8 @@
         android:key="pirate_switch"
         android:title="@string/pirate"
         android:summary="@string/pirate_description"
-        android:defaultValue="false" />
+        android:defaultValue="false"
+        android:persistent="true" />
 
     <ListPreference
         android:key="color_list"
@@ -67,16 +72,19 @@
         android:summary="@string/color_description"
         android:entries="@array/color_titles"
         android:entryValues="@array/color_values"
-        android:defaultValue="60"/>
+        android:defaultValue="default"
+        android:persistent="true"/>
 
 
     <!-- May need to work on the below, they may not work well, if at all. May need to switch them to intents instead of fragments for example.
     -->
     <Preference
         android:title='@string/userTutorial'
-        android:summary="@string/userTutorial_description"
-        android:fragment="com.yarmatey.messageinabottle.InventoryFragment"
-        />
+        android:summary="@string/userTutorial_description">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/adamhabib25/MessageInABottle/wiki/Tutorial" />
+    </Preference>
 
     <Preference
         android:title="@string/socialLink"

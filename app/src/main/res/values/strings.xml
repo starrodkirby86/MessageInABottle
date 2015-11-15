@@ -33,10 +33,11 @@
                 <item>Awake Pirate</item>
                 <item>Caffeinated Pirate</item>
             </string-array>
+            <!-- You'd think this would be an integer array, but that crashed the entire app. Fix appreciated - Brennen-->
             <string-array name="pickupFreq_values">
-                <item>60</item>
-                <item>6</item>
-                <item>.6</item>
+                <item>600</item> <!-- 60 seconds-->
+                <item>60</item>  <!-- 6 seconds-->
+                <item>6</item>   <!-- .6 seconds-->
             </string-array>
 
         <string name="maps">Enable Maps</string>

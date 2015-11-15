@@ -2,8 +2,10 @@ package com.yarmatey.messageinabottle;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -65,7 +67,6 @@ public class Inventory extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -145,9 +146,16 @@ public class Inventory extends AppCompatActivity
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "Connected Status: Connected");
 
+
+        //Retrieve the preferences now. We'll take the interval from here (key =
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //We cannot store Integer arrays for whatever reason. So instead, we need to parse a String into an Integer
+        //We have 600 = 1 minute, 60 = 6 seconds, 6 = .6 s.
+        Integer interval=Integer.parseInt(preferences.getString("pickupFreq_list", "600"))*100;
+
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(5000);
+        mLocationRequest.setInterval(interval); //In milliseconds
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
 
