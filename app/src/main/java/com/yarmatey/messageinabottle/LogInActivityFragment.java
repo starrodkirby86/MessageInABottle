@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,7 +23,10 @@ public class LogInActivityFragment extends Fragment {
      */
     private String LOG_TAG = LogInActivityFragment.class.getSimpleName(); //Log tag for ADB
 
+    private UserLocalStore userLocalStore;
+
     public LogInActivityFragment() {
+
     }
 
     @Override
@@ -37,6 +41,8 @@ public class LogInActivityFragment extends Fragment {
         final TextView anon = (TextView) view.findViewById(R.id.anon_log_in);
         final EditText username = (EditText) view.findViewById(R.id.etUsername);
         final EditText password = (EditText) view.findViewById(R.id.etPassword);
+        CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
+        userLocalStore = new UserLocalStore(getContext()); //use this instead of class
 
 
         //anonymous log in click
@@ -81,6 +87,9 @@ public class LogInActivityFragment extends Fragment {
         EditText username; //changed
         EditText password;
 
+
+
+
         //CONSTRUCTORS
         public logInClick(EditText u, EditText p) { // retrieves username and password
             this.username = u;
@@ -92,10 +101,11 @@ public class LogInActivityFragment extends Fragment {
         }
 
         private boolean authenticate() {
-            return  UserLocalStore.getUserLoggedIn();
+
+            return  userLocalStore.getUserLoggedIn();
         }
         private void displayUserDetails() {
-            User user = UserLocalStore.getUserLoggedIn();
+            User user = userLocalStore.getLoggedInUser();
 
             username.setText(user.username);
             password.setText(user.password);
@@ -106,6 +116,7 @@ public class LogInActivityFragment extends Fragment {
         public void onClick(View v) {
             Intent intent = new Intent(getActivity(), Inventory.class);//Intent to launch to MessageActivity
 //            Intent intent2 = new Intent(getActivity(), RegisterActivity.class);
+            CheckBox checkBox = (CheckBox) getActivity().findViewById(R.id.checkBox);
 
             if(authenticate() == true) {
                 displayUserDetails();
@@ -115,12 +126,18 @@ public class LogInActivityFragment extends Fragment {
             if (v.getId() == R.id.bLogin) {
                 //parse log in info
 
-                if(v.getId() == R.id.checkBox) {
 
+                if(checkBox.isChecked() == true) {
                     User user = new User(username, password);
-                    UserLocalStore.storeUserData(user);
-                    UserLocalStore.setUserLoggedIn(true);
+                    userLocalStore.storeUserData(user);
+                    userLocalStore.setUserLoggedIn(true);
+                    displayUserDetails();
                 }
+//                if(v.getId() == R.id.checkBox) {
+//                    User user = new User(username, password);
+//                    UserLocalStore.storeUserData(user);
+//                    UserLocalStore.setUserLoggedIn(true);
+//                }
 
                 startActivity(intent);
 

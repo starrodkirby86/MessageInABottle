@@ -8,7 +8,9 @@ import android.widget.EditText;
 
 public class User extends AppCompatActivity {
 
-    String name, username, password;
+    String name;
+    String username;
+    String password;
     int age;
 
     public User(String name, int age, String username, String password) {

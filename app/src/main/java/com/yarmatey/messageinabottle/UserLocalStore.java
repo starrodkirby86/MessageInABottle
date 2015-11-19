@@ -7,14 +7,14 @@ import android.widget.EditText;
 
 public class UserLocalStore {
 
-    public static final String SP_NAME = "userDetails";
+    public final String SP_NAME = "userDetails";
     static SharedPreferences userLocalDatabase;  // Shared preference allows to store data on phone
 
     public UserLocalStore(Context context) {
         userLocalDatabase = context.getSharedPreferences(SP_NAME, 0);
     }
 
-    public static void storeUserData(User user) {
+    public void storeUserData(User user) {
         //     SharedPreferences userLocalDataBase;
         SharedPreferences.Editor spEditor = userLocalDatabase.edit(); //allows to edit what is in the shared preference
         spEditor.putString("name", user.name);
@@ -35,19 +35,23 @@ public class UserLocalStore {
         return storedUser;
     }
 
-    public static void setUserLoggedIn(boolean loggedIn) { //sets user login with true or false
+    public void setUserLoggedIn(boolean loggedIn) { //sets user login with true or false
         SharedPreferences.Editor spEditor = userLocalDatabase.edit();
         spEditor.putBoolean("loggedIn", loggedIn);
         spEditor.commit();  //save changes
     }
 
-    public static boolean getUserLoggedIn() {
-        if(userLocalDatabase.getBoolean("LoggedIn" , false) == true) { //if logged in == true
+    public boolean getUserLoggedIn() {
+       if(userLocalDatabase.getBoolean("LoggedIn", false)) { //if logged in == true
             return true;
         }
         else { // else false
             return  false;
         }
+
+ /*       SharedPreferences.Editor spEditor = userLocalDatabase.edit();
+        spEditor.putString("LoggedIn",spEditor);
+        */
     }
 
     public void clearUserData() {
