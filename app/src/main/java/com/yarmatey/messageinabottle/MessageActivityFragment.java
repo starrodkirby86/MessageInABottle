@@ -126,9 +126,9 @@ public class MessageActivityFragment extends Fragment
         //Retrieve the preferences from this fragment's context.
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         //Pull the map_switch and return false if this value does not exist (the default value)
-        boolean maps = preferences.getBoolean("map_switch", false);
+        boolean mapsVal = preferences.getBoolean("map_switch", false);
 
-        if(maps){
+        if(mapsVal){
             Toast.makeText(getContext(), "Maps Works!", Toast.LENGTH_SHORT).show();
         }
         //Find mapView in layout and create the view

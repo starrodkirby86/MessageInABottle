@@ -3,6 +3,7 @@ package com.yarmatey.messageinabottle;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -22,7 +23,7 @@ import android.view.MenuItem;
 /**
  * @author Brennen Fagan
  * @params Saved Preferences if any exist.
- * @version 2015_11_14
+ * @version 2015_11_15
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
  * settings are split by category, with category headers shown to the left of
@@ -33,7 +34,16 @@ import android.view.MenuItem;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends AppCompatPreferenceActivity {
+public class SettingsActivity extends AppCompatPreferenceActivity
+                              implements SharedPreferences.OnSharedPreferenceChangeListener {
+    /* Settings Keys: Use the string when referring to the key.*/
+    public static final String discardWarn = "discardWarning_switch";
+    public static final String pickupFreq= "pickupFreq_list";
+    public static final String maps = "map_switch";
+    public static final String sailor = "sailor_switch";
+    public static final String pirate = "pirate_switch";
+    public static final String colors = "color_list";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +56,57 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
         setupActionBar();
     }
+
+    //From http://developer.android.com/guide/topics/ui/settings.html#Listening
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }*/
+
+    //From Official Documentation: http://developer.android.com/guide/topics/ui/settings.html#Listening
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                          String key) {
+        if (key.equals(discardWarn)) {
+            Preference connectionPref = findPreference(key);
+            // Set summary to be the user-description for the selected value
+            connectionPref.setSummary(sharedPreferences.getString(key, ""));
+        }
+        else if (key.equals(pickupFreq)) {
+            Preference connectionPref = findPreference(key);
+            // Set summary to be the user-description for the selected value
+            connectionPref.setSummary(sharedPreferences.getString(key, ""));
+        }
+        else if (key.equals(maps)) {
+            Preference connectionPref = findPreference(key);
+            // Set summary to be the user-description for the selected value
+            connectionPref.setSummary(sharedPreferences.getString(key, ""));
+        }
+        else if (key.equals(sailor)) {
+            Preference connectionPref = findPreference(key);
+            // Set summary to be the user-description for the selected value
+            connectionPref.setSummary(sharedPreferences.getString(key, ""));
+        }
+        else if (key.equals(pirate)) {
+            Preference connectionPref = findPreference(key);
+            // Set summary to be the user-description for the selected value
+            connectionPref.setSummary(sharedPreferences.getString(key, ""));
+        }
+        else if (key.equals(colors)) {
+            Preference connectionPref = findPreference(key);
+            // Set summary to be the user-description for the selected value
+            connectionPref.setSummary(sharedPreferences.getString(key, ""));
+        }
+    }
+
 
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.

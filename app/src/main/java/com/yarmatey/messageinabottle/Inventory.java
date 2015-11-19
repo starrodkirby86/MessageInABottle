@@ -63,6 +63,21 @@ public class Inventory extends AppCompatActivity
 
     private String TAG = this.getClass().getSimpleName();
 
+
+    //Declaring preferences, interval here to be accessed elsewhere in the class (as in in the listener)
+    public SharedPreferences preferences;
+    public Integer interval;
+
+    //Declaring SharedPreferencesListener here to be constantly available.
+    public SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals("pickupFreq_list")) {
+                //If the the pickupFrequency Interval has changed, we set it to the new value.
+                interval=Integer.parseInt(preferences.getString("pickupFreq_list", "600"))*100;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +112,9 @@ public class Inventory extends AppCompatActivity
             }
         });
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //To save shared preferences in an ongoing manner.
+        preferences.registerOnSharedPreferenceChangeListener(listener);
     }
 
 
@@ -142,17 +160,18 @@ public class Inventory extends AppCompatActivity
         super.onStop();
     }
 
+
+
     @Override
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "Connected Status: Connected");
 
-
-        //Retrieve the preferences now. We'll take the interval from here (key =
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //We'll take the sharedPreferences from preferences (key = pickupFreq_list)
         //We cannot store Integer arrays for whatever reason. So instead, we need to parse a String into an Integer
-        //We have 600 = 1 minute, 60 = 6 seconds, 6 = .6 s.
-        Integer interval=Integer.parseInt(preferences.getString("pickupFreq_list", "600"))*100;
+        //We have 600 = 60 seconds, 60 = 6 seconds, 6 = .6 s.
+        interval=Integer.parseInt(preferences.getString("pickupFreq_list", "600"))*100;
 
+        //Change the static interval to the now public dynamic interval.
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(interval); //In milliseconds
