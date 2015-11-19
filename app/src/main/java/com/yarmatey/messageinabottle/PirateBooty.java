@@ -1,7 +1,7 @@
 package com.yarmatey.messageinabottle;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,30 +11,49 @@ import android.widget.TextView;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+
+import java.util.List;
 
 /**
  * Created by Jason on 10/27/2015.
  */
-public class PirateBooty extends ParseRecyclerQueryAdapter<ParseObject, PirateBooty.ViewHolder> {
+public class PirateBooty extends RecyclerView.Adapter<PirateBooty.ViewHolder> {
 
-    public PirateBooty(String className, boolean hasStableIds) {
-        super(className, hasStableIds);
+    private ParseQueryAdapter<ParseObject> parseAdapter;
+
+    private ViewGroup parseParent;
+
+    private PirateBooty pirateBooty = this;
+
+    public PirateBooty(Context context, ViewGroup parentIn) {
+        parseParent = parentIn;
+        ParseQueryAdapter.QueryFactory<ParseObject> factory = new ParseQueryAdapter.QueryFactory<ParseObject>() {
+            @Override
+            public ParseQuery<ParseObject> create() {
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("ghost");
+                query.fromLocalDatastore();
+                return query;
+            }
+        };
+        parseAdapter = new ParseQueryAdapter<ParseObject>(context, factory) {
+            @Override
+            public View getItemView(ParseObject object, View v, ViewGroup parent) {
+                if (v == null) {
+                    v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_list_item, parent, false);
+                }
+                super.getItemView(object, v, parent);
+                TextView titleText = (TextView) v.findViewById(R.id.card_title);
+                TextView description = (TextView) v.findViewById(R.id.card_message);
+                titleText.setText("A message be waitin' for ye");
+                description.setText(object.get("message").toString());
+                return v;
+            }
+        };
+        parseAdapter.addOnQueryLoadListener(new OnQueryLoadListener());
+        parseAdapter.loadObjects();
     }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        protected TextView titleText;
-        protected TextView description;
-        protected CardView card;
-
-        public ViewHolder(View v) {
-            super(v);
-            titleText = (TextView) v.findViewById(R.id.card_title);
-            description = (TextView) v.findViewById(R.id.card_message);
-            card = (CardView) v;
-        }
-    }
-
 
     @Override
     public PirateBooty.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -54,10 +73,10 @@ public class PirateBooty extends ParseRecyclerQueryAdapter<ParseObject, PirateBo
             @Override
             public void onClick(View v) {
                 try {
-                    getItem(vh.getAdapterPosition()).unpin();
-                    getItem(vh.getAdapterPosition()).delete();
+                    parseAdapter.getItem(vh.getAdapterPosition()).unpin();
+                    parseAdapter.getItem(vh.getAdapterPosition()).delete();
                     notifyItemRemoved(vh.getAdapterPosition());
-                    loadObjects();
+                    parseAdapter.loadObjects();
 
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -69,13 +88,32 @@ public class PirateBooty extends ParseRecyclerQueryAdapter<ParseObject, PirateBo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.titleText.setText("A message be waitin' for ye");
-        holder.description.setText(getItem(holder.getAdapterPosition()).get("message").toString());
-
+        parseAdapter.getView(position, holder.card, parseParent);
     }
 
     @Override
     public int getItemCount() {
-        return super.getItemCount();
+        return parseAdapter.getCount();
     }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        protected View card;
+
+        public ViewHolder(View v) {
+            super(v);
+            card = v;
+        }
+    }
+
+    public class OnQueryLoadListener implements ParseQueryAdapter.OnQueryLoadListener<ParseObject> {
+
+        public void onLoading() {
+
+        }
+
+        public void onLoaded(List<ParseObject> objects, Exception e) {
+            pirateBooty.notifyDataSetChanged();
+        }
+    }
+
 }

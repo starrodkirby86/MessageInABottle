@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.parse.ParseObject;
 
@@ -32,6 +33,7 @@ public class DriftingBottlesFragment extends Fragment{
     // TODO: Rename and change types of parameters
     private RecyclerView mRecyclerView;
     public PirateBooty mAdapter;
+    private TextView emptyMessage;
     private OnFragmentInteractionListener mListener;
     /**
      * Use this factory method to create a new instance of
@@ -59,13 +61,14 @@ public class DriftingBottlesFragment extends Fragment{
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_drifting_bottles, container, false);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.pirate_booty);
-        //TODO add empty view functionality
-        mRecyclerView.setHasFixedSize(false);
 
+        mRecyclerView.setHasFixedSize(false);
+        emptyMessage = (TextView) v.findViewById(R.id.empty_message);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new PirateBooty("ghost", false);
+        mAdapter = new PirateBooty(getContext(), container);
         mRecyclerView.setAdapter(mAdapter);
+        //checkIfEmpty();
         return v;
     }
 
@@ -79,13 +82,11 @@ public class DriftingBottlesFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        checkIfEmpty();
     }
 
     public void addBottle (ParseObject message) {
-        mAdapter.notifyItemInserted(mAdapter.getItemCount());
-        mAdapter.loadObjects();
-
-
+        //mAdapter.notifyItemInserted(mAdapter.getItemCount());
         //Create an explicit intent to go to Inventory
         Intent resultIntent = new Intent(getContext(), Inventory.class);
         PendingIntent contentIntent = PendingIntent.getActivity(getContext(),
@@ -110,6 +111,17 @@ public class DriftingBottlesFragment extends Fragment{
         mListener = null;
     }
 
+    public void checkIfEmpty() {
+//        if (mAdapter.getItemCount() == 0) {
+//            emptyMessage.setVisibility(View.VISIBLE);
+//            mRecyclerView.setVisibility(View.GONE);
+//        }
+//        else {
+//            emptyMessage.setVisibility(View.GONE);
+//            mRecyclerView.setVisibility(View.VISIBLE);
+//        }
+
+    }
 
     /**
      * This interface must be implemented by activities that contain this

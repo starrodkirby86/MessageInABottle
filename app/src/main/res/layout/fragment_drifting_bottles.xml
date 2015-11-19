@@ -29,7 +29,15 @@
 
     </LinearLayout>
 
-    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/empty_message"
+        android:layout_below="@+id/drifting_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:textSize="24sp"
+        android:gravity="center_horizontal"
+        android:text="Nothin' seems to be here, yah scruvy dog!"/>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

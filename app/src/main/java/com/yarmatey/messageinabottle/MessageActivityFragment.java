@@ -64,13 +64,13 @@ public class MessageActivityFragment extends Fragment
     public void onStart() {
         super.onStart();
         // Connect the client.
-        mGoogleApiClient.connect();
+        //mGoogleApiClient.connect();
     }
 
     @Override
     public void onStop() {
         // Disconnecting the client invalidates it.
-        mGoogleApiClient.disconnect();
+        //mGoogleApiClient.disconnect();
         super.onStop();
     }
 
@@ -118,8 +118,8 @@ public class MessageActivityFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_message, container, false);
-        mapDialog(v, savedInstanceState);
-        final Button dropBottle = (Button) v.findViewById(R.id.drop_button);
+        //mapDialog(v, savedInstanceState);
+        final Button dropBottle = (Button) v.findViewById(R.id.button_fake);
         dropBottle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,20 +188,20 @@ public class MessageActivityFragment extends Fragment
     //For MapView to resume when parent view resumes
     @Override
     public void onResume() {
-        mapView.onResume();
+        //mapView.onResume();
         super.onResume();
     }
     //For MapView to destroy when parent view is destroyed
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        //mapView.onDestroy();
     }
     //For MapView to follow parent view on LowMemory
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
+        //mapView.onLowMemory();
     }
 
     /** LocationListener OVERRIDES **/
@@ -210,9 +210,9 @@ public class MessageActivityFragment extends Fragment
         if(location != null) {
             Log.i("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude()); //print location in log
             //Move map to new location [IS THIS NECESSARY], might be taxing on battery
-            cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-            map.animateCamera(cameraUpdate);
-            //update location
+//            cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+//            map.animateCamera(cameraUpdate);
+//            //update location
             currentLocation = location;
 
             //Create a point that Parse knows what the location is.

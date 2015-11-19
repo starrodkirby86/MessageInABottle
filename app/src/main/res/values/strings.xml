@@ -2,7 +2,7 @@
     <string name="app_name">Message In A Bottle</string>
     <string name="create_message">Create A Message</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_message">MessageActivity</string>
+    <string name="title_activity_message">Create a Bottle</string>
     <string name="title_activity_maps">Map</string>
     <string name="create_button">Drop Bottle</string>
 
