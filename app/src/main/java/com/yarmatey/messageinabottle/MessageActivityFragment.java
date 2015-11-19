@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -57,8 +58,6 @@ public class MessageActivityFragment extends Fragment
     private String TAG = this.getClass().getSimpleName();
     //private final int PERMISSION_LOCATION = 1;
 
-    /** CONSTRUCTOR **/
-    public MessageActivityFragment() {}
 
     @Override
     public void onStart() {
@@ -115,6 +114,12 @@ public class MessageActivityFragment extends Fragment
 
     /** FRAGMENT OVERRIDES **/
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_message, container, false);
@@ -139,6 +144,18 @@ public class MessageActivityFragment extends Fragment
 
 
         return v;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()) {
+            case R.id.drop_bottle:
+                Toast.makeText(getContext(), "Test", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void mapDialog(View v, Bundle savedInstanceState) {
