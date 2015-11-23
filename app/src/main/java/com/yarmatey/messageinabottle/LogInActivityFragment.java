@@ -11,6 +11,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+
 
 /**
  * A placeholder fragment containing a simple view.
@@ -105,16 +109,17 @@ public class LogInActivityFragment extends Fragment {
             return  userLocalStore.getUserLoggedIn();
         }
         private void displayUserDetails() {
-            User user = userLocalStore.getLoggedInUser();
-
-            username.setText(user.username);
-            password.setText(user.password);
+            //User user = userLocalStore.getLoggedInUser();
+            ParseUser user = ParseUser.getCurrentUser();
+            if (user != null)
+                username.setText(user.getUsername());
+            //password.setText();
         }
 
         //OnClickListener
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getActivity(), Inventory.class);//Intent to launch to MessageActivity
+            final Intent intent = new Intent(getActivity(), Inventory.class);//Intent to launch to MessageActivity
 //            Intent intent2 = new Intent(getActivity(), RegisterActivity.class);
             CheckBox checkBox = (CheckBox) getActivity().findViewById(R.id.checkBox);
 
@@ -125,6 +130,19 @@ public class LogInActivityFragment extends Fragment {
             //Log In button pressed
             if (v.getId() == R.id.bLogin) {
                 //parse log in info
+                ParseUser.logInInBackground(username.toString(), password.toString(), new LogInCallback() {
+                    @Override
+                    public void done(ParseUser parseUser, ParseException e) {
+                        ParseUser user = new ParseUser();
+                        if(user != null) {
+                            startActivity(intent);
+                        }
+                        else { //signup failed. look at parseExceptioin to see what happened
+
+                        }
+
+                    }
+                });
 
 
                 if(checkBox.isChecked() == true) {

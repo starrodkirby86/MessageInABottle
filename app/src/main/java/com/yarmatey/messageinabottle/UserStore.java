@@ -19,7 +19,7 @@ public class UserStore {
         //     SharedPreferences userLocalDataBase;
         SharedPreferences.Editor spEditor = userLocalDatabase.edit();
         spEditor.putString("name", user.name);
-        spEditor.putInt("age", user.age);
+        spEditor.putString("age", user.age);
         spEditor.putString("username", user.username);
         spEditor.putString("password", user.password);
         spEditor.commit();
@@ -27,7 +27,7 @@ public class UserStore {
 
     public User getLoggedInUser() {
         String name = userLocalDatabase.getString("name", "");
-        int age = userLocalDatabase.getInt("age", -1);
+        String age = userLocalDatabase.getString("age", "-1");
         String username = userLocalDatabase.getString("username", "");
         String password = userLocalDatabase.getString("password", "");
 

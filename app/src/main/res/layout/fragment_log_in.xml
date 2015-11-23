@@ -12,19 +12,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Log In"
-            android:id="@+id/log_in"
-            android:background="@drawable/rounded_corners"
+            android:id="@+id/bLogin"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_below="@+id/checkBox"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:clickable="true" />
 
     <EditText
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/username"
+        android:id="@+id/etUsername"
         android:layout_below="@+id/username_text" />
 
     <EditText
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/password"
+        android:id="@+id/etPassword"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/password_text"
         android:layout_alignParentLeft="true" />
@@ -46,7 +46,7 @@
         android:linksClickable="false"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_below="@+id/username"
+        android:layout_below="@+id/etUsername"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -59,9 +59,10 @@
         android:linksClickable="false"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="181dp" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -69,7 +70,10 @@
         android:text="Remember Me"
         android:id="@+id/checkBox"
         android:checked="false"
-        android:layout_below="@+id/password" />
+        android:layout_below="@+id/etPassword"
+        android:clickable="true"
+        android:enabled="true"
+        android:allowUndo="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -81,5 +85,15 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:clickable="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:id="@+id/register"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_below="@+id/bLogin"
+        android:layout_alignRight="@+id/anon_log_in"
+        android:layout_alignEnd="@+id/anon_log_in" />
 
 </RelativeLayout>

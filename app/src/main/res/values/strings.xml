@@ -11,5 +11,11 @@
     <string name="title_activity_inventory">Inventory</string>
     <string name="hello_world">Hello world!</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_user">UserActivity</string>
+    <string name="title_activity_user_store">UserStoreActivity</string>
+    <string name="title_activity_main">main</string>
+    <string name="title_activity_welcome">welcomeActivity</string>
+    <string name="title_activity_welcome2">welcomeActivity2</string>
 
 </resources>

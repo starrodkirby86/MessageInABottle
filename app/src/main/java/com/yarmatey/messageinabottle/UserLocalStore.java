@@ -18,7 +18,7 @@ public class UserLocalStore {
         //     SharedPreferences userLocalDataBase;
         SharedPreferences.Editor spEditor = userLocalDatabase.edit(); //allows to edit what is in the shared preference
         spEditor.putString("name", user.name);
-        spEditor.putInt("age", user.age);
+        spEditor.putString("age", user.age);
         spEditor.putString("username", user.username);
         spEditor.putString("password", user.password);
         spEditor.commit(); //saves changes from spEdit
@@ -26,7 +26,7 @@ public class UserLocalStore {
 
     public User getLoggedInUser() { //returns what's contained in logged in user
         String name = userLocalDatabase.getString("name", ""); //default values if no name will be nothing "(nothing)"
-        int age = userLocalDatabase.getInt("age", -1); //default value to be -1
+        String age = userLocalDatabase.getString("age", "-1"); //default value to be -1
         String username = userLocalDatabase.getString("username", "");
         String password = userLocalDatabase.getString("password", "");
 

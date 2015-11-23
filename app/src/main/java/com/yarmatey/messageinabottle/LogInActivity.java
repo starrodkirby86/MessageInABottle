@@ -15,11 +15,7 @@ public class LogInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        //PARSE.COM::
-        // Enable Local Datastore.
-        Parse.enableLocalDatastore(this);
 
-        Parse.initialize(this, "OZBa3WcZ3gwkZYGUabDMjyt9Kq3YBWY3cfoDLPnH", "IUJSIrtz1JamTw41lyBW1SDp8rWzzg04j7jV3a95");
     }
 
 
