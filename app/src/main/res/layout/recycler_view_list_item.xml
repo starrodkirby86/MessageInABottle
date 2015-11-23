@@ -44,7 +44,7 @@
             android:layout_alignParentEnd="true"
             android:src="@android:drawable/ic_menu_delete"
             android:contentDescription="delete"
-            android:onClick="test"/>
+            android:onClick="deleteItem"/>
 
         <ImageView
             android:id="@+id/edit"

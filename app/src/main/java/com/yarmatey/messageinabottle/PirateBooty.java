@@ -75,7 +75,7 @@ public class PirateBooty extends RecyclerView.Adapter<PirateBooty.ViewHolder> {
                 try {
                     parseAdapter.getItem(vh.getAdapterPosition()).unpin();
                     parseAdapter.getItem(vh.getAdapterPosition()).delete();
-                    notifyItemRemoved(vh.getAdapterPosition());
+                    //notifyItemRemoved(vh.getAdapterPosition());
                     parseAdapter.loadObjects();
 
                 } catch (ParseException e) {
@@ -114,6 +114,11 @@ public class PirateBooty extends RecyclerView.Adapter<PirateBooty.ViewHolder> {
         public void onLoaded(List<ParseObject> objects, Exception e) {
             pirateBooty.notifyDataSetChanged();
         }
+    }
+
+    public void itemInserted() {
+        //notifyItemInserted(this.getItemCount());
+        parseAdapter.loadObjects();
     }
 
 }

@@ -69,7 +69,7 @@ public class DriftingBottlesFragment extends Fragment{
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new PirateBooty(getContext(), container);
         mRecyclerView.setAdapter(mAdapter);
-        //checkIfEmpty();
+        checkIfEmpty();
         return v;
     }
 
@@ -107,7 +107,7 @@ public class DriftingBottlesFragment extends Fragment{
     }
 
     public void addBottle (ParseObject message) {
-        //mAdapter.notifyItemInserted(mAdapter.getItemCount());
+        mAdapter.itemInserted();
         //Create an explicit intent to go to Inventory
         Intent resultIntent = new Intent(getContext(), Inventory.class);
         PendingIntent contentIntent = PendingIntent.getActivity(getContext(),
