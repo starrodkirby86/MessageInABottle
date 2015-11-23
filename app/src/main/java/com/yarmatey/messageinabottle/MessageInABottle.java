@@ -6,10 +6,8 @@ import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseUser;
 
-/**
-<<<<<<< HEAD
- * Created by Jason on 10/28/2015.
- */
+//Created by Jason on 10/28/2015.
+
 public class MessageInABottle extends Application {
 
     @Override
