@@ -7,42 +7,16 @@
     tools:context="com.yarmatey.messageinabottle.MessageActivityFragment"
     android:orientation="vertical">
 
-        <com.google.android.gms.maps.MapView
-            android:id = "@+id/mapview"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1" />
-
-    <RelativeLayout
+    <Button
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/drifting_title"
+        android:id="@+id/button_fake"/>
+    <EditText
+        android:id="@+id/message_edit"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1.0"
-        android:orientation="vertical">
+        android:inputType="text" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/message_title"
-            android:text="@string/create_message"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-            android:gravity="center"
-            android:layout_alignParentTop="true">
-        </TextView>
 
-        <EditText
-            android:layout_below="@+id/message_title"
-            android:layout_above="@+id/drop_button"
-            android:id="@+id/message_edit"
-            android:layout_width="fill_parent"
-            android:layout_height="0dip"
-            android:inputType="text" />
-
-        <Button
-            android:id="@+id/drop_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_button"
-            android:layout_alignParentBottom="true"/>
-
-    </RelativeLayout>
 </LinearLayout>

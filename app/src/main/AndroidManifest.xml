@@ -46,7 +46,8 @@
         <activity
             android:name=".MessageActivity"
             android:label="@string/title_activity_message"
-            android:parentActivityName=".Inventory" >
+            android:parentActivityName=".Inventory"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yarmatey.messageinabottle.Inventory" />
@@ -63,6 +64,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.yarmatey.messageinabottle.Inventory" />
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:label="@string/title_activity_register" >
         </activity>
     </application>
 

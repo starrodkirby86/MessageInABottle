@@ -58,7 +58,7 @@ public class Inventory extends AppCompatActivity
     private ViewPager mViewPager;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private ArrayList<String> bottleList;
+    private ArrayList<ParseObject> bottleList;
     private DriftingBottlesFragment driftingBottlesFragment;
 
 
@@ -229,14 +229,15 @@ public class Inventory extends AppCompatActivity
                         foundBottle.put("message", message);
                         int type = localBottle.get(0).getInt("type");
                         foundBottle.put("type", type);
+                        foundBottle.pinInBackground();
                         foundBottle.saveInBackground();
                         localBottle.get(0).deleteInBackground();
                         //message.setText(foundBottle.getString("message"));
                         Toast.makeText(getApplicationContext(), foundBottle.getString("message"), Toast.LENGTH_SHORT).show();
                         if (!bottleList.contains(foundBottle.get("message").toString())) {
-                            bottleList.add(foundBottle.get("message").toString());
+                            bottleList.add(foundBottle);
                             if (driftingBottlesFragment != null) {
-                                driftingBottlesFragment.addBottle(foundBottle.get("message").toString());
+                                driftingBottlesFragment.addBottle(localBottle.get(0));
                             }
                         }
                     } else {
@@ -257,7 +258,7 @@ public class Inventory extends AppCompatActivity
         }
     }
 
-    public ArrayList<String> getBottleList() {
+    public ArrayList<ParseObject> getBottleList() {
         return bottleList;
     }
     /**
