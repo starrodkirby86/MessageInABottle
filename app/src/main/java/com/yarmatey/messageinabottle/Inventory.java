@@ -36,6 +36,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Inventory extends AppCompatActivity
@@ -205,7 +206,7 @@ public class Inventory extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) {
         if (location != null && location.getAccuracy() < LocationUpdater.MIN_ACCURACY && location.getAccuracy() != 0) {
-            Log.i("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude()); //print location in log
+            Log.i("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude() +" t=" + Calendar.getInstance().getTimeInMillis()); //print location in log
             //Create a point that Parse knows what the location is.
             ParseGeoPoint point = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
             //Replicating the below code:
