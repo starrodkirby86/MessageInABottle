@@ -1,9 +1,8 @@
-package com.yarmatey.messageinabottle;
+package com.yarmatey.messageinabottle.login;
 
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.EditText;
 
 public class UserLocalStore {
 

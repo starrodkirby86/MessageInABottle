@@ -1,4 +1,4 @@
-package com.yarmatey.messageinabottle;
+package com.yarmatey.messageinabottle.message;
 
 import android.content.IntentSender;
 import android.location.Location;
@@ -20,13 +20,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.bottles.AvailableBottle;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 public class MessageActivity extends AppCompatActivity
@@ -43,12 +42,6 @@ public class MessageActivity extends AppCompatActivity
     private LocationRequest mLocationRequest;
 
     /** CLASS CONSTANTS **/
-    //Constant for range of pickup
-    public static final double RANGE = .001;
-
-    //Constant for checking minimum accuracy to check for bottles
-    public static final double MIN_ACCURACY = 20;
-
     private String TAG = this.getClass().getSimpleName();
     //private final int PERMISSION_LOCATION = 1;
 
@@ -107,12 +100,10 @@ public class MessageActivity extends AppCompatActivity
             //grab EditText that contains user message
             EditText textView = (EditText) findViewById(R.id.message_edit);
             if (textView.getText().toString().trim().length() > 0) { //if contains characters, and not just whitespace
-                ParseObject bottle = new ParseObject("bottle");
                 ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
-                bottle.put("location", point);
-                bottle.put("message", textView.getText().toString());
-                bottle.put("type", 0);
-                bottle.saveInBackground();
+                AvailableBottle newBottle = new AvailableBottle();
+                newBottle.setAll(point, textView.getText().toString(), 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>());
+                newBottle.saveInBackground();
             } else //No message inserted
                 Toast.makeText(this, "Enter a Message!", Toast.LENGTH_SHORT).show();
         }
@@ -146,50 +137,7 @@ public class MessageActivity extends AppCompatActivity
     public void onLocationChanged(Location location) {
         if(location != null) {
             Log.i("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude()); //print location in log
-            //Move map to new location [IS THIS NECESSARY], might be taxing on battery
-//            cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-//            map.animateCamera(cameraUpdate);
-//            //update location
             currentLocation = location;
-
-            //Create a point that Parse knows what the location is.
-            ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(),currentLocation.getLongitude());
-            final ParseObject foundBottle = new ParseObject("bottle");
-            foundBottle.put("message","Create a Message!");
-            //Replicating the below code:
-            //ParseGeoPoint userLocation = (ParseGeoPoint) foundBottle.get("location");
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("bottle");
-            query.whereNear("location", point);
-            //Retrieve 1 Bottle. Do not proceed unto 2.
-            query.setLimit(1);
-            query.whereWithinKilometers("location", point, RANGE);
-            //Now to run the query:
-            //NOTE: BELOW IS A SEPARATE THREAD
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> localBottle, ParseException e) {
-                    if (e == null && !localBottle.isEmpty()) {
-                        Log.d("location", "Retrieved Lat: " + localBottle.get(0).getParseGeoPoint("location").getLatitude() + ", Lon: " + localBottle.get(0).getParseGeoPoint("location").getLongitude());
-                        foundBottle.put("location", localBottle.get(0).getParseGeoPoint("location"));
-                        foundBottle.put("message", localBottle.get(0).getString("message"));
-                        foundBottle.put("type", localBottle.get(0).getInt("type"));
-                        try {
-                            ParseObject.pinAll(localBottle);
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
-                        }
-                        //message.setText(foundBottle.getString("message"));
-                        //Toast.makeText(getContext(), foundBottle.getString("message"), Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (e == null) {
-                            Log.d("location", "No Bottles!");
-                        } else {
-                            Log.d("location", "Error: " + e.getMessage());
-                        }
-                    }
-                }
-            });
-
         }
     }
 

@@ -1,8 +1,10 @@
-package com.yarmatey.messageinabottle;
+package com.yarmatey.messageinabottle.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +14,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.parse.LogInCallback;
+import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.inventory.Inventory;
 
 
 /**
@@ -45,7 +50,7 @@ public class LogInActivityFragment extends Fragment {
         final TextView anon = (TextView) view.findViewById(R.id.anon_log_in);
         final EditText username = (EditText) view.findViewById(R.id.etUsername);
         final EditText password = (EditText) view.findViewById(R.id.etPassword);
-        CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
+        final TextView logout = (TextView) view.findViewById(R.id.log_out);
         userLocalStore = new UserLocalStore(getContext()); //use this instead of class
 
 
@@ -63,8 +68,15 @@ public class LogInActivityFragment extends Fragment {
             }
         });
 
-
-
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ParseUser.getCurrentUser() != null) {
+                    Snackbar.make(v, "Logging out of: " + ParseUser.getCurrentUser().getUsername(), Snackbar.LENGTH_SHORT).show();
+                    ParseUser.logOut();
+                }
+            }
+        });
 
         return view;
     }
@@ -118,54 +130,54 @@ public class LogInActivityFragment extends Fragment {
 
         //OnClickListener
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             final Intent intent = new Intent(getActivity(), Inventory.class);//Intent to launch to MessageActivity
 //            Intent intent2 = new Intent(getActivity(), RegisterActivity.class);
             CheckBox checkBox = (CheckBox) getActivity().findViewById(R.id.checkBox);
 
-            if(authenticate() == true) {
+            if(authenticate()) {
                 displayUserDetails();
             }
 
             //Log In button pressed
             if (v.getId() == R.id.bLogin) {
                 //parse log in info
-                ParseUser.logInInBackground(username.toString(), password.toString(), new LogInCallback() {
+                ParseUser.logInInBackground(username.getText().toString(), password.getText().toString(), new LogInCallback() {
                     @Override
                     public void done(ParseUser parseUser, ParseException e) {
-                        ParseUser user = new ParseUser();
-                        if(user != null) {
+                        if(parseUser != null) {
                             startActivity(intent);
                         }
                         else { //signup failed. look at parseExceptioin to see what happened
-
+                            Snackbar.make(v,"Invalid username or password, try again!", Snackbar.LENGTH_SHORT).show();
                         }
-
                     }
                 });
 
 
-                if(checkBox.isChecked() == true) {
+                if(checkBox.isChecked()) {
                     User user = new User(username, password);
                     userLocalStore.storeUserData(user);
                     userLocalStore.setUserLoggedIn(true);
                     displayUserDetails();
                 }
-//                if(v.getId() == R.id.checkBox) {
-//                    User user = new User(username, password);
-//                    UserLocalStore.storeUserData(user);
-//                    UserLocalStore.setUserLoggedIn(true);
-//                }
-
-                startActivity(intent);
 
             }
+            else if (v.getId() == R.id.anon_log_in) {
+                ParseAnonymousUtils.logIn(new LogInCallback() {
+                    @Override
+                    public void done(ParseUser user, ParseException e) {
+                        if (e == null) {
+                            Log.d("Message In A Bottle", "LOG IN STATUS: Anonymous login succeed!");
+                            startActivity(intent);
+                        }
+                        else {
+                            Log.d("Message In A Bottle", "LOG IN STATUS: Anonymous Login Failed!");
+                        }
+                    }
+                });
+            }
 
-//            if(v.getId() == R.id.register) {
-//                startActivity(intent2);
-//            }
-
-            startActivity(intent); //launch to next activity
         }
     }
 }

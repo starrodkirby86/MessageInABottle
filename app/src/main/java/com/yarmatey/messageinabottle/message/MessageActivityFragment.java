@@ -1,4 +1,4 @@
-package com.yarmatey.messageinabottle;
+package com.yarmatey.messageinabottle.message;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.yarmatey.messageinabottle.R;
 
 /**
  * A placeholder fragment containing a simple view.

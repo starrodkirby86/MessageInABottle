@@ -1,9 +1,11 @@
-package com.yarmatey.messageinabottle;
+package com.yarmatey.messageinabottle.login;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.yarmatey.messageinabottle.R;
 
 
 public class LogInActivity extends AppCompatActivity {

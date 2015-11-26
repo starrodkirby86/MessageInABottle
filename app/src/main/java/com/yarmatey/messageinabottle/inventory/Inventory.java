@@ -1,10 +1,11 @@
-package com.yarmatey.messageinabottle;
+package com.yarmatey.messageinabottle.inventory;
 
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -30,8 +30,11 @@ import com.google.android.gms.location.LocationServices;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.bottles.AvailableBottle;
+import com.yarmatey.messageinabottle.bottles.PickedUpBottle;
+import com.yarmatey.messageinabottle.message.MessageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,13 +52,19 @@ public class Inventory extends AppCompatActivity
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
+    //Constant for range of pickup
+    public static final double RANGE = .01;
+
+    //Constant for checking minimum accuracy to check for bottles
+    public static final double MIN_ACCURACY = 20;
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private ArrayList<ParseObject> bottleList;
+    private ArrayList<PickedUpBottle> pickedUpBottleList;
     private DriftingBottlesFragment driftingBottlesFragment;
 
 
@@ -78,7 +87,7 @@ public class Inventory extends AppCompatActivity
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        bottleList = new ArrayList<>();
+        pickedUpBottleList = new ArrayList<>();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -169,42 +178,39 @@ public class Inventory extends AppCompatActivity
 
     }
 
+    /**
+     * Given the location is accurate enough, it will check with Parse to see if there is any
+     * nearby bottles. If so, it will pick up the bottle and move into local storage and into
+     * the picked-up bottle database, to preventing others from picking it up.
+     * @param location: current location of the device
+     * @author Jason Hernandez
+     */
     @Override
     public void onLocationChanged(Location location) {
-        if (location != null && location.getAccuracy() < LocationUpdater.MIN_ACCURACY && location.getAccuracy() != 0) {
+        if (location != null && location.getAccuracy() < MIN_ACCURACY && location.getAccuracy() != 0) {
             Log.i("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude()); //print location in log
             //Create a point that Parse knows what the location is.
             ParseGeoPoint point = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
-            //Replicating the below code:
-            //ParseGeoPoint userLocation = (ParseGeoPoint) foundBottle.get("location");
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("bottle");
-            query.whereNear("location", point);
-            //Retrieve 1 Bottle. Do not proceed unto 2.
-            query.setLimit(1);
-            query.whereWithinKilometers("location", point, LocationUpdater.RANGE);
+            ParseQuery<AvailableBottle> query = AvailableBottle.getQuery(point, RANGE);
             //Now to run the query:
-            final ParseObject foundBottle = new ParseObject("ghost");
-            query.findInBackground(new FindCallback<ParseObject>() {
+            query.findInBackground(new FindCallback<AvailableBottle>() {
                 @Override
-                public void done(List<ParseObject> localBottle, ParseException e) {
-                    if (e == null && !localBottle.isEmpty()) {
-                        Log.d("location", "Retrieved Lat: " + localBottle.get(0).getParseGeoPoint("location").getLatitude() + ", Lon: " + localBottle.get(0).getParseGeoPoint("location").getLongitude());
-                        ParseGeoPoint bottleLoc = localBottle.get(0).getParseGeoPoint("location");
-                        foundBottle.put("location", bottleLoc);
-                        String message = localBottle.get(0).getString("message");
-                        foundBottle.put("message", message);
-                        int type = localBottle.get(0).getInt("type");
-                        foundBottle.put("type", type);
-                        foundBottle.pinInBackground();
-                        foundBottle.saveInBackground();
-                        localBottle.get(0).deleteInBackground();
-                        //message.setText(foundBottle.getString("message"));
-                        Toast.makeText(getApplicationContext(), foundBottle.getString("message"), Toast.LENGTH_SHORT).show();
-                        if (!bottleList.contains(foundBottle.get("message").toString())) {
-                            bottleList.add(foundBottle);
-                            if (driftingBottlesFragment != null) {
-                                driftingBottlesFragment.addBottle(localBottle.get(0));
-                            }
+                public void done(List<AvailableBottle> nearestBottle, ParseException e) {
+                    if (e == null && !nearestBottle.isEmpty()) {
+                        Log.d("location", "Retrieved Lat: " + nearestBottle.get(0).getParseGeoPoint(AvailableBottle.LOCATION).getLatitude()
+                                + ", Lon: " + nearestBottle.get(0).getParseGeoPoint(AvailableBottle.LOCATION).getLongitude());
+                        PickedUpBottle pickedUpBottle = new PickedUpBottle();
+                        pickedUpBottle.setAll(nearestBottle.get(0));
+                        try {
+                            pickedUpBottle.pin();
+                            pickedUpBottle.save();
+                            nearestBottle.get(0).delete();
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                        Snackbar.make(mViewPager, pickedUpBottle.getString(AvailableBottle.MESSAGE), Snackbar.LENGTH_SHORT).show();
+                        if (driftingBottlesFragment != null) {
+                            driftingBottlesFragment.addBottle();
                         }
                     } else {
                         if (e == null) {
@@ -215,18 +221,9 @@ public class Inventory extends AppCompatActivity
                     }
                 }
             });
-//            if (foundBottle.get("message") != null && !bottleList.contains(foundBottle.get("message").toString())) {
-//                bottleList.add(foundBottle.get("message").toString());
-//                if (driftingBottlesFragment != null) {
-//                    driftingBottlesFragment.addBottle(foundBottle.get("message").toString());
-//                }
-//            }
         }
     }
 
-    public ArrayList<ParseObject> getBottleList() {
-        return bottleList;
-    }
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -243,7 +240,7 @@ public class Inventory extends AppCompatActivity
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-                     driftingBottlesFragment= DriftingBottlesFragment.newInstance(bottleList);
+                     driftingBottlesFragment= DriftingBottlesFragment.newInstance();
                     return driftingBottlesFragment;
                 case 1:
                     return StaticBottlesFragment.newInstance("Foo", "bar");
@@ -306,31 +303,6 @@ public class Inventory extends AppCompatActivity
             View rootView = inflater.inflate(R.layout.fragment_inventory, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-
-
-            //Notification [DEBUG ONLY]
-
-//            //Create an explicit intent to go to Inventory
-//            Intent resultIntent = new Intent(getContext(), Inventory.class);
-//            PendingIntent contentIntent = PendingIntent.getActivity(getContext(),
-//                    0, resultIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//            NotificationManager nm  = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//            Notification mBuilder =
-//                    new NotificationCompat.Builder(getContext())
-//                    .setContentIntent(contentIntent)
-//                    .setSmallIcon(R.drawable.pirate_hat)
-//                    .setWhen(System.currentTimeMillis())
-//                    .setAutoCancel(true)
-//                    .setContentTitle("Ye found me booty!")
-//                    .setContentText("Check ye booty to see")
-//                    .build();
-//            nm.notify(0, mBuilder);
-
-
-
-
             return rootView;
         }
     }
