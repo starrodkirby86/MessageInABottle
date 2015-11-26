@@ -204,7 +204,7 @@ public class Inventory extends AppCompatActivity
                         try {
                             pickedUpBottle.pin();
                             pickedUpBottle.save();
-                            nearestBottle.get(0).delete();
+                            AvailableBottle.deleteAll(nearestBottle);
                         } catch (ParseException e1) {
                             e1.printStackTrace();
                         }

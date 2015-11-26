@@ -96,7 +96,13 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                                 newBottle.setLastUser(ParseUser.getCurrentUser());
                                 newBottle.setPoint(point);
                                 newBottle.saveInBackground();
-                                pickedUpBottle.deleteInBackground();
+                                try {
+                                    pickedUpBottle.delete();
+                                    driftingBottlesAdapter.notifyItemRemoved(vh.getAdapterPosition());
+                                    parseAdapter.loadObjects();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

@@ -21,6 +21,7 @@ public class MessageInABottle extends Application {
         //ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();
         defaultACL.setPublicReadAccess(true);
+        defaultACL.setPublicWriteAccess(true);
         ParseACL.setDefaultACL(defaultACL, true);
         ParseObject.registerSubclass(PickedUpBottle.class);
         ParseObject.registerSubclass(AvailableBottle.class);
