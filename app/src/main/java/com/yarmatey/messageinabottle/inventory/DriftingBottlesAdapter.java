@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
@@ -55,10 +54,13 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                 TextView titleText = (TextView) v.findViewById(R.id.card_title);
                 TextView description = (TextView) v.findViewById(R.id.card_message);
                 String title;
-                if (!ParseAnonymousUtils.isLinked(object.getLastUser()))
-                    title ="A message from " + object.getLastUser().getUsername();
-                else
-                    title = "A message from a pirate.";
+                try {
+                    //TODO make this cleaner
+                    title = "A message from " + object.getLastUser().fetchIfNeeded().getUsername();
+                } catch (ParseException e) {
+                    title = "A message from a pirate";
+                    e.printStackTrace();
+                }
                 titleText.setText(title);
                 description.setText(object.getMessage());
                 return v;
