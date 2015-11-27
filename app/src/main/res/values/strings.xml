@@ -88,6 +88,10 @@
 
     <string name="socialLink">Social Media Link</string>
         <string name="socialLink_description">Opens up a new screen to link social media and Message In A Bottle accounts</string>
+
+    <string name="logout">Log Out</string>
+        <string name="logout_button"></string>
+        <string name="logout_description">Log out of this device</string>
     <!-- Example General settings -->
 
 
