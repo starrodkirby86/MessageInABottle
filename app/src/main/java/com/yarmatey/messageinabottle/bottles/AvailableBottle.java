@@ -36,10 +36,16 @@ public class AvailableBottle extends ParseObject {
         return query;
     }
 
+    public static ParseQuery<AvailableBottle> getAuthorQuery(ParseUser author) {
+        ParseQuery<AvailableBottle> query = ParseQuery.getQuery(AvailableBottle.class);
+        query.whereEqualTo(AUTHOR, author);
+        return query;
+    }
+
     public ParseGeoPoint getPoint() {return getParseGeoPoint(LOCATION);}
     public String getMessage(){return getString(MESSAGE);}
     public int getBottleType(){return getInt(TYPE);}
-    public ParseUser getUser(){return getParseUser(LAST_USER);}
+    public ParseUser getLastUser(){return getParseUser(LAST_USER);}
     public List<String> getComments() {return getList(COMMENTS);}
     public ParseUser getAuthor() {return getParseUser(AUTHOR);}
 

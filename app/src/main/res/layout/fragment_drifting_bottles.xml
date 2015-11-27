@@ -6,7 +6,8 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/drifting_title_bar">
+        android:id="@+id/drifting_title_bar"
+        android:background="@color/colorAccent">
 
         <ImageView
             android:layout_width="50dp"
@@ -19,13 +20,13 @@
             android:src="@drawable/pirate_hat"
             android:contentDescription="@string/drifting_title" />
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop ="13dp"
             android:id="@+id/drifting_label"
             android:text="@string/drifting_title"
-            android:textSize="25sp"/>
+            android:textSize="25sp"
+            android:textColor="@color/colorPrimaryDark"/>
 
     </LinearLayout>
 

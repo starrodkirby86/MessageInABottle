@@ -15,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.bottles.DriftingBottlesAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,11 +56,16 @@ public class DriftingBottlesFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_drifting_bottles, container, false);
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.pirate_booty);
-        mRecyclerView.setHasFixedSize(false);
+
+        TextView label = (TextView) v.findViewById(R.id.drifting_label);
+        label.setText("Here be ye loot, " + ParseUser.getCurrentUser().getUsername());
+
         //TODO Implement empty screen
         emptyMessage = (TextView) v.findViewById(R.id.empty_message);
         emptyMessage.setVisibility(View.GONE);
+
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.pirate_booty);
+        mRecyclerView.setHasFixedSize(false);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new DriftingBottlesAdapter(getContext(), container);

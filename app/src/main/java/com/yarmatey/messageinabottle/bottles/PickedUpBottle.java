@@ -59,7 +59,7 @@ public class PickedUpBottle extends ParseObject {
         setPoint(newObject.getPoint());
         setMessage(newObject.getMessage());
         setBottleType(newObject.getBottleType());
-        setLastUser(newObject.getUser());
+        setLastUser(newObject.getLastUser());
         setComments(newObject.getComments());
     }
 }

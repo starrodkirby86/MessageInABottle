@@ -32,8 +32,6 @@ public class LogInActivityFragment extends Fragment {
      */
     private String LOG_TAG = LogInActivityFragment.class.getSimpleName(); //Log tag for ADB
 
-    private UserLocalStore userLocalStore;
-
     public LogInActivityFragment() {
 
     }
@@ -51,7 +49,6 @@ public class LogInActivityFragment extends Fragment {
         final EditText username = (EditText) view.findViewById(R.id.etUsername);
         final EditText password = (EditText) view.findViewById(R.id.etPassword);
         final TextView logout = (TextView) view.findViewById(R.id.log_out);
-        userLocalStore = new UserLocalStore(getContext()); //use this instead of class
 
 
         //anonymous log in click
@@ -81,25 +78,11 @@ public class LogInActivityFragment extends Fragment {
         return view;
     }
 
-
-
-//    private void displayUserDetails() {
-//        User user = UserLocalStore.getUserLoggedIn();
-//        username.setText();
-//    }
-
     public class logInClick implements View.OnClickListener { //when user clicks
         /*
             This class parses the username and password from the login activity
             sets on click listener to set for when log in button is pressed
          */
-        //TODO Login with Facebook?
-        //stores usernames
-        //TODO add persistance for auto-login
-  //      private EditText username;
-        //stores password
-   //     private EditText password;
-
         EditText username; //changed
         EditText password;
 
@@ -115,11 +98,6 @@ public class LogInActivityFragment extends Fragment {
             this.username = null;
             this.password = null;
         }
-
-        private boolean authenticate() {
-
-            return  userLocalStore.getUserLoggedIn();
-        }
         private void displayUserDetails() {
             //User user = userLocalStore.getLoggedInUser();
             ParseUser user = ParseUser.getCurrentUser();
@@ -134,10 +112,6 @@ public class LogInActivityFragment extends Fragment {
             final Intent intent = new Intent(getActivity(), Inventory.class);//Intent to launch to MessageActivity
 //            Intent intent2 = new Intent(getActivity(), RegisterActivity.class);
             CheckBox checkBox = (CheckBox) getActivity().findViewById(R.id.checkBox);
-
-            if(authenticate()) {
-                displayUserDetails();
-            }
 
             //Log In button pressed
             if (v.getId() == R.id.bLogin) {
@@ -156,10 +130,7 @@ public class LogInActivityFragment extends Fragment {
 
 
                 if(checkBox.isChecked()) {
-                    User user = new User(username, password);
-                    userLocalStore.storeUserData(user);
-                    userLocalStore.setUserLoggedIn(true);
-                    displayUserDetails();
+                    //TODO add remember me option
                 }
 
             }

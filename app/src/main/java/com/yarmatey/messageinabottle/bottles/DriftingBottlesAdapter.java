@@ -1,4 +1,4 @@
-package com.yarmatey.messageinabottle.inventory;
+package com.yarmatey.messageinabottle.bottles;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -16,8 +16,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
-import com.yarmatey.messageinabottle.bottles.AvailableBottle;
-import com.yarmatey.messageinabottle.bottles.PickedUpBottle;
 
 import java.util.List;
 
@@ -48,7 +46,7 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
             @Override
             public View getItemView(PickedUpBottle object, View v, ViewGroup parent) {
                 if (v == null) {
-                    v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item, parent, false);
+                    v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_drifting_item, parent, false);
                 }
                 super.getItemView(object, v, parent);
                 TextView titleText = (TextView) v.findViewById(R.id.card_title);
@@ -76,7 +74,7 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
     public DriftingBottlesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
         v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recyclerview_item, parent, false);
+                .inflate(R.layout.recyclerview_drifting_item, parent, false);
         final ViewHolder vh = new ViewHolder(v);
         ImageView delete = (ImageView) v.findViewById(R.id.delete);
         ImageView edit = (ImageView) v.findViewById(R.id.edit);

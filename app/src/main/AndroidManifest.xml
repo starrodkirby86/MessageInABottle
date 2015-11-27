@@ -18,18 +18,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!--
-     To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
-     option is required to comply with the Google+ Sign-In developer policies
-    -->
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" /> <!-- To retrieve the account name (email) as part of sign-in: -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- END PERMISSIONS ! -->
     <application
         android:name=".MessageInABottle"
         android:allowBackup="true"
-        android:icon="@drawable/pirate_hat_color"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <meta-data
@@ -42,13 +34,18 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name=".login.LogInActivity"
-            android:label="@string/app_name" >
+            android:name=".SplashScreen"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".login.LogInActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".message.MessageActivity"
@@ -61,7 +58,7 @@
         </activity>
         <activity
             android:name=".inventory.Inventory"
-            android:label="@string/title_activity_inventory"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity

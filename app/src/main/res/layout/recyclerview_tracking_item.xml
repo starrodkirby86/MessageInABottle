@@ -6,13 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     card_view:cardCornerRadius="4dp"
-    android:layout_margin="5dp"
-    card_view:cardBackgroundColor="@color/colorPrimaryDark">
+    android:layout_margin="5dp">
 
     <RelativeLayout
         android:id="@+id/cardBackground"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
 
         <TextView
             android:id="@+id/card_title"
@@ -21,7 +21,8 @@
             android:text="Title"
             android:gravity="center_vertical"
             android:textColor="@android:color/white"
-            android:textSize="30dp"/>
+            android:textSize="20dp"
+            android:background="@color/colorAccent"/>
 
         <TextView
             android:id="@+id/card_message"
@@ -30,7 +31,7 @@
             android:text="Content"
             android:gravity="center_vertical"
             android:textColor="@android:color/white"
-            android:textSize="25dp"
+            android:textSize="16sp"
             android:layout_below="@+id/card_title"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="5dp"/>
@@ -52,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:layout_alignParentBottom="true"
-            android:src="@drawable/quill"
+            android:src="@drawable/floating_bottle"
             android:contentDescription="edit" />
 
     </RelativeLayout>
