@@ -4,7 +4,8 @@
         <ImageView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:src="@drawable/log_in_screen"
+            android:background="@drawable/log_in"
+            android:src="@drawable/log_in"
             android:scaleType="centerCrop"
             android:contentDescription="Ocean Background"/>
 
@@ -14,55 +15,38 @@
             android:text="Log In"
             android:id="@+id/bLogin"
             android:layout_gravity="center_horizontal|bottom"
+            android:clickable="true"
             android:layout_below="@+id/checkBox"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="16dp"
-            android:clickable="true" />
+            android:textColor="#000000"
+            android:textStyle="bold"
+            />
 
     <EditText
         android:inputType="text"
-        android:layout_width="match_parent"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:id="@+id/etUsername"
-        android:layout_below="@+id/username_text" />
+        android:layout_marginTop="106dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp" />
 
     <EditText
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/etPassword"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/password_text"
-        android:layout_alignParentLeft="true" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:id="@+id/password_text"
-        android:gravity="center_horizontal"
-        android:linksClickable="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
         android:layout_below="@+id/etUsername"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Username"
-        android:id="@+id/username_text"
-        android:gravity="center_horizontal"
-        android:linksClickable="false"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="181dp" />
+        android:layout_marginTop="65dp"
+        android:layout_alignRight="@+id/etUsername"
+        android:layout_alignEnd="@+id/etUsername"
+        android:layout_alignLeft="@+id/etUsername"
+        android:layout_alignStart="@+id/etUsername" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -76,24 +60,51 @@
         android:allowUndo="true" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Anonymous Log In"
         android:id="@+id/anon_log_in"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:clickable="true" />
+        android:clickable="true"
+        android:layout_below="@+id/register_here"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp"
+        android:textStyle="bold"/>
 
-    <Button
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
-        android:id="@+id/register"
-        android:layout_gravity="center_horizontal|bottom"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Not a member? Sign up here!"
+        android:id="@+id/register_here"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:clickable="true"
         android:layout_below="@+id/bLogin"
-        android:layout_alignRight="@+id/anon_log_in"
-        android:layout_alignEnd="@+id/anon_log_in" />
+        android:textStyle="bold|italic"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Password:"
+        android:id="@+id/textView"
+        android:layout_alignTop="@+id/etUsername"
+        android:layout_alignLeft="@+id/etUsername"
+        android:layout_alignStart="@+id/etUsername"
+        android:layout_marginTop="80dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Username:"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/etUsername"
+        android:layout_alignLeft="@+id/etPassword"
+        android:layout_alignStart="@+id/etPassword"
+        android:layout_marginTop="-70dp"/>
 
 </RelativeLayout>

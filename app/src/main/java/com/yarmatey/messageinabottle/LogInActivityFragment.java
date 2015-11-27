@@ -41,7 +41,8 @@ public class LogInActivityFragment extends Fragment {
 
         //Load in objects needed to log in
         final Button button = (Button) view.findViewById(R.id.bLogin);
-        final Button button2 = (Button) view.findViewById(R.id.register);
+    //    final Button button2 = (Button) view.findViewById(R.id.register);
+        final TextView register = (TextView) view.findViewById(R.id.register_here);
         final TextView anon = (TextView) view.findViewById(R.id.anon_log_in);
         final EditText username = (EditText) view.findViewById(R.id.etUsername);
         final EditText password = (EditText) view.findViewById(R.id.etPassword);
@@ -56,7 +57,7 @@ public class LogInActivityFragment extends Fragment {
         button.setOnClickListener(new logInClick(username, password));
 
 
-        button2.setOnClickListener(new View.OnClickListener() {
+        register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), RegisterActivity.class));
