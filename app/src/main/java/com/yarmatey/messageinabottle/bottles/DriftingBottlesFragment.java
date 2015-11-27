@@ -1,4 +1,4 @@
-package com.yarmatey.messageinabottle.inventory;
+package com.yarmatey.messageinabottle.bottles;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
-import com.yarmatey.messageinabottle.bottles.DriftingBottlesAdapter;
+import com.yarmatey.messageinabottle.inventory.Inventory;
 
 /**
  * A simple {@link Fragment} subclass.

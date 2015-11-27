@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yarmatey.messageinabottle.inventory.DriftingBottlesFragment"
+    tools:context="com.yarmatey.messageinabottle.bottles.DriftingBottlesFragment"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="fill_parent"
@@ -37,7 +37,7 @@
         android:layout_height="fill_parent"
         android:textSize="24sp"
         android:gravity="center_horizontal"
-        android:text="Nothin' seems to be here, yah scruvy dog!"/>
+        android:text="Nothin' seems to be here, yah scurvy dog!"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

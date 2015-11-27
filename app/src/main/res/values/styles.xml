@@ -5,7 +5,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- Supposedly the below solution should fix the problem with the Preference Subscreen,
+               But I have been unable to get it to work to say the least. Uploading what I have,
+               and going to move onto servicing the actual preferences themselves rather than
+               fighting with the damn eyecandy.
+        <item name="android:actionBarStyle">@style/MyActionBar</item>-->
     </style>
+
+    <!--
+    <style name="MyActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
+    </style>
+    -->
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

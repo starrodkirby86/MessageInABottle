@@ -1,5 +1,6 @@
 package com.yarmatey.messageinabottle.message;
 
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.MapView;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.SettingsActivity;
 import com.yarmatey.messageinabottle.bottles.AvailableBottle;
 
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class MessageActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-        // Connect the client.
+        // Connect texi client.
         mGoogleApiClient.connect();
     }
 
@@ -94,6 +96,11 @@ public class MessageActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            //Launch the Settings Activity
+            Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+            startActivity(intent);
+
             return true;
         }
         if (id == R.id.drop_bottle) {

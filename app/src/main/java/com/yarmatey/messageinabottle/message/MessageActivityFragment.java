@@ -1,7 +1,9 @@
 package com.yarmatey.messageinabottle.message;
 
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -149,6 +151,14 @@ public class MessageActivityFragment extends Fragment {
 
     public void mapDialog(View v, Bundle savedInstanceState) {
 
+        //Retrieve the preferences from this fragment's context.
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+        //Pull the map_switch and return false if this value does not exist (the default value)
+        boolean mapsVal = preferences.getBoolean("map_switch", false);
+
+        if(mapsVal){
+            Toast.makeText(getContext(), "Maps Works!", Toast.LENGTH_SHORT).show();
+        }
         //Find mapView in layout and create the view
         //see onCreate below
         //mapView = (MapView) v.findViewById(R.id.mapview);

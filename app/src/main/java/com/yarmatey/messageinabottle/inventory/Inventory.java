@@ -2,8 +2,10 @@ package com.yarmatey.messageinabottle.inventory;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -32,25 +34,16 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.SettingsActivity;
 import com.yarmatey.messageinabottle.bottles.AvailableBottle;
+import com.yarmatey.messageinabottle.bottles.DriftingBottlesFragment;
 import com.yarmatey.messageinabottle.bottles.PickedUpBottle;
 import com.yarmatey.messageinabottle.message.MessageActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     //Constant for range of pickup
     public static final double RANGE = .01;
@@ -63,31 +56,48 @@ public class Inventory extends AppCompatActivity
      */
     private ViewPager mViewPager;
     private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
-    private ArrayList<PickedUpBottle> pickedUpBottleList;
     private DriftingBottlesFragment driftingBottlesFragment;
 
 
     private String TAG = this.getClass().getSimpleName();
+
+
+    //Declaring preferences, interval here to be accessed elsewhere in the class (as in in the listener)
+    public SharedPreferences preferences;
+    public Integer interval;
+
+    //Declaring SharedPreferencesListener here to be constantly available.
+    public SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals("pickupFreq_list")) {
+                //If the the pickupFrequency Interval has changed, we set it to the new value.
+                interval=Integer.parseInt(preferences.getString("pickupFreq_list", "600"))*100;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inventory);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        /*
+      The {@link android.support.v4.view.PagerAdapter} that will provide
+      fragments for each of the sections. We use a
+      {@link FragmentPagerAdapter} derivative, which will keep every
+      loaded fragment in memory. If this becomes too memory intensive, it
+      may be best to switch to a
+      {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     */
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        pickedUpBottleList = new ArrayList<>();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -105,6 +115,9 @@ public class Inventory extends AppCompatActivity
             }
         });
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //To save shared preferences in an ongoing manner.
+        preferences.registerOnSharedPreferenceChangeListener(listener);
     }
 
 
@@ -122,8 +135,14 @@ public class Inventory extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        //Handle specific cases of id clicks.
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            //Launch the Settings Activity
+            Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+            startActivity(intent);
+
             return true;
         }
 
@@ -144,13 +163,21 @@ public class Inventory extends AppCompatActivity
         super.onStop();
     }
 
+
+
     @Override
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "Connected Status: Connected");
 
-        mLocationRequest = LocationRequest.create();
+        //We'll take the sharedPreferences from preferences (key = pickupFreq_list)
+        //We cannot store Integer arrays for whatever reason. So instead, we need to parse a String into an Integer
+        //We have 600 = 60 seconds, 60 = 6 seconds, 6 = .6 s.
+        interval=Integer.parseInt(preferences.getString("pickupFreq_list", "600"))*100;
+
+        //Change the static interval to the now public dynamic interval.
+        LocationRequest mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(5000);
+        mLocationRequest.setInterval(interval); //In milliseconds
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
 
@@ -183,7 +210,6 @@ public class Inventory extends AppCompatActivity
      * nearby bottles. If so, it will pick up the bottle and move into local storage and into
      * the picked-up bottle database, to preventing others from picking it up.
      * @param location: current location of the device
-     * @author Jason Hernandez
      */
     @Override
     public void onLocationChanged(Location location) {
