@@ -25,6 +25,15 @@ import java.util.List;
 
 public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottlesAdapter.ViewHolder> {
 
+    private static final String BEST_RATING = "Yar Har! + ";
+    private static final String GOOD_RATING = "Aye + ";
+    private static final String BAD_RATING = "Nay + ";
+    private static final String WORST_RATING = "Scurvy! + ";
+
+    private TextView yarhar;
+    private TextView aye;
+    private TextView nay;
+    private TextView scurvy;
     private ParseQueryAdapter<PickedUpBottle> parseAdapter;
 
     private ViewGroup parseParent;
@@ -71,46 +80,16 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
     }
 
     @Override
-    public DriftingBottlesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DriftingBottlesAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View v;
         v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyclerview_drifting_item, parent, false);
         final ViewHolder vh = new ViewHolder(v);
         ImageView delete = (ImageView) v.findViewById(R.id.delete);
-        ImageView edit = (ImageView) v.findViewById(R.id.edit);
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(v.getContext())
-                        .setTitle("Drop ye bottle?")
-                        .setMessage("Add your feelings to how this bottle be")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                PickedUpBottle pickedUpBottle = parseAdapter.getItem(vh.getAdapterPosition());
-                                ParseGeoPoint point = pickedUpBottle.getPoint(); //currentLocation.getLatitude(), currentLocation.getLongitude());
-                                AvailableBottle newBottle = new AvailableBottle();
-                                newBottle.setAll(pickedUpBottle);
-                                newBottle.setLastUser(ParseUser.getCurrentUser());
-                                newBottle.setPoint(point);
-                                newBottle.saveInBackground();
-                                try {
-                                    pickedUpBottle.delete();
-                                    driftingBottlesAdapter.notifyItemRemoved(vh.getAdapterPosition());
-                                    parseAdapter.loadObjects();
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        }).show();
-            }
-        });
+        yarhar = (TextView) v.findViewById(R.id.yar_har_rating);
+        aye = (TextView) v.findViewById(R.id.aye_rating);
+        nay = (TextView) v.findViewById(R.id.nay_rating);
+        scurvy = (TextView) v.findViewById(R.id.scurvy_rating);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,6 +104,17 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                 }
             }
         });
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showDropBottleDialog(v.getContext(), vh.getAdapterPosition());
+                return true;
+            }
+        });
+        yarhar.setOnClickListener(new RatingClick(vh));
+        aye.setOnClickListener(new RatingClick(vh));
+        nay.setOnClickListener(new RatingClick(vh));
+        scurvy.setOnClickListener(new RatingClick(vh));
         return vh;
     }
 
@@ -138,12 +128,99 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
         return parseAdapter.getCount();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
         protected View card;
 
         public ViewHolder(View v) {
             super(v);
             card = v;
+
+        }
+    }
+    private class RatingClick implements View.OnClickListener{
+
+        ViewHolder vh;
+        List<Integer> ratings;
+        int isRated;
+        public RatingClick(ViewHolder vh) {
+            this.vh = vh;
+        }
+        @Override
+        public void onClick(View v) {
+            PickedUpBottle bottle = parseAdapter.getItem(vh.getAdapterPosition());
+            if (ratings == null)
+                ratings = bottle.getRatings();
+            isRated = bottle.getRated();
+            if (isRated > 0) {
+                int newVal;
+                switch (isRated) {
+                    case 1:
+                        if (v.getId() == R.id.yar_har_rating)
+                            return;
+                        newVal = ratings.get(0) - 1;
+                        setText(yarhar, newVal, BEST_RATING);
+                        ratings.set(0,newVal);
+                        break;
+                    case 2:
+                        if (v.getId() == R.id.aye_rating)
+                            return;
+                        newVal = ratings.get(1) - 1;
+                        setText(aye, newVal, GOOD_RATING);
+                        ratings.set(1, newVal);
+                        break;
+                    case 3:
+                        if (v.getId() == R.id.nay_rating)
+                            return;
+                        newVal = ratings.get(2) - 1;
+                        setText(nay, newVal, BAD_RATING);
+                        ratings.set(2, newVal);
+                        break;
+                    case 4:
+                        if (v.getId() == R.id.scurvy_rating)
+                            return;
+                        newVal = ratings.get(3) - 1;
+                        setText(scurvy, newVal, WORST_RATING);
+                        ratings.set(3, newVal);
+                        break;
+                }
+            }
+            int rate;
+            String base;
+            switch (v.getId()) {
+                case R.id.yar_har_rating:
+                    rate = ratings.get(0) + 1;
+                    ratings.set(0, rate);
+                    base = BEST_RATING;
+                    bottle.setRated(1);
+                    break;
+                case R.id.aye_rating:
+                    rate = ratings.get(1) + 1;
+                    ratings.set(1, rate);
+                    base = GOOD_RATING;
+                    bottle.setRated(2);
+                    break;
+                case R.id.nay_rating:
+                    rate = ratings.get(2) + 1;
+                    ratings.set(2, rate);
+                    base = BAD_RATING;
+                    bottle.setRated(3);
+                    break;
+                case R.id.scurvy_rating:
+                    rate = ratings.get(3) + 1;
+                    ratings.set(3, rate);
+                    base = WORST_RATING;
+                    bottle.setRated(4);
+                    break;
+                default:
+                    return;
+            }
+            setText(v, rate, base);
+            bottle.setRatings(ratings);
+        }
+
+        private void setText(View v, int rating, String base) {
+            ((TextView) v).setText(base + rating);
         }
     }
 
@@ -164,9 +241,38 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
         //notifyItemInserted(this.getItemCount());
         parseAdapter.loadObjects();
         //driftingBottlesAdapter.notifyItemInserted(this.getItemCount());
-
     }
 
+    public void showDropBottleDialog(Context context, final int position) {
+        new AlertDialog.Builder(context)
+                .setTitle("Cast yer bottle?")
+                .setMessage("Are ye sure ye wish to cast yer bottle?")
+                .setPositiveButton("Aye!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PickedUpBottle pickedUpBottle = parseAdapter.getItem(position);
+                        ParseGeoPoint point = pickedUpBottle.getPoint(); //currentLocation.getLatitude(), currentLocation.getLongitude());
+                        AvailableBottle newBottle = new AvailableBottle();
+                        newBottle.setAll(pickedUpBottle);
+                        newBottle.setLastUser(ParseUser.getCurrentUser());
+                        newBottle.setPoint(point);
+                        newBottle.saveInBackground();
+                        try {
+                            pickedUpBottle.delete();
+                            driftingBottlesAdapter.notifyItemRemoved(position);
+                            parseAdapter.loadObjects();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                })
+                .setNegativeButton("Nay!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).show();
+    }
 
 
 

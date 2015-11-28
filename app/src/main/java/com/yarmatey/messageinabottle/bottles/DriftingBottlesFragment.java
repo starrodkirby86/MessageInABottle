@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
 import com.yarmatey.messageinabottle.inventory.Inventory;
@@ -58,7 +59,12 @@ public class DriftingBottlesFragment extends Fragment{
         View v =  inflater.inflate(R.layout.fragment_drifting_bottles, container, false);
 
         TextView label = (TextView) v.findViewById(R.id.drifting_label);
-        label.setText("Here be ye loot, " + ParseUser.getCurrentUser().getUsername());
+        String user;
+        if (!ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser()))
+            user = ParseUser.getCurrentUser().getUsername();
+        else
+            user = "matey!";
+        label.setText("Here be ye loot, " + user);
 
         //TODO Implement empty screen
         emptyMessage = (TextView) v.findViewById(R.id.empty_message);
@@ -115,4 +121,6 @@ public class DriftingBottlesFragment extends Fragment{
                         .build();
         nm.notify(0, mBuilder);
     }
+
+
 }

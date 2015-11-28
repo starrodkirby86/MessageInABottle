@@ -109,7 +109,10 @@ public class MessageActivity extends AppCompatActivity
             if (textView.getText().toString().trim().length() > 0) { //if contains characters, and not just whitespace
                 ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
                 AvailableBottle newBottle = new AvailableBottle();
-                newBottle.setAll(point, textView.getText().toString(), 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>());
+                ArrayList<Integer> ratings = new ArrayList<>();
+                for(int i = 0; i < 4; i++)
+                    ratings.add(0);
+                newBottle.setAll(point, textView.getText().toString(), 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
                 newBottle.saveInBackground();
             } else //No message inserted
                 Toast.makeText(this, "Enter a Message!", Toast.LENGTH_SHORT).show();
