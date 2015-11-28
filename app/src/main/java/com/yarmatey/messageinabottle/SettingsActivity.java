@@ -20,6 +20,9 @@ import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.parse.ParseUser;
+import com.yarmatey.messageinabottle.login.LogInActivity;
+
 /**
  * @author Brennen Fagan
  * @params Saved Preferences if any exist.
@@ -404,6 +407,23 @@ public class SettingsActivity extends AppCompatPreferenceActivity
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("pickupFreq_list"));
             bindPreferenceSummaryToValue(findPreference("color_list"));
+
+            //Logout Implementation
+            Preference logoutButton = findPreference(getString(R.string.logout_button));
+            logoutButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+
+
+                    if (ParseUser.getCurrentUser() != null) {
+                        //Snackbar.make(getView(), "Logging out of: " + ParseUser.getCurrentUser().getUsername(), Snackbar.LENGTH_SHORT).show();
+                        ParseUser.logOut();
+                    }
+
+                    startActivity(new Intent(getActivity(), LogInActivity.class));
+                    return true;
+                }
+            });
         }
 
         @Override

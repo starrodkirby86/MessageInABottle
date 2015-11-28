@@ -37,6 +37,7 @@
             android:defaultValue="false"
             android:persistent="true"/>
 
+        <!--TODO: IMPLEMENT FILTERS -->
         <!-- Adult Language filter
                 True: Adult Language Allowed
                 False: Adult Language Blocked
@@ -54,11 +55,12 @@
         <Preference
             android:title="@string/filters"
             android:summary="@string/filters_description"
-            android:fragment="com.yarmatey.messageinabottle.LogInActivityFragment"
+            android:fragment="com.yarmatey.messageinabottle.login.LogInActivityFragment"
             />
 
     </PreferenceScreen>
 
+    <!--TODO: IMPLEMENT PIRATE TALK -->
     <SwitchPreference
         android:key="pirate_switch"
         android:title="@string/pirate"
@@ -66,6 +68,7 @@
         android:defaultValue="false"
         android:persistent="true" />
 
+    <!--TODO: IMPLEMENT COLOR SCHEMES-->
     <ListPreference
         android:key="color_list"
         android:title="@string/color"
@@ -76,8 +79,6 @@
         android:persistent="true"/>
 
 
-    <!-- May need to work on the below, they may not work well, if at all. May need to switch them to intents instead of fragments for example.
-    -->
     <Preference
         android:title='@string/userTutorial'
         android:summary="@string/userTutorial_description">
@@ -86,11 +87,17 @@
             android:data="https://github.com/adamhabib25/MessageInABottle/wiki/Tutorial" />
     </Preference>
 
+    <!-- TODO: IMPLEMENT SOCIAL LINKS
     <Preference
         android:title="@string/socialLink"
         android:summary="@string/socialLink_description"
-        android:fragment="com.yarmatey.messageinabottle.LogInActivityFragment"
-        />
+        android:fragment="com.yarmatey.messageinabottle.login.LogInActivityFragment"
+        />-->
 
+    <Preference
+        android:key="@string/logout_button"
+        android:title="@string/logout"
+        android:summary="@string/logout_description"
+        />
 
 </PreferenceScreen>
