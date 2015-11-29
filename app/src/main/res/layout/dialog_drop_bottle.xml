@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minHeight="1000dp"
+    android:minWidth="1000dp"
     android:gravity="center"
     android:padding="10dp"
     android:orientation="vertical"
@@ -12,36 +14,14 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rate yer found bottle!"
+        android:text="@string/cast_bottle_title"
         android:textSize="20dp" />
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/rating_group">
-
-        <!--<RadioButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/yar_har_rating"-->
-            <!--android:text="Yar Har!"/>-->
-        <!--<RadioButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/aye_rating"-->
-            <!--android:text="Aye"/>-->
-        <!--<RadioButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/nay_rating"-->
-            <!--android:text="Nay"/>-->
-        <!--<RadioButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/scurvy_rating"-->
-            <!--android:text="Scurvy"/>-->
-
-    </RadioGroup>
+        <com.google.android.gms.maps.MapView
+            android:id = "@+id/map_view_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"

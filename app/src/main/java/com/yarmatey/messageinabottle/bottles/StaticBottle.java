@@ -29,13 +29,6 @@ public class StaticBottle extends ParseObject {
         //Retrieve 1 PickedUpBottle. Do not proceed unto 2.
         query.setLimit(1);
         query.whereWithinKilometers(LOCATION, point, range);
-        query.whereNotEqualTo(LAST_USER, ParseUser.getCurrentUser());
-        return query;
-    }
-
-    public static ParseQuery<AvailableBottle> getAuthorQuery(ParseUser author) {
-        ParseQuery<AvailableBottle> query = ParseQuery.getQuery(AvailableBottle.class);
-        query.whereEqualTo(AUTHOR, author);
         return query;
     }
 

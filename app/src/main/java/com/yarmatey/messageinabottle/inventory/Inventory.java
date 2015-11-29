@@ -36,7 +36,6 @@ import com.parse.ParseQuery;
 import com.yarmatey.messageinabottle.R;
 import com.yarmatey.messageinabottle.SettingsActivity;
 import com.yarmatey.messageinabottle.bottles.AvailableBottle;
-import com.yarmatey.messageinabottle.bottles.DriftingBottlesFragment;
 import com.yarmatey.messageinabottle.bottles.PickedUpBottle;
 import com.yarmatey.messageinabottle.message.MessageActivity;
 
@@ -57,6 +56,7 @@ public class Inventory extends AppCompatActivity
     private ViewPager mViewPager;
     private GoogleApiClient mGoogleApiClient;
     private DriftingBottlesFragment driftingBottlesFragment;
+    public Location currentLocation;
 
 
     private String TAG = this.getClass().getSimpleName();
@@ -163,6 +163,9 @@ public class Inventory extends AppCompatActivity
         super.onStop();
     }
 
+    public Location getCurrentLocation() {
+        return currentLocation;
+    }
 
 
     @Override
@@ -215,9 +218,11 @@ public class Inventory extends AppCompatActivity
     public void onLocationChanged(Location location) {
         if (location != null && location.getAccuracy() < MIN_ACCURACY && location.getAccuracy() != 0) {
             Log.i("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude()); //print location in log
+            currentLocation = location;
             //Create a point that Parse knows what the location is.
             ParseGeoPoint point = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
             ParseQuery<AvailableBottle> query = AvailableBottle.getQuery(point, RANGE);
+
             //Now to run the query:
             query.findInBackground(new FindCallback<AvailableBottle>() {
                 @Override
@@ -269,7 +274,7 @@ public class Inventory extends AppCompatActivity
                      driftingBottlesFragment= DriftingBottlesFragment.newInstance();
                     return driftingBottlesFragment;
                 case 1:
-                    return StaticBottlesFragment.newInstance("Foo", "bar");
+                    return StaticBottlesFragment.newInstance(mGoogleApiClient);
                 case 2:
                     return PlaceholderFragment.newInstance(2);
                 default:

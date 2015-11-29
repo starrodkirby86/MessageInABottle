@@ -1,4 +1,4 @@
-package com.yarmatey.messageinabottle.bottles;
+package com.yarmatey.messageinabottle.inventory;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
-import com.yarmatey.messageinabottle.inventory.Inventory;
+import com.yarmatey.messageinabottle.bottles.DriftingBottlesAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +28,6 @@ import com.yarmatey.messageinabottle.inventory.Inventory;
  */
 public class DriftingBottlesFragment extends Fragment{
 
-    // TODO: Rename and change types of parameters
     private RecyclerView mRecyclerView;
     public DriftingBottlesAdapter mAdapter;
     private TextView emptyMessage;

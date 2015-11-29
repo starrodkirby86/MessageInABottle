@@ -32,10 +32,7 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
     private static final String BAD_RATING = "Nay + ";
     private static final String WORST_RATING = "Scurvy! + ";
 
-    private TextView yarhar;
-    private TextView aye;
-    private TextView nay;
-    private TextView scurvy;
+
     private ParseQueryAdapter<PickedUpBottle> parseAdapter;
 
     private ViewGroup parseParent;
@@ -86,6 +83,11 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                 }
                 titleText.setText(title);
                 description.setText(object.getMessage());
+                List<Integer> ratings = object.getRatings();
+                ((TextView) v.findViewById(R.id.yar_har_rating)).setText(BEST_RATING + ratings.get(0));
+                ((TextView) v.findViewById(R.id.aye_rating)).setText(GOOD_RATING + ratings.get(1));
+                ((TextView) v.findViewById(R.id.nay_rating)).setText(BAD_RATING + ratings.get(2));
+                ((TextView) v.findViewById(R.id.scurvy_rating)).setText(WORST_RATING + ratings.get(3));
                 return v;
             }
         };
@@ -105,26 +107,30 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                 .inflate(R.layout.recyclerview_drifting_item, parent, false);
         final ViewHolder vh = new ViewHolder(v);
         ImageView delete = (ImageView) v.findViewById(R.id.delete);
-        yarhar = (TextView) v.findViewById(R.id.yar_har_rating);
-        aye = (TextView) v.findViewById(R.id.aye_rating);
-        nay = (TextView) v.findViewById(R.id.nay_rating);
-        scurvy = (TextView) v.findViewById(R.id.scurvy_rating);
+        TextView [] rateHolders = new TextView[4];
+        rateHolders[0] = (TextView) v.findViewById(R.id.yar_har_rating);
+        rateHolders[1] = (TextView) v.findViewById(R.id.aye_rating);
+        rateHolders[2] = (TextView) v.findViewById(R.id.nay_rating);
+        rateHolders[3] = (TextView) v.findViewById(R.id.scurvy_rating);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(discardWarn)
+                if (discardWarn)
                     new AlertDialog.Builder(parent.getContext())
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setTitle("Warning: Discard?")
                             .setMessage("Are you sure you want to discard this bottle?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                            {
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //Proceed
                                     try {
-                                        parseAdapter.getItem(vh.getAdapterPosition()).unpin();
-                                        parseAdapter.getItem(vh.getAdapterPosition()).delete();
+                                        PickedUpBottle oldBottle = parseAdapter.getItem(vh.getAdapterPosition());
+                                        AvailableBottle newBottle = new AvailableBottle();
+                                        newBottle.setAll(oldBottle);
+                                        newBottle.saveEventually();
+                                        oldBottle.unpin();
+                                        oldBottle.delete();
                                         driftingBottlesAdapter.notifyItemRemoved(vh.getAdapterPosition());
                                         parseAdapter.loadObjects();
 
@@ -156,10 +162,10 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                 return true;
             }
         });
-        yarhar.setOnClickListener(new RatingClick(vh));
-        aye.setOnClickListener(new RatingClick(vh));
-        nay.setOnClickListener(new RatingClick(vh));
-        scurvy.setOnClickListener(new RatingClick(vh));
+        rateHolders[0].setOnClickListener(new RatingClick(vh, rateHolders));
+        rateHolders[1].setOnClickListener(new RatingClick(vh, rateHolders));
+        rateHolders[2].setOnClickListener(new RatingClick(vh, rateHolders));
+        rateHolders[3].setOnClickListener(new RatingClick(vh, rateHolders));
         return vh;
     }
 
@@ -188,8 +194,10 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
         ViewHolder vh;
         List<Integer> ratings;
         int isRated;
-        public RatingClick(ViewHolder vh) {
+        TextView [] rateHolders;
+        public RatingClick(ViewHolder vh, TextView [] rateHolders) {
             this.vh = vh;
+            this.rateHolders = rateHolders;
         }
         @Override
         public void onClick(View v) {
@@ -204,28 +212,28 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                         if (v.getId() == R.id.yar_har_rating)
                             return;
                         newVal = ratings.get(0) - 1;
-                        setText(yarhar, newVal, BEST_RATING);
+                        setText(rateHolders[0], newVal, BEST_RATING);
                         ratings.set(0,newVal);
                         break;
                     case 2:
                         if (v.getId() == R.id.aye_rating)
                             return;
                         newVal = ratings.get(1) - 1;
-                        setText(aye, newVal, GOOD_RATING);
+                        setText(rateHolders[1], newVal, GOOD_RATING);
                         ratings.set(1, newVal);
                         break;
                     case 3:
                         if (v.getId() == R.id.nay_rating)
                             return;
                         newVal = ratings.get(2) - 1;
-                        setText(nay, newVal, BAD_RATING);
+                        setText(rateHolders[2], newVal, BAD_RATING);
                         ratings.set(2, newVal);
                         break;
                     case 4:
                         if (v.getId() == R.id.scurvy_rating)
                             return;
                         newVal = ratings.get(3) - 1;
-                        setText(scurvy, newVal, WORST_RATING);
+                        setText(rateHolders[3], newVal, WORST_RATING);
                         ratings.set(3, newVal);
                         break;
                 }

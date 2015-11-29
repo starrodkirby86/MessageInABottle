@@ -38,9 +38,10 @@ public class AvailableBottle extends ParseObject {
         return query;
     }
 
-    public static ParseQuery<AvailableBottle> getAuthorQuery(ParseUser author) {
+    public static ParseQuery<AvailableBottle> getNearbyQuery(ParseGeoPoint point, int range, int maxPosts) {
         ParseQuery<AvailableBottle> query = ParseQuery.getQuery(AvailableBottle.class);
-        query.whereEqualTo(AUTHOR, author);
+        query.whereWithinKilometers(LOCATION, point, range);
+        query.setLimit(maxPosts);
         return query;
     }
 
