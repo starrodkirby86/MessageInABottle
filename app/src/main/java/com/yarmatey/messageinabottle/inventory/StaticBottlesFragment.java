@@ -23,6 +23,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.yarmatey.messageinabottle.R;
 import com.yarmatey.messageinabottle.bottles.AvailableBottle;
@@ -154,7 +156,14 @@ public class StaticBottlesFragment extends Fragment {
     public void addMarker(AvailableBottle bottle) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title(bottle.getMessage());
-        markerOptions.snippet(bottle.getLastUser().getUsername());
+
+        try {
+            markerOptions.snippet(bottle.getLastUser().fetchIfNeeded().getUsername());
+        } catch (ParseException e){
+            markerOptions.snippet("pirate");
+            e.printStackTrace();
+        }
+
         markerOptions.position(new LatLng(bottle.getPoint().getLatitude(), bottle.getPoint().getLongitude()));
         map.addMarker(markerOptions);
     }
