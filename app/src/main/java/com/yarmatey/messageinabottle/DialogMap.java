@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,6 +45,7 @@ public class DialogMap extends DialogFragment
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private String message;
+    private boolean mapsVal;
 
 
     @Override
@@ -63,6 +63,12 @@ public class DialogMap extends DialogFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //Retrieve the preferences from this fragment's context.
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+        //Pull the map_switch and return false if this value does not exist (the default value)
+        mapsVal = preferences.getBoolean("map_switch", false);
+
         View view = inflater.inflate(R.layout.dialog_drop_bottle, container);
         Bundle args = getArguments();
         message = args.getString("message");
@@ -107,6 +113,9 @@ public class DialogMap extends DialogFragment
         if(location != null) {
             Log.i("LOCATION UPDATED TO ", location.getLatitude() + ", " + location.getLongitude()); //print location in log
             currentLocation = location;
+            if(!mapsVal)
+                return;
+
             if (map.getCameraPosition().zoom > 15)
                 cameraUpdate = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
             else {
@@ -156,10 +165,10 @@ public class DialogMap extends DialogFragment
         //Retrieve the preferences from this fragment's context.
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         //Pull the map_switch and return false if this value does not exist (the default value)
-        boolean mapsVal = preferences.getBoolean("map_switch", false);
+        mapsVal = preferences.getBoolean("map_switch", false);
 
         if(!mapsVal){
-            Snackbar.make(v.getRootView(), "Maps Disabled!", Snackbar.LENGTH_SHORT).show();
+            //Snackbar.make(v.getRootView(), "Maps Disabled!", Snackbar.LENGTH_SHORT).show();
             return;
         }
         //Find mapView in layout and create the view
@@ -209,19 +218,22 @@ public class DialogMap extends DialogFragment
     //For MapView to resume when parent view resumes
     @Override
     public void onResume() {
-        mapView.onResume();
+        if(mapsVal)
+        {mapView.onResume();}
         super.onResume();
     }
     //For MapView to destroy when parent view is destroyed
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        if(mapsVal)
+        {mapView.onDestroy();}
     }
     //For MapView to follow parent view on LowMemory
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
+        if(mapsVal)
+        {mapView.onLowMemory();}
     }
 }
