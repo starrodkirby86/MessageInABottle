@@ -46,7 +46,7 @@ public class LogInActivityFragment extends Fragment {
         final TextView anon = (TextView) view.findViewById(R.id.anon_log_in);
         final EditText username = (EditText) view.findViewById(R.id.etUsername);
         final EditText password = (EditText) view.findViewById(R.id.etPassword);
-        CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
+  //      CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         userLocalStore = new UserLocalStore(getContext()); //use this instead of class
 
 
@@ -122,7 +122,7 @@ public class LogInActivityFragment extends Fragment {
         public void onClick(View v) {
             final Intent intent = new Intent(getActivity(), Inventory.class);//Intent to launch to MessageActivity
 //            Intent intent2 = new Intent(getActivity(), RegisterActivity.class);
-            CheckBox checkBox = (CheckBox) getActivity().findViewById(R.id.checkBox);
+ //           CheckBox checkBox = (CheckBox) getActivity().findViewById(R.id.checkBox);
 
             if(authenticate() == true) {
                 displayUserDetails();
@@ -146,12 +146,12 @@ public class LogInActivityFragment extends Fragment {
                 });
 
 
-                if(checkBox.isChecked() == true) {
-                    User user = new User(username, password);
-                    userLocalStore.storeUserData(user);
-                    userLocalStore.setUserLoggedIn(true);
-                    displayUserDetails();
-                }
+//                if(checkBox.isChecked() == true) {
+//                    User user = new User(username, password);
+//                    userLocalStore.storeUserData(user);
+//                    userLocalStore.setUserLoggedIn(true);
+//                    displayUserDetails();
+//                }
 //                if(v.getId() == R.id.checkBox) {
 //                    User user = new User(username, password);
 //                    UserLocalStore.storeUserData(user);
