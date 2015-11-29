@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<navigationModel
+  ns = "http://schemas.android.com?import=com.android.tools.idea.editors.navigation.model.*">
+  <locations  
+    class = "java.util.ArrayList">
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.yarmatey.messageinabottle.login.LogInActivity"/>
+      <point      
+        x = "2988"      
+        y = "236"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.yarmatey.messageinabottle.login.RegisterActivity"/>
+      <point      
+        x = "5144"      
+        y = "124"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.yarmatey.messageinabottle.message.MessageActivity"/>
+      <point      
+        x = "2524"      
+        y = "1656"/>
+    </statePointEntry>
+    <statePointEntry>
+      <state      
+        class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
+        className = "com.yarmatey.messageinabottle.inventory.Inventory"/>
+      <point      
+        x = "420"      
+        y = "684"/>
+    </statePointEntry>
+  </locations>
+</navigationModel>

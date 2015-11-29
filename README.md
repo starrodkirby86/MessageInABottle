@@ -8,8 +8,8 @@ In this project, we aim to:
 Create an application for Android that replicates the idea of tossing a Message in A Bottle into the ocean.
 
 Users will be able to create a message and "drop" it and another user will be able to pick it.
-Once they pick up a new bottle they can add to the message and drop it again, repeating the cycle.
-Some bottles will act as a stationary bottle, remaining in the same place, while others are bottles that are designed to drift and be carried around the globe. 
+Once they pick up a new pickedUpBottle they can add to the message and drop it again, repeating the cycle.
+Some bottles will act as a stationary pickedUpBottle, remaining in the same place, while others are bottles that are designed to drift and be carried around the globe.
 
 This app is currently under development. We hope to have version 1 nearly completed by December. 
 

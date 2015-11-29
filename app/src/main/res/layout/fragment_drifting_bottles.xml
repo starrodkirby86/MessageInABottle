@@ -1,12 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.yarmatey.messageinabottle.DriftingBottlesFragment"
+    tools:context="com.yarmatey.messageinabottle.inventory.DriftingBottlesFragment"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/drifting_title_bar">
+        android:id="@+id/drifting_title_bar"
+        android:background="@color/colorAccent">
 
         <ImageView
             android:layout_width="50dp"
@@ -19,13 +20,13 @@
             android:src="@drawable/pirate_hat"
             android:contentDescription="@string/drifting_title" />
         <TextView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop ="13dp"
             android:id="@+id/drifting_label"
             android:text="@string/drifting_title"
-            android:textSize="25sp"/>
+            android:textSize="25sp"
+            android:textColor="@color/colorPrimaryDark"/>
 
     </LinearLayout>
 
@@ -36,7 +37,7 @@
         android:layout_height="fill_parent"
         android:textSize="24sp"
         android:gravity="center_horizontal"
-        android:text="Nothin' seems to be here, yah scruvy dog!"/>
+        android:text="Nothin' seems to be here, yah scurvy dog!"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

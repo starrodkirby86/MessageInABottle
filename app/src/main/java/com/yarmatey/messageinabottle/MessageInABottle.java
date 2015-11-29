@@ -4,7 +4,9 @@ import android.app.Application;
 
 import com.parse.Parse;
 import com.parse.ParseACL;
-import com.parse.ParseUser;
+import com.parse.ParseObject;
+import com.yarmatey.messageinabottle.bottles.AvailableBottle;
+import com.yarmatey.messageinabottle.bottles.PickedUpBottle;
 
 //Created by Jason on 10/28/2015.
 
@@ -15,10 +17,15 @@ public class MessageInABottle extends Application {
         super.onCreate();
 
         Parse.enableLocalDatastore(this);
-       // ParseObject.registerSubclass(Bottle.class);
-        ParseUser.enableAutomaticUser();
+       // ParseObject.registerSubclass(PickedUpBottle.class);
+        //ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();
+        defaultACL.setPublicReadAccess(true);
+        defaultACL.setPublicWriteAccess(true);
         ParseACL.setDefaultACL(defaultACL, true);
+        ParseObject.registerSubclass(PickedUpBottle.class);
+        ParseObject.registerSubclass(AvailableBottle.class);
         Parse.initialize(this, "OZBa3WcZ3gwkZYGUabDMjyt9Kq3YBWY3cfoDLPnH", "IUJSIrtz1JamTw41lyBW1SDp8rWzzg04j7jV3a95");
     }
+
 }

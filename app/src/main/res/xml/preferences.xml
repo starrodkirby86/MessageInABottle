@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--One part backwards compatibility, but mostly to make sure we have a working set of settings.-->
+    <PreferenceScreen
+        android:title="@string/pref_header_bottles"
+        android:icon="@drawable/floating_bottle"
+        >
+
+        <!-- Warn on Discard
+        -->
+        <SwitchPreference
+            android:key="discardWarning_switch"
+            android:title="@string/discardWarning"
+            android:summary="@string/discardWarning_description"
+            android:defaultValue="true"
+            android:persistent="true"/>
+
+        <!-- Frequency of Bottle Pickup
+        -->
+        <ListPreference
+            android:key="pickupFreq_list"
+            android:title="@string/pickupFreq"
+            android:summary="@string/pickupFreq_description"
+            android:entries="@array/pickupFreq_titles"
+            android:entryValues="@array/pickupFreq_values"
+            android:defaultValue="600"
+            android:persistent="true"/>
+
+        <!-- Enable Maps
+                True: Can see Google Maps
+                False: Cannot see Google Maps
+        -->
+        <SwitchPreference
+            android:key="map_switch"
+            android:title="@string/maps"
+            android:summary="@string/maps_description"
+            android:defaultValue="false"
+            android:persistent="true"/>
+
+        <!--TODO: IMPLEMENT FILTERS -->
+        <!-- Adult Language filter
+                True: Adult Language Allowed
+                False: Adult Language Blocked
+        -->
+        <SwitchPreference
+            android:key="sailor_switch"
+            android:title="@string/sailor_mouth"
+            android:summary="@string/sailor_mouth_description"
+            android:defaultValue="false"
+            android:persistent="true" />
+
+        <!-- Other Filters Menu
+                Links to another menu that allows the user to type in filter entries.
+        -->
+        <Preference
+            android:title="@string/filters"
+            android:summary="@string/filters_description"
+            android:fragment="com.yarmatey.messageinabottle.login.LogInActivityFragment"
+            />
+
+    </PreferenceScreen>
+
+    <!--TODO: IMPLEMENT PIRATE TALK -->
+    <SwitchPreference
+        android:key="pirate_switch"
+        android:title="@string/pirate"
+        android:summary="@string/pirate_description"
+        android:defaultValue="false"
+        android:persistent="true" />
+
+    <!--TODO: IMPLEMENT COLOR SCHEMES-->
+    <ListPreference
+        android:key="color_list"
+        android:title="@string/color"
+        android:summary="@string/color_description"
+        android:entries="@array/color_titles"
+        android:entryValues="@array/color_values"
+        android:defaultValue="default"
+        android:persistent="true"/>
+
+
+    <Preference
+        android:title='@string/userTutorial'
+        android:summary="@string/userTutorial_description">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://github.com/adamhabib25/MessageInABottle/wiki/Tutorial" />
+    </Preference>
+
+    <!-- TODO: IMPLEMENT SOCIAL LINKS
+    <Preference
+        android:title="@string/socialLink"
+        android:summary="@string/socialLink_description"
+        android:fragment="com.yarmatey.messageinabottle.login.LogInActivityFragment"
+        />-->
+
+    <Preference
+        android:key="@string/logout_button"
+        android:title="@string/logout"
+        android:summary="@string/logout_description"
+        />
+
+</PreferenceScreen>

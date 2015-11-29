@@ -18,13 +18,12 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- END PERMISSIONS ! -->
     <application
+        android:name=".MessageInABottle"
         android:allowBackup="true"
-        android:icon="@drawable/pirate_hat"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".MessageInABottle">
+        android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -35,30 +34,44 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name=".LogInActivity"
-            android:label="@string/app_name" >
+            android:name=".SplashScreen"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".MessageActivity"
-            android:label="@string/title_activity_message"
-            android:parentActivityName=".Inventory"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yarmatey.messageinabottle.Inventory" />
+            android:name=".login.LogInActivity"
+            android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Inventory"
-            android:label="@string/title_activity_inventory"
+            android:name=".message.MessageActivity"
+            android:label="@string/title_activity_message"
+            android:parentActivityName=".inventory.Inventory"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".inventory.Inventory" />
+        </activity>
+        <activity
+            android:name=".inventory.Inventory"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".inventory.Inventory" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.yarmatey.messageinabottle.inventory.Inventory" />
+        </activity>
+        <activity
+            android:name=".login.RegisterActivity"
             android:label="@string/title_activity_register" >
         </activity>
     </application>
