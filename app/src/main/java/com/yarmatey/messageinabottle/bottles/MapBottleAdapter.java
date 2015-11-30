@@ -51,14 +51,26 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
                     super.getItemView(object, v, parent);
                     TextView titleText = (TextView) v.findViewById(R.id.card_title);
                     TextView description = (TextView) v.findViewById(R.id.card_message);
-                    String title;
+                    String title="A message from ";
                     try {
                         //TODO make this cleaner
-                        title = "A message from " + object.getLastUser().fetchIfNeeded().getUsername();
+                        if(object.getLastUser().fetchIfNeeded().getUsername().length()<=15)
+                        title = title + object.getLastUser().fetchIfNeeded().getUsername();
+                        else
+                            title=title+"a pirate";
                     } catch (ParseException e) {
-                        title = "A message from a pirate";
+                        title = title+"a pirate";
                         e.printStackTrace();
                     }
+
+                    /*
+                    title = "A message from ";
+                    if (!ParseAnonymousUtils.isLinked(object.getLastUser()))
+                        title = title + object.getLastUser().getUsername();
+                    else
+                        title = title + "a pirate";
+                    */
+
                     titleText.setText(title);
                     description.setText(object.getMessage());
                     return v;
