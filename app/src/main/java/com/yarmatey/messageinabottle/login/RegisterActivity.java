@@ -2,6 +2,7 @@ package com.yarmatey.messageinabottle.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -19,18 +20,15 @@ import com.yarmatey.messageinabottle.R;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button bRegister;
-    EditText etName, etAge, etUsername, etPassword, etPassword2;
+    EditText etName, etAge, etUsername, etPassword, etPasswordCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        etName = (EditText) findViewById(R.id.etName);
-        etAge = (EditText) findViewById(R.id.etAge);
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
-        etPassword2 = (EditText) findViewById(R.id.etPassword2);
+        etPasswordCheck = (EditText) findViewById(R.id.etPassword2);
         bRegister = (Button) findViewById(R.id.bRegister);
 
         bRegister.setOnClickListener(this);
@@ -43,12 +41,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         switch(v.getId()) {
             case R.id.bRegister:
 
-                final String name = etName.getText().toString();
                 final String username = etUsername.getText().toString();
                 final String password = etPassword.getText().toString();
-                final String age = etAge.getText().toString(); //changes what user puts into a int
-
-                //              age = new Integer(Integer.parseInt(age));
+                final String passwordCheck = etPasswordCheck.getText().toString();
+                if (!password.equals(passwordCheck)) {
+                    Snackbar.make(v, "Passwords do not match!", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
 
                 ParseUser user = new ParseUser();
                 user.setUsername(username);

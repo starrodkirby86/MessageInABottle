@@ -82,10 +82,19 @@
     <orderEntry type="library" exported="" scope="TEST" name="dexmaker-mockito-1.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="dexmaker-1.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="hamcrest-core-1.1" level="project" />
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> master
     <orderEntry type="library" exported="" scope="TEST" name="jsonassert-1.2.3" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="mockito-core-1.10.19" level="project" />
     <orderEntry type="library" exported="" name="bolts-android-1.2.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="objenesis-2.1" level="project" />
     <orderEntry type="library" exported="" name="parse-android-1.10.3" level="project" />
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 6f5ed8ad1e2d3d79853bfb0e854a5d1e7c348e77
+>>>>>>> master
   </component>
 </module>

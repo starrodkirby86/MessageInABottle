@@ -44,11 +44,17 @@ public class LogInActivityFragment extends Fragment {
 
         //Load in objects needed to log in
         final Button button = (Button) view.findViewById(R.id.bLogin);
-        final Button button2 = (Button) view.findViewById(R.id.register);
+    //    final Button button2 = (Button) view.findViewById(R.id.register);
+        final TextView register = (TextView) view.findViewById(R.id.register_here);
         final TextView anon = (TextView) view.findViewById(R.id.anon_log_in);
         final EditText username = (EditText) view.findViewById(R.id.etUsername);
         final EditText password = (EditText) view.findViewById(R.id.etPassword);
+<<<<<<< HEAD:app/src/main/java/com/yarmatey/messageinabottle/LogInActivityFragment.java
+  //      CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
+        userLocalStore = new UserLocalStore(getContext()); //use this instead of class
+=======
         final TextView logout = (TextView) view.findViewById(R.id.log_out);
+>>>>>>> 37b6c8e56dd0c64ae16b1a3670bfcf7e7357630d:app/src/main/java/com/yarmatey/messageinabottle/login/LogInActivityFragment.java
 
 
         //anonymous log in click
@@ -58,7 +64,7 @@ public class LogInActivityFragment extends Fragment {
         button.setOnClickListener(new logInClick(username, password));
 
 
-        button2.setOnClickListener(new View.OnClickListener() {
+        register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), RegisterActivity.class));
@@ -111,7 +117,7 @@ public class LogInActivityFragment extends Fragment {
         public void onClick(final View v) {
             final Intent intent = new Intent(getActivity(), Inventory.class);//Intent to launch to MessageActivity
 //            Intent intent2 = new Intent(getActivity(), RegisterActivity.class);
-            CheckBox checkBox = (CheckBox) getActivity().findViewById(R.id.checkBox);
+ //           CheckBox checkBox = (CheckBox) getActivity().findViewById(R.id.checkBox);
 
             //Log In button pressed
             if (v.getId() == R.id.bLogin) {
@@ -129,9 +135,25 @@ public class LogInActivityFragment extends Fragment {
                 });
 
 
+<<<<<<< HEAD:app/src/main/java/com/yarmatey/messageinabottle/LogInActivityFragment.java
+//                if(checkBox.isChecked() == true) {
+//                    User user = new User(username, password);
+//                    userLocalStore.storeUserData(user);
+//                    userLocalStore.setUserLoggedIn(true);
+//                    displayUserDetails();
+//                }
+//                if(v.getId() == R.id.checkBox) {
+//                    User user = new User(username, password);
+//                    UserLocalStore.storeUserData(user);
+//                    UserLocalStore.setUserLoggedIn(true);
+//                }
+
+                startActivity(intent);
+=======
                 if(checkBox.isChecked()) {
                     //TODO add remember me option
                 }
+>>>>>>> 37b6c8e56dd0c64ae16b1a3670bfcf7e7357630d:app/src/main/java/com/yarmatey/messageinabottle/login/LogInActivityFragment.java
 
             }
             else if (v.getId() == R.id.anon_log_in) {

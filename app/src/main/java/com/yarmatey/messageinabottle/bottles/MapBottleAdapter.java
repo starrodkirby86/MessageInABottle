@@ -9,31 +9,36 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
-import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.inventory.StaticBottlesFragment;
 
 import java.util.List;
 
 /**
  * Created by Jason on 11/27/2015.
  */
-public class TrackingBottleAdapter  extends RecyclerView.Adapter<TrackingBottleAdapter.ViewHolder> {
+public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.ViewHolder> {
 
         private ParseQueryAdapter<AvailableBottle> parseAdapter;
 
-        private ViewGroup parseParent;
+        private static final int MAX_POSTS = 25;
+        private static final int RANGE = 1000;
 
-        private TrackingBottleAdapter driftingBottlesAdapter = this;
+        private ViewGroup parseParent;
+        private StaticBottlesFragment fragment;
+        private MapBottleAdapter driftingBottlesAdapter = this;
         public boolean isEmpty;
 
-        public TrackingBottleAdapter(Context context, ViewGroup parentIn) {
+        public MapBottleAdapter(Context context, ViewGroup parentIn, final ParseGeoPoint location, StaticBottlesFragment fragment) {
+            this.fragment = fragment;
             parseParent = parentIn;
             ParseQueryAdapter.QueryFactory<AvailableBottle> factory = new ParseQueryAdapter.QueryFactory<AvailableBottle>() {
                 @Override
                 public ParseQuery<AvailableBottle> create() {
-                    ParseQuery<AvailableBottle> query = AvailableBottle.getAuthorQuery(ParseUser.getCurrentUser());
+                    ParseQuery<AvailableBottle> query = AvailableBottle.getNearbyQuery(location, RANGE, MAX_POSTS);
                     return query;
                 }
             };
@@ -66,29 +71,13 @@ public class TrackingBottleAdapter  extends RecyclerView.Adapter<TrackingBottleA
         }
 
         @Override
-        public TrackingBottleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public MapBottleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v;
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.recyclerview_tracking_item, parent, false);
 
             final ViewHolder vh = new ViewHolder(v);
-
-
             ImageView delete = (ImageView) v.findViewById(R.id.delete);
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        parseAdapter.getItem(vh.getAdapterPosition()).unpin();
-                        parseAdapter.getItem(vh.getAdapterPosition()).delete();
-                        driftingBottlesAdapter.notifyItemRemoved(vh.getAdapterPosition());
-                        parseAdapter.loadObjects();
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
             return vh;
         }
 
@@ -121,7 +110,10 @@ public class TrackingBottleAdapter  extends RecyclerView.Adapter<TrackingBottleA
             public void onLoaded(List<AvailableBottle> objects, Exception e) {
                 driftingBottlesAdapter.notifyDataSetChanged();
                 isEmpty = objects.isEmpty();
-
+                fragment.clearMarkers();
+                for (AvailableBottle bottle : objects) {
+                    fragment.addMarker(bottle);
+                }
             }
         }
 
