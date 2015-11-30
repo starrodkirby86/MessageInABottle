@@ -1,6 +1,8 @@
 package com.yarmatey.messageinabottle.bottles;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -122,9 +124,18 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
             public void onLoaded(List<AvailableBottle> objects, Exception e) {
                 driftingBottlesAdapter.notifyDataSetChanged();
                 isEmpty = objects.isEmpty();
-                fragment.clearMarkers();
-                for (AvailableBottle bottle : objects) {
-                    fragment.addMarker(bottle);
+
+                //IMPLEMENTATION OF mapsVal for opening maps.
+                //Retrieve the preferences from this fragment's context.
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(parseParent.getContext());
+                //Pull the map_switch and return false if this value does not exist (the default value)
+                boolean mapsVal = preferences.getBoolean("map_switch", false);
+
+                if(mapsVal) {
+                    fragment.clearMarkers();
+                    for (AvailableBottle bottle : objects) {
+                        fragment.addMarker(bottle);
+                    }
                 }
             }
         }
