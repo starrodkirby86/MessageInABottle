@@ -44,11 +44,12 @@ public class LogInActivityFragment extends Fragment {
 
         //Load in objects needed to log in
         final Button button = (Button) view.findViewById(R.id.bLogin);
-        final Button button2 = (Button) view.findViewById(R.id.register);
+        final TextView button2 = (TextView) view.findViewById(R.id.Tregister);
         final TextView anon = (TextView) view.findViewById(R.id.anon_log_in);
         final EditText username = (EditText) view.findViewById(R.id.etUsername);
         final EditText password = (EditText) view.findViewById(R.id.etPassword);
         final TextView logout = (TextView) view.findViewById(R.id.log_out);
+
 
 
         //anonymous log in click
