@@ -26,7 +26,6 @@ public class noLocation extends AppCompatActivity {
         dialog.setPositiveButton(context.getResources().getString(R.string.open_location_settings), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                // TODO Auto-generated method stub
                 Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 context.startActivity(myIntent);
                 //get gps
@@ -37,7 +36,6 @@ public class noLocation extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                // TODO Auto-generated method stub
                 finish();
             }
         });
