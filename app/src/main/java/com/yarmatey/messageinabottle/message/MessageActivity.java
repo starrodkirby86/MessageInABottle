@@ -8,14 +8,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
-import com.yarmatey.messageinabottle.DialogMap;
 import com.yarmatey.messageinabottle.R;
 import com.yarmatey.messageinabottle.SettingsActivity;
 
 
 public class MessageActivity extends AppCompatActivity{
+
+    private Spinner options;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -30,7 +34,13 @@ public class MessageActivity extends AppCompatActivity{
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        options = (Spinner) findViewById(R.id.bottle_types);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.types_of_bottles, R.layout.spinner_layout);
+        adapter.setDropDownViewResource(R.layout.spinner_drop_down_item);
+        options.setAdapter(adapter);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -53,11 +63,13 @@ public class MessageActivity extends AppCompatActivity{
             //grab EditText that contains user message
 
             EditText textView = (EditText) findViewById(R.id.message_edit);
+
             if (textView.getText().toString().trim().length() > 0) { //if contains characters, and not just whitespace
                 FragmentManager fm = getSupportFragmentManager();
                 DialogMap dialogMap = new DialogMap();
                 Bundle args = new Bundle();
                 args.putString("message", textView.getText().toString());
+                args.putBoolean("type", options.getSelectedItem().toString().equals("Create a Bottle"));
                 dialogMap.setArguments(args);
                 dialogMap.show(fm, "Casting yer bottle!");
             } else //No message inserted
@@ -65,5 +77,12 @@ public class MessageActivity extends AppCompatActivity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void exitWithValue(boolean mast) {
+        Intent intent = new Intent();
+        intent.putExtra("type", mast);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

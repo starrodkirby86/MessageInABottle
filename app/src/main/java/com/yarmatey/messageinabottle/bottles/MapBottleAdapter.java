@@ -1,13 +1,10 @@
 package com.yarmatey.messageinabottle.bottles;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.parse.ParseException;
@@ -24,38 +21,36 @@ import java.util.List;
  */
 public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.ViewHolder> {
 
-        private ParseQueryAdapter<AvailableBottle> parseAdapter;
+        private ParseQueryAdapter<PirateMast> parseAdapter;
 
-        private static final int MAX_POSTS = 25;
-        private static final int RANGE = 1000;
-
+        private static final int MAX_POSTS = 250;
+        private static final int RANGE = 10000;
+        private int count = 0;
         private ViewGroup parseParent;
         private StaticBottlesFragment fragment;
-        private MapBottleAdapter driftingBottlesAdapter = this;
+        private MapBottleAdapter pirateMastAdapter = this;
         public boolean isEmpty;
 
         public MapBottleAdapter(Context context, ViewGroup parentIn, final ParseGeoPoint location, StaticBottlesFragment fragment) {
             this.fragment = fragment;
             parseParent = parentIn;
-            ParseQueryAdapter.QueryFactory<AvailableBottle> factory = new ParseQueryAdapter.QueryFactory<AvailableBottle>() {
+            ParseQueryAdapter.QueryFactory<PirateMast> factory = new ParseQueryAdapter.QueryFactory<PirateMast>() {
                 @Override
-                public ParseQuery<AvailableBottle> create() {
-                    ParseQuery<AvailableBottle> query = AvailableBottle.getNearbyQuery(location, RANGE, MAX_POSTS);
+                public ParseQuery<PirateMast> create() {
+                    ParseQuery<PirateMast> query = PirateMast.getQuery(location, RANGE, MAX_POSTS);
                     return query;
                 }
             };
-            parseAdapter = new ParseQueryAdapter<AvailableBottle>(context, factory) {
+            parseAdapter = new ParseQueryAdapter<PirateMast>(context, factory) {
                 @Override
-                public View getItemView(AvailableBottle object, View v, ViewGroup parent) {
+                public View getItemView(PirateMast object, View v, ViewGroup parent) {
                     if (v == null) {
-                        v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_tracking_item, parent, false);
+                        v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_pirate_mast, parent, false);
                     }
-                    super.getItemView(object, v, parent);
-                    TextView titleText = (TextView) v.findViewById(R.id.card_title);
-                    TextView description = (TextView) v.findViewById(R.id.card_message);
+                    TextView titleText = (TextView) v.findViewById(R.id.pirate_mast_title);
+                    TextView description = (TextView) v.findViewById(R.id.pirate_mast_message);
                     String title="A message from ";
                     try {
-                        //TODO make this cleaner
                         if(object.getLastUser().fetchIfNeeded().getUsername().length()<=15)
                         title = title + object.getLastUser().fetchIfNeeded().getUsername();
                         else
@@ -75,12 +70,12 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
 
                     titleText.setText(title);
                     description.setText(object.getMessage());
+                    super.getItemView(object, v, parent);
                     return v;
                 }
             };
             parseAdapter.addOnQueryLoadListener(new OnQueryLoadListener());
             parseAdapter.loadObjects();
-            setHasStableIds(true);
 
         }
 
@@ -88,17 +83,23 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
         public MapBottleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v;
             v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recyclerview_tracking_item, parent, false);
+                    .inflate(R.layout.recyclerview_pirate_mast, parent, false);
 
             final ViewHolder vh = new ViewHolder(v);
-            ImageView delete = (ImageView) v.findViewById(R.id.delete);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.goToMarker(parseAdapter.getItem(vh.getAdapterPosition()));
+                }
+            });
             return vh;
         }
-
-
     @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             parseAdapter.getView(position, holder.card, parseParent);
+
+            fragment.addMarkerIfUnique(
+                    parseAdapter.getItem(holder.getAdapterPosition()));
         }
 
         @Override
@@ -108,40 +109,27 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             protected View card;
-
             public ViewHolder(View v) {
                 super(v);
                 card = v;
             }
         }
 
-        public class OnQueryLoadListener implements ParseQueryAdapter.OnQueryLoadListener<AvailableBottle> {
+        public class OnQueryLoadListener implements ParseQueryAdapter.OnQueryLoadListener<PirateMast> {
 
             public void onLoading() {
 
             }
 
-            public void onLoaded(List<AvailableBottle> objects, Exception e) {
-                driftingBottlesAdapter.notifyDataSetChanged();
-                isEmpty = objects.isEmpty();
-
-                //IMPLEMENTATION OF mapsVal for opening maps.
-                //Retrieve the preferences from this fragment's context.
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(parseParent.getContext());
-                //Pull the map_switch and return false if this value does not exist (the default value)
-                boolean mapsVal = preferences.getBoolean("map_switch", false);
-
-                if(mapsVal) {
-                    fragment.clearMarkers();
-                    for (AvailableBottle bottle : objects) {
-                        fragment.addMarker(bottle);
-                    }
-                }
+            public void onLoaded(List<PirateMast> objects, Exception e) {
+                pirateMastAdapter.notifyDataSetChanged();
+                //parseAdapter.notifyDataSetChanged();
+                //isEmpty = objects.isEmpty();
             }
         }
 
         public void itemInserted() {
-            //notifyItemInserted(this.getItemCount());
             parseAdapter.loadObjects();
+            //parseAdapter.notifyDataSetChanged();
         }
 }

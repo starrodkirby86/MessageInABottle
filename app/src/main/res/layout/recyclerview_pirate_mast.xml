@@ -15,7 +15,7 @@
         android:background="@color/colorPrimaryDark">
 
         <TextView
-            android:id="@+id/card_title"
+            android:id="@+id/pirate_mast_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Title"
@@ -25,36 +25,16 @@
             android:background="@color/colorAccent"/>
 
         <TextView
-            android:id="@+id/card_message"
+            android:id="@+id/pirate_mast_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Content"
             android:gravity="center_vertical"
             android:textColor="@android:color/white"
             android:textSize="16sp"
-            android:layout_below="@+id/card_title"
+            android:layout_below="@+id/pirate_mast_title"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="5dp"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/delete"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:src="@android:drawable/ic_menu_delete"
-            android:contentDescription="delete"
-            android:onClick="deleteItem"/>
-
-        <ImageView
-            android:id="@+id/edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/floating_bottle"
-            android:contentDescription="edit" />
 
     </RelativeLayout>
 

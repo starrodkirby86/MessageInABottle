@@ -56,6 +56,7 @@ public class Inventory extends AppCompatActivity
     private ViewPager mViewPager;
     private GoogleApiClient mGoogleApiClient;
     private DriftingBottlesFragment driftingBottlesFragment;
+    private StaticBottlesFragment staticBottleFragment;
     public Location currentLocation;
 
 
@@ -111,7 +112,7 @@ public class Inventory extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(),MessageActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 101);
             }
         });
 
@@ -274,7 +275,8 @@ public class Inventory extends AppCompatActivity
                      driftingBottlesFragment= DriftingBottlesFragment.newInstance();
                     return driftingBottlesFragment;
                 case 1:
-                    return StaticBottlesFragment.newInstance(mGoogleApiClient);
+                    staticBottleFragment = StaticBottlesFragment.newInstance();
+                    return staticBottleFragment;
                 case 2:
                     return PlaceholderFragment.newInstance(2);
                 default:
@@ -335,6 +337,20 @@ public class Inventory extends AppCompatActivity
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == 101) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                if (data.getBooleanExtra("type", false)) {
+                    //TODO add better functionality to updating mast map
+                    staticBottleFragment.newMast();
+                }
+            }
         }
     }
 }

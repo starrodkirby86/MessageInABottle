@@ -11,17 +11,40 @@
 
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cast_bottle_title"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:id="@+id/dialog_confirm"
+            android:text="Ye be sure ye wish to cast:"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/dialog_message"
+            android:layout_below="@+id/dialog_confirm"
+            android:text="A pirate's tale be here"/>
 
         <com.google.android.gms.maps.MapView
             android:id = "@+id/map_view_dialog"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,7 +65,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryDark"
-            android:text="Dismiss" />
+            android:text="Not yet be sailin'" />
     </LinearLayout>
 
 </LinearLayout>

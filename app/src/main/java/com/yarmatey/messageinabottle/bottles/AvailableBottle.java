@@ -38,13 +38,6 @@ public class AvailableBottle extends ParseObject {
         return query;
     }
 
-    public static ParseQuery<AvailableBottle> getNearbyQuery(ParseGeoPoint point, int range, int maxPosts) {
-        ParseQuery<AvailableBottle> query = ParseQuery.getQuery(AvailableBottle.class);
-        query.whereWithinKilometers(LOCATION, point, range);
-        query.setLimit(maxPosts);
-        return query;
-    }
-
     public ParseGeoPoint getPoint() {return getParseGeoPoint(LOCATION);}
     public String getMessage(){return getString(MESSAGE);}
     public int getBottleType(){return getInt(TYPE);}

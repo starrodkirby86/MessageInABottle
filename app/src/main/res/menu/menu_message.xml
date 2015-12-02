@@ -7,13 +7,8 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item android:id="@+id/drop_bottle"
-        android:title="Drop Bottle"
+        android:title="Cast Bottle"
         android:orderInCategory="50"
         app:showAsAction="always"
         android:icon="@drawable/floating_bottle"/>
-    <item android:id="@+id/archive_bottle"
-        android:title="Archive Bottle"
-        android:orderInCategory="75"
-        app:showAsAction="always"
-        android:icon="@drawable/common_full_open_on_phone" />
 </menu>

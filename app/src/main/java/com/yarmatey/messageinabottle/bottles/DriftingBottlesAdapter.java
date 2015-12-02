@@ -68,17 +68,19 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
             @Override
             public View getItemView(PickedUpBottle object, View v, ViewGroup parent) {
                 if (v == null) {
-                    v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_drifting_item, parent, false);
+                    v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_bottle, parent, false);
                 }
                 super.getItemView(object, v, parent);
-                TextView titleText = (TextView) v.findViewById(R.id.card_title);
-                TextView description = (TextView) v.findViewById(R.id.card_message);
-                String title;
+                TextView titleText = (TextView) v.findViewById(R.id.pirate_mast_title);
+                TextView description = (TextView) v.findViewById(R.id.pirate_mast_message);
+                String title="A message from ";
                 try {
-                    //TODO make this cleaner
-                    title = "A message from " + object.getLastUser().fetchIfNeeded().getUsername();
+                    if(object.getLastUser().fetchIfNeeded().getUsername().length()<=15)
+                        title = title + object.getLastUser().fetchIfNeeded().getUsername();
+                    else
+                        title=title+"a pirate";
                 } catch (ParseException e) {
-                    title = "A message from a pirate";
+                    title = title+"a pirate";
                     e.printStackTrace();
                 }
                 titleText.setText(title);
@@ -104,7 +106,7 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
         preferences.registerOnSharedPreferenceChangeListener(listener);
         View v;
         v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recyclerview_drifting_item, parent, false);
+                .inflate(R.layout.recyclerview_bottle, parent, false);
         final ViewHolder vh = new ViewHolder(v);
         ImageView delete = (ImageView) v.findViewById(R.id.delete);
         TextView [] rateHolders = new TextView[4];

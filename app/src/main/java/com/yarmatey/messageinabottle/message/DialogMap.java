@@ -1,4 +1,4 @@
-package com.yarmatey.messageinabottle;
+package com.yarmatey.messageinabottle.message;
 
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -27,7 +28,9 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
+import com.yarmatey.messageinabottle.R;
 import com.yarmatey.messageinabottle.bottles.AvailableBottle;
+import com.yarmatey.messageinabottle.bottles.PirateMast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,7 @@ public class DialogMap extends DialogFragment
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private String message;
+    private boolean isBottle;
     private boolean mapsVal;
 
 
@@ -72,6 +76,14 @@ public class DialogMap extends DialogFragment
         View view = inflater.inflate(R.layout.dialog_drop_bottle, container);
         Bundle args = getArguments();
         message = args.getString("message");
+        isBottle = args.getBoolean("type");
+        TextView dialogTitle = (TextView) view.findViewById(R.id.dialog_title);
+        if (isBottle) {
+            dialogTitle.setText("Cast yer bottle to the Sea!");
+        }
+        else {
+            dialogTitle.setText("Set yer pirate mast for all to see!");
+        }
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -82,14 +94,27 @@ public class DialogMap extends DialogFragment
         cast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean isMast = false;
                 ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
-                AvailableBottle newBottle = new AvailableBottle();
-                ArrayList<Integer> ratings = new ArrayList<>();
-                for(int i = 0; i < 4; i++)
-                    ratings.add(0);
-                newBottle.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
-                newBottle.saveInBackground();
+                if (isBottle) {
+                    AvailableBottle newBottle = new AvailableBottle();
+                    ArrayList<Integer> ratings = new ArrayList<>();
+                    for (int i = 0; i < 4; i++)
+                        ratings.add(0);
+                    newBottle.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
+                    newBottle.saveInBackground();
+                }
+                else {
+                    PirateMast newMast = new PirateMast();
+                    isMast = true;
+                    ArrayList<Integer> ratings = new ArrayList<>();
+                    for (int i = 0; i < 4; i++)
+                        ratings.add(0);
+                    newMast.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
+                    newMast.saveInBackground();
+                }
                 getDialog().dismiss();
+                ((MessageActivity) getActivity()).exitWithValue(isMast);
             }
         });
         Button dismiss = (Button) view.findViewById(R.id.dismiss);
@@ -99,7 +124,13 @@ public class DialogMap extends DialogFragment
                 dismiss();
             }
         });
-        showMapDialog(view, savedInstanceState);
+        if (mapsVal)
+            showMapDialog(view, savedInstanceState);
+        else {
+            TextView tv = (TextView) view.findViewById(R.id.dialog_message);
+            tv.setText(message);
+            view.findViewById(R.id.map_view_dialog).setVisibility(View.GONE);
+        }
         return view;
     }
 
@@ -168,14 +199,14 @@ public class DialogMap extends DialogFragment
         mapsVal = preferences.getBoolean("map_switch", false);
 
         if(!mapsVal){
-            //Snackbar.make(v.getRootView(), "Maps Disabled!", Snackbar.LENGTH_SHORT).show();
+            v.findViewById(R.id.map_view_dialog).setVisibility(View.GONE);
             return;
         }
         //Find mapView in layout and create the view
         //see onCreate below
         mapView = (MapView) v.findViewById(R.id.map_view_dialog);
         mapView.onCreate(savedInstanceState);
-
+        mapView.setVisibility(View.VISIBLE);
         //Allow GoogleMap to grab the MapView and initialize
         map = mapView.getMap();
         map.getUiSettings().setMyLocationButtonEnabled(false);
