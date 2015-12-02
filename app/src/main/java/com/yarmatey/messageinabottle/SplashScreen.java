@@ -31,6 +31,7 @@ public class SplashScreen extends AppCompatActivity {
         } catch(Exception ex) {}
         if(!gps_enabled){
             startActivity(new Intent(SplashScreen.this, noLocation.class));
+            finish();
         }
 
         else {
