@@ -21,15 +21,19 @@ import java.util.List;
  */
 public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.ViewHolder> {
 
+
+        private static final String BEST_RATING = "Yar Har! + ";
+        private static final String GOOD_RATING = "Aye + ";
+        private static final String BAD_RATING = "Nay + ";
+        private static final String WORST_RATING = "Scurvy! + ";
+
         private ParseQueryAdapter<PirateMast> parseAdapter;
 
         private static final int MAX_POSTS = 250;
         private static final int RANGE = 10000;
-        private int count = 0;
         private ViewGroup parseParent;
         private StaticBottlesFragment fragment;
         private MapBottleAdapter pirateMastAdapter = this;
-        public boolean isEmpty;
 
         public MapBottleAdapter(Context context, ViewGroup parentIn, final ParseGeoPoint location, StaticBottlesFragment fragment) {
             this.fragment = fragment;
@@ -49,6 +53,7 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
                     }
                     TextView titleText = (TextView) v.findViewById(R.id.pirate_mast_title);
                     TextView description = (TextView) v.findViewById(R.id.pirate_mast_message);
+
                     String title="A message from ";
                     try {
                         if(object.getLastUser().fetchIfNeeded().getUsername().length()<=15)
@@ -59,6 +64,12 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
                         title = title+"a pirate";
                         e.printStackTrace();
                     }
+
+                    List<Integer> ratings = object.getRatings();
+                    ((TextView) v.findViewById(R.id.yar_har_rating)).setText(BEST_RATING + ratings.get(0));
+                    ((TextView) v.findViewById(R.id.aye_rating)).setText(GOOD_RATING + ratings.get(1));
+                    ((TextView) v.findViewById(R.id.nay_rating)).setText(BAD_RATING + ratings.get(2));
+                    ((TextView) v.findViewById(R.id.scurvy_rating)).setText(WORST_RATING + ratings.get(3));
 
                     /*
                     title = "A message from ";
@@ -86,12 +97,23 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
                     .inflate(R.layout.recyclerview_pirate_mast, parent, false);
 
             final ViewHolder vh = new ViewHolder(v);
+            TextView [] rateHolders = new TextView[4];
+            rateHolders[0] = (TextView) v.findViewById(R.id.yar_har_rating);
+            rateHolders[1] = (TextView) v.findViewById(R.id.aye_rating);
+            rateHolders[2] = (TextView) v.findViewById(R.id.nay_rating);
+            rateHolders[3] = (TextView) v.findViewById(R.id.scurvy_rating);
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     fragment.goToMarker(parseAdapter.getItem(vh.getAdapterPosition()));
                 }
             });
+
+            rateHolders[0].setOnClickListener(new RatingClick(vh, rateHolders));
+            rateHolders[1].setOnClickListener(new RatingClick(vh, rateHolders));
+            rateHolders[2].setOnClickListener(new RatingClick(vh, rateHolders));
+            rateHolders[3].setOnClickListener(new RatingClick(vh, rateHolders));
+
             return vh;
         }
     @Override
@@ -114,6 +136,105 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
                 card = v;
             }
         }
+
+
+        private class RatingClick implements View.OnClickListener{
+
+            ViewHolder vh;
+            List<Integer> ratings;
+            int isRated;
+            TextView [] rateHolders;
+            public RatingClick(ViewHolder vh, TextView [] rateHolders) {
+                this.vh = vh;
+                this.rateHolders = rateHolders;
+            }
+            @Override
+            public void onClick(View v) {
+                PirateMast bottle = parseAdapter.getItem(vh.getAdapterPosition());
+                if (ratings == null)
+                    ratings = bottle.getRatings();
+                isRated = bottle.getRated();
+                if (isRated > 0) {
+                    int newVal;
+                    switch (isRated) {
+                        case 1:
+                            newVal = ratings.get(0) - 1;
+                            setText(rateHolders[0], newVal, BEST_RATING);
+                            ratings.set(0,newVal);
+                            if (v.getId() == R.id.yar_har_rating){
+                                bottle.setRated(0);
+                                return;
+                            }
+                            break;
+                        case 2:
+
+                            newVal = ratings.get(1) - 1;
+                            setText(rateHolders[1], newVal, GOOD_RATING);
+                            ratings.set(1, newVal);
+                            if (v.getId() == R.id.aye_rating){
+                                bottle.setRated(0);
+                                return;
+                            }
+                            break;
+                        case 3:
+                            newVal = ratings.get(2) - 1;
+                            setText(rateHolders[2], newVal, BAD_RATING);
+                            ratings.set(2, newVal);
+                            if (v.getId() == R.id.nay_rating) {
+                                bottle.setRated(0);
+                                return;
+                            }
+                            break;
+                        case 4:
+                            newVal = ratings.get(3) - 1;
+                            setText(rateHolders[3], newVal, WORST_RATING);
+                            ratings.set(3, newVal);
+                            if (v.getId() == R.id.scurvy_rating){
+                                bottle.setRated(0);
+                                return;
+                            }
+                            break;
+                    }
+                }
+                int rate;
+                String base;
+                switch (v.getId()) {
+                    case R.id.yar_har_rating:
+                        rate = ratings.get(0) + 1;
+                        ratings.set(0, rate);
+                        base = BEST_RATING;
+                        bottle.setRated(1);
+                        break;
+                    case R.id.aye_rating:
+                        rate = ratings.get(1) + 1;
+                        ratings.set(1, rate);
+                        base = GOOD_RATING;
+                        bottle.setRated(2);
+                        break;
+                    case R.id.nay_rating:
+                        rate = ratings.get(2) + 1;
+                        ratings.set(2, rate);
+                        base = BAD_RATING;
+                        bottle.setRated(3);
+                        break;
+                    case R.id.scurvy_rating:
+                        rate = ratings.get(3) + 1;
+                        ratings.set(3, rate);
+                        base = WORST_RATING;
+                        bottle.setRated(4);
+                        break;
+                    default:
+                        return;
+                }
+                setText(v, rate, base);
+                bottle.setRatings(ratings);
+            }
+
+            private void setText(View v, int rating, String base) {
+                ((TextView) v).setText(base + rating);
+            }
+        }
+
 
         public class OnQueryLoadListener implements ParseQueryAdapter.OnQueryLoadListener<PirateMast> {
 

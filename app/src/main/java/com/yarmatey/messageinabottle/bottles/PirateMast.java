@@ -24,6 +24,9 @@ public class PirateMast extends ParseObject {
     public static final String RATINGS = "ratings";
 
 
+    private int rated;
+    private List<Integer> ratings;
+
     public PirateMast() {
         super();
     }
@@ -31,6 +34,12 @@ public class PirateMast extends ParseObject {
         ParseQuery<PirateMast> query = ParseQuery.getQuery(PirateMast.class);
         query.whereWithinKilometers(LOCATION, point, range);
         query.setLimit(maxPosts);
+        return query;
+    }
+
+    public static ParseQuery<PirateMast> getUserQuery(ParseUser user) {
+        ParseQuery<PirateMast> query = ParseQuery.getQuery(PirateMast.class);
+        query.whereEqualTo(AUTHOR, user);
         return query;
     }
 
@@ -54,6 +63,11 @@ public class PirateMast extends ParseObject {
         }
         return ratings;
     }
+
+    public int getRated() {return rated;}
+
+
+    public void setRated(int rated) { this.rated = rated;}
 
     public void setPoint(ParseGeoPoint p){
         //point = p;

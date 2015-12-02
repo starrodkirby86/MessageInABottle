@@ -26,7 +26,7 @@
 
     <!-- These do not work as they do not bring up fragments that are not preference fragments correctly.
     <header
-        android:fragment="com.yarmatey.messageinabottle.InventoryFragment"
+        android:fragment="com.yarmatey.messageinabottle.UserPirateMastFragment"
         android:title='@string/userTutorial'
         android:summary="@string/userTutorial_description"
         />

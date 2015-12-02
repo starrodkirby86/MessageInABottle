@@ -16,12 +16,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -30,9 +27,11 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.parse.FindCallback;
+import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
 import com.yarmatey.messageinabottle.SettingsActivity;
 import com.yarmatey.messageinabottle.bottles.AvailableBottle;
@@ -57,6 +56,7 @@ public class Inventory extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private DriftingBottlesFragment driftingBottlesFragment;
     private StaticBottlesFragment staticBottleFragment;
+    private UserPirateMastFragment userPirateMastFragment;
     public Location currentLocation;
 
 
@@ -278,7 +278,8 @@ public class Inventory extends AppCompatActivity
                     staticBottleFragment = StaticBottlesFragment.newInstance();
                     return staticBottleFragment;
                 case 2:
-                    return PlaceholderFragment.newInstance(2);
+                    userPirateMastFragment = UserPirateMastFragment.newInstance();
+                    return UserPirateMastFragment.newInstance();
                 default:
                     return null;
             }
@@ -299,44 +300,11 @@ public class Inventory extends AppCompatActivity
                 case 1:
                     return "Pirate Masts";
                 case 2:
+                    if (!ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser()))
+                        return ParseUser.getCurrentUser().getUsername() + "'s Locker";
                     return "Davy Jones' Locker";
             }
             return null;
-        }
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_inventory, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
         }
     }
 
