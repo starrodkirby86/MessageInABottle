@@ -1,6 +1,8 @@
 package com.yarmatey.messageinabottle;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -20,18 +22,30 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
 
+        //Stack Overflow: Handling GPS not being on
+        //http://stackoverflow.com/questions/10311834/how-to-check-if-location-services-are-enabled
+        LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+        if(!gps_enabled){
+            startActivity(new Intent(SplashScreen.this, noLocation.class));
+        }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (ParseUser.getCurrentUser() != null)
-                    startActivity( new Intent(SplashScreen.this, Inventory.class));
-                else {
-                    startActivity(new Intent(SplashScreen.this, LogInActivity.class));
+        else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (ParseUser.getCurrentUser() != null)
+                        startActivity(new Intent(SplashScreen.this, Inventory.class));
+                    else {
+                        startActivity(new Intent(SplashScreen.this, LogInActivity.class));
+                    }
+                    SplashScreen.this.finish();
                 }
-                SplashScreen.this.finish();
-            }
-        }, SPLASH_LENGTH);
+            }, SPLASH_LENGTH);
+        }
 
     }
 
