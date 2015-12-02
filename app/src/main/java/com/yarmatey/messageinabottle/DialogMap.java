@@ -1,10 +1,13 @@
 package com.yarmatey.messageinabottle;
 
+import android.content.Context;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,43 +67,78 @@ public class DialogMap extends DialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //Retrieve the preferences from this fragment's context.
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        //Pull the map_switch and return false if this value does not exist (the default value)
-        mapsVal = preferences.getBoolean("map_switch", false);
+        //FIRST: We check to see if we even can cast this bottle!
+        LocationManager lm = (LocationManager)this.getContext().getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
 
-        View view = inflater.inflate(R.layout.dialog_drop_bottle, container);
-        Bundle args = getArguments();
-        message = args.getString("message");
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        Button cast = (Button) view.findViewById(R.id.cast_bottle);
-        cast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
-                AvailableBottle newBottle = new AvailableBottle();
-                ArrayList<Integer> ratings = new ArrayList<>();
-                for(int i = 0; i < 4; i++)
-                    ratings.add(0);
-                newBottle.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
-                newBottle.saveInBackground();
-                getDialog().dismiss();
-            }
-        });
-        Button dismiss = (Button) view.findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        showMapDialog(view, savedInstanceState);
-        return view;
+        final View view;
+
+        if(!gps_enabled) {
+            view = inflater.inflate(R.layout.dialog_cant_drop_bottle, container);
+
+            //Set it to be UNABLE to drop!
+            Button cast = (Button) view.findViewById(R.id.cast_bottle);
+            cast.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
+        else {
+            view = inflater.inflate(R.layout.dialog_drop_bottle, container);
+
+            //Set it to be able to drop!
+            Button cast = (Button) view.findViewById(R.id.cast_bottle);
+            cast.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(currentLocation!=null) {
+                        ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
+                        AvailableBottle newBottle = new AvailableBottle();
+                        ArrayList<Integer> ratings = new ArrayList<>();
+                        for (int i = 0; i < 4; i++)
+                            ratings.add(0);
+                        newBottle.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
+                        newBottle.saveInBackground();
+                        getDialog().dismiss();
+                    }
+                    else
+                    {
+                        Snackbar.make(view, "You're lost at sea matey, find yer location first!", Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+
+            //Retrieve the preferences from this fragment's context.
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+            //Pull the map_switch and return false if this value does not exist (the default value)
+            mapsVal = preferences.getBoolean("map_switch", false);
+
+
+            Bundle args = getArguments();
+            message = args.getString("message");
+            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
+            Button dismiss = (Button) view.findViewById(R.id.dismiss);
+            dismiss.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+            showMapDialog(view, savedInstanceState);
+            return view;
     }
 
 

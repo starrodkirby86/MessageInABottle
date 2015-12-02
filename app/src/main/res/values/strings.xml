@@ -21,6 +21,7 @@
     <string name="title_activity_comments">CommentsActivity</string>
     <string name="static_label">Here be what pirates be sayin\' </string>
     <string name="cast_bottle_title">Cast yer bottle to the sea!</string>
+    <string name="warning_no_location">Warning: No Location Detected</string>
 
 
     <string name="title_activity_login">Sign in</string>
