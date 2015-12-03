@@ -16,22 +16,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_register"
         android:src="@drawable/pirate_hat"
-        android:layout_alignBottom="@+id/etUsername"
+        android:layout_alignBottom="@+id/username_prompt"
         android:layout_marginBottom="45dp"/>
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="45dp"
         android:text="Log In"
-        android:id="@+id/bLogin"
+        android:id="@+id/login_button"
         android:clickable="true"
         android:textColor="#000000"
         android:textStyle="bold"
-        android:layout_below="@+id/etPassword"
-        android:layout_alignRight="@+id/etPassword"
-        android:layout_alignEnd="@+id/etPassword"
-        android:layout_alignLeft="@+id/etPassword"
-        android:layout_alignStart="@+id/etPassword"
+        android:layout_below="@+id/password_prompt"
+        android:layout_alignRight="@+id/password_prompt"
+        android:layout_alignEnd="@+id/password_prompt"
+        android:layout_alignLeft="@+id/password_prompt"
+        android:layout_alignStart="@+id/password_prompt"
         android:background="#2E9AFE"
         android:layout_marginTop="20dp"
         />
@@ -44,16 +44,16 @@
         android:id="@+id/register_here"
         android:clickable="true"
         android:textStyle="bold|italic"
-        android:layout_below="@+id/bLogin"
-        android:layout_alignLeft="@+id/etPassword"
-        android:layout_alignStart="@+id/etPassword"
+        android:layout_below="@+id/login_button"
+        android:layout_alignLeft="@+id/password_prompt"
+        android:layout_alignStart="@+id/password_prompt"
         android:layout_marginTop="10dp"/>
 
     <EditText
         android:inputType="text"
         android:layout_width="320dp"
         android:layout_height="45dp"
-        android:id="@+id/etUsername"
+        android:id="@+id/username_prompt"
         android:layout_centerVertical="true"
         android:hint="Username"
         android:layout_centerHorizontal="true" />
@@ -64,11 +64,11 @@
         android:layout_height="45dp"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/etPassword"
+        android:id="@+id/password_prompt"
         android:hint="Password"
-        android:layout_below="@+id/etUsername"
-        android:layout_alignLeft="@+id/etUsername"
-        android:layout_alignStart="@+id/etUsername" />
+        android:layout_below="@+id/username_prompt"
+        android:layout_alignLeft="@+id/username_prompt"
+        android:layout_alignStart="@+id/username_prompt" />
 
     <TextView
         android:layout_width="wrap_content"

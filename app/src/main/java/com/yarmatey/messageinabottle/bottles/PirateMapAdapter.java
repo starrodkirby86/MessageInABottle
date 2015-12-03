@@ -12,14 +12,14 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.yarmatey.messageinabottle.R;
-import com.yarmatey.messageinabottle.inventory.StaticBottlesFragment;
+import com.yarmatey.messageinabottle.inventory.PirateMapFragment;
 
 import java.util.List;
 
 /**
  * Created by Jason on 11/27/2015.
  */
-public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.ViewHolder> {
+public class PirateMapAdapter extends RecyclerView.Adapter<PirateMapAdapter.ViewHolder> {
 
 
         private static final String BEST_RATING = "Yar Har! + ";
@@ -32,10 +32,10 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
         private static final int MAX_POSTS = 250;
         private static final int RANGE = 10000;
         private ViewGroup parseParent;
-        private StaticBottlesFragment fragment;
-        private MapBottleAdapter pirateMastAdapter = this;
+        private PirateMapFragment fragment;
+        private PirateMapAdapter pirateMastAdapter = this;
 
-        public MapBottleAdapter(Context context, ViewGroup parentIn, final ParseGeoPoint location, StaticBottlesFragment fragment) {
+        public PirateMapAdapter(Context context, ViewGroup parentIn, final ParseGeoPoint location, PirateMapFragment fragment) {
             this.fragment = fragment;
             parseParent = parentIn;
             ParseQueryAdapter.QueryFactory<PirateMast> factory = new ParseQueryAdapter.QueryFactory<PirateMast>() {
@@ -91,7 +91,7 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
         }
 
         @Override
-        public MapBottleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public PirateMapAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v;
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.recyclerview_pirate_mast, parent, false);
@@ -250,7 +250,7 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
             }
         }
 
-        public void itemInserted() {
+        public void reload() {
             parseAdapter.loadObjects();
             //parseAdapter.notifyDataSetChanged();
         }

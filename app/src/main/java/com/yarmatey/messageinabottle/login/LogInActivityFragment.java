@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -43,12 +42,11 @@ public class LogInActivityFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_log_in, container, false);
 
         //Load in objects needed to log in
-        final Button button = (Button) view.findViewById(R.id.bLogin);
-        final Button button2 = (Button) view.findViewById(R.id.register);
+        final Button button = (Button) view.findViewById(R.id.login_button);
+        final Button button2 = (Button) view.findViewById(R.id.bRegister);
         final TextView anon = (TextView) view.findViewById(R.id.anon_log_in);
-        final EditText username = (EditText) view.findViewById(R.id.etUsername);
-        final EditText password = (EditText) view.findViewById(R.id.etPassword);
-        final TextView logout = (TextView) view.findViewById(R.id.log_out);
+        final EditText username = (EditText) view.findViewById(R.id.username_prompt);
+        final EditText password = (EditText) view.findViewById(R.id.password_prompt);
 
 
         //anonymous log in click
@@ -65,16 +63,6 @@ public class LogInActivityFragment extends Fragment {
             }
         });
 
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ParseUser.getCurrentUser() != null) {
-                    Snackbar.make(v, "Logging out of: " + ParseUser.getCurrentUser().getUsername(), Snackbar.LENGTH_SHORT).show();
-                    ParseUser.logOut();
-                }
-            }
-        });
-
         return view;
     }
 
@@ -85,9 +73,6 @@ public class LogInActivityFragment extends Fragment {
          */
         EditText username; //changed
         EditText password;
-
-
-
 
         //CONSTRUCTORS
         public logInClick(EditText u, EditText p) { // retrieves username and password
@@ -111,10 +96,9 @@ public class LogInActivityFragment extends Fragment {
         public void onClick(final View v) {
             final Intent intent = new Intent(getActivity(), Inventory.class);//Intent to launch to MessageActivity
 //            Intent intent2 = new Intent(getActivity(), RegisterActivity.class);
-            CheckBox checkBox = (CheckBox) getActivity().findViewById(R.id.checkBox);
 
             //Log In button pressed
-            if (v.getId() == R.id.bLogin) {
+            if (v.getId() == R.id.login_button) {
                 //parse log in info
                 ParseUser.logInInBackground(username.getText().toString(), password.getText().toString(), new LogInCallback() {
                     @Override
@@ -127,12 +111,6 @@ public class LogInActivityFragment extends Fragment {
                         }
                     }
                 });
-
-
-                if(checkBox.isChecked()) {
-                    //TODO add remember me option
-                }
-
             }
             else if (v.getId() == R.id.anon_log_in) {
                 ParseAnonymousUtils.logIn(new LogInCallback() {

@@ -3,23 +3,23 @@
     <!-- These settings headers are only used on tablets. -->
     <!-- Default Headers
     <header
-        android:fragment="com.yarmatey.messageinabottle.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="com.yarmatey.messageinabottle.settings.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general"
         android:icon="@drawable/ic_info_black_24dp" />
 
     <header
-        android:fragment="com.yarmatey.messageinabottle.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="com.yarmatey.messageinabottle.settings.SettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications"
         android:icon="@drawable/ic_notifications_black_24dp" />
 
     <header
-        android:fragment="com.yarmatey.messageinabottle.SettingsActivity$DataSyncPreferenceFragment"
+        android:fragment="com.yarmatey.messageinabottle.settings.SettingsActivity$DataSyncPreferenceFragment"
         android:title="@string/pref_header_data_sync"
         android:icon="@drawable/ic_sync_black_24dp" />
         -->
 
     <header
-        android:fragment="com.yarmatey.messageinabottle.SettingsActivity$BottlesPreferenceFragment"
+        android:fragment="com.yarmatey.messageinabottle.settings.SettingsActivity$BottlesPreferenceFragment"
         android:title="@string/pref_header_bottles"
         android:icon="@drawable/floating_bottle"
         />

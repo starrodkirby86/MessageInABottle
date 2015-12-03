@@ -50,9 +50,11 @@ public class PirateMast extends ParseObject {
     public List<String> getComments() {return getList(COMMENTS);}
     public ParseUser getAuthor() {return getParseUser(AUTHOR);}
     public List<Integer> getRatings() {
+        if (ratings != null)
+            return ratings;
         List<Object> list = getList(RATINGS);
-        List<Integer> ratings = new ArrayList<>(4);
-        if (list == null || list.size() < 4) {
+        ratings = new ArrayList<>(4);
+        if (list == null) {
             for (int i = 0; i < 4; i++)
                 ratings.add(0);
             setRatings(ratings);
@@ -93,7 +95,10 @@ public class PirateMast extends ParseObject {
         put(COMMENTS, c);
     }
     public void setRatings(List<Integer> ratings) {
-        put(RATINGS,ratings);
+        this.ratings = ratings;
+    }
+    private void saveRatings() {
+        put(RATINGS, ratings);
     }
 
     public void addComment(String newComment) {
@@ -110,12 +115,6 @@ public class PirateMast extends ParseObject {
         setLastUser(user);
         setComments(comments);
         setRatings(ratings);
-    }
-    public void setAll(PickedUpBottle newObject){
-        setPoint(newObject.getPoint());
-        setMessage(newObject.getMessage());
-        setBottleType(newObject.getBottleType());
-        setLastUser(newObject.getLastUser());
-        setComments(newObject.getComments());
+        saveRatings();
     }
 }

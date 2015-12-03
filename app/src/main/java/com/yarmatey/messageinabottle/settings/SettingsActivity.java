@@ -1,4 +1,4 @@
-package com.yarmatey.messageinabottle;
+package com.yarmatey.messageinabottle.settings;
 
 
 import android.annotation.TargetApi;
@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.parse.ParseUser;
+import com.yarmatey.messageinabottle.R;
 import com.yarmatey.messageinabottle.login.LogInActivity;
 
 /**

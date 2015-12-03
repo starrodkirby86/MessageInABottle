@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minHeight="1000dp"
+    android:minWidth="1000dp"
+    android:gravity="center"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:background="@color/colorAccent">
+
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/warning_no_location"
+        android:textSize="20dp"
+        android:textColor="#f30"/>
+
+        <com.google.android.gms.maps.MapView
+            android:id = "@+id/map_view_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/cast_bottle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="#666"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="Can't Cast bottle" />
+        <Button
+            android:id="@+id/dismiss"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:text="Dismiss" />
+    </LinearLayout>
+
+</LinearLayout>

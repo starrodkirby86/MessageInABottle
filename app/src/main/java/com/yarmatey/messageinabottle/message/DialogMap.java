@@ -1,10 +1,13 @@
 package com.yarmatey.messageinabottle.message;
 
+import android.content.Context;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,70 +71,97 @@ public class DialogMap extends DialogFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //Retrieve the preferences from this fragment's context.
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        //Pull the map_switch and return false if this value does not exist (the default value)
-        mapsVal = preferences.getBoolean("map_switch", false);
+        //FIRST: We check to see if we even can cast this bottle!
+        LocationManager lm = (LocationManager)this.getContext().getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
 
-        View view = inflater.inflate(R.layout.dialog_drop_bottle, container);
-        Bundle args = getArguments();
-        message = args.getString("message");
-        isBottle = args.getBoolean("type");
-        TextView dialogTitle = (TextView) view.findViewById(R.id.dialog_title);
-        if (isBottle) {
-            dialogTitle.setText("Cast yer bottle to the Sea!");
+        final View view;
+
+        if(!gps_enabled) {
+            view = inflater.inflate(R.layout.dialog_cant_drop_bottle, container);
+
+            //Set it to be UNABLE to drop!
+            Button cast = (Button) view.findViewById(R.id.cast_bottle);
+            cast.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Snackbar.make(view, "You're lost at sea matey, find yer location first!", Snackbar.LENGTH_SHORT).show();
+                }
+            });
         }
+
         else {
-            dialogTitle.setText("Set yer pirate mast for all to see!");
+            view = inflater.inflate(R.layout.dialog_drop_bottle, container);
+            TextView dialogTitle = (TextView) view.findViewById(R.id.dialog_title);
+            if (isBottle) {
+                dialogTitle.setText("Cast yer bottle to the Sea!");
+            }
+            else {
+                dialogTitle.setText("Set yer pirate mast for all to see!");
+            }
+            Bundle args = getArguments();
+            message = args.getString("message");
+            isBottle = args.getBoolean("type");
+            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                    .addApi(LocationServices.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
+            getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            //Set it to be able to drop!
+            Button cast = (Button) view.findViewById(R.id.cast_bottle);
+            cast.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(currentLocation!=null) {
+                        boolean isMast = false;
+                        ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
+                        if (isBottle) {
+                            AvailableBottle newBottle = new AvailableBottle();
+                            ArrayList<Integer> ratings = new ArrayList<>();
+                            for (int i = 0; i < 4; i++)
+                                ratings.add(0);
+                            newBottle.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
+                            newBottle.saveInBackground();
+                        } else {
+                            PirateMast newMast = new PirateMast();
+                            isMast = true;
+                            ArrayList<Integer> ratings = new ArrayList<>();
+                            for (int i = 0; i < 4; i++)
+                                ratings.add(0);
+                            newMast.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
+                            newMast.saveInBackground();
+                        }
+                        getDialog().dismiss();
+                        ((MessageActivity) getActivity()).exitWithValue(isMast);
+                    }
+                    else
+                    {
+                        Snackbar.make(view, "You're lost at sea matey, find yer location first!", Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        Button cast = (Button) view.findViewById(R.id.cast_bottle);
-        cast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isMast = false;
-                ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
-                if (isBottle) {
-                    AvailableBottle newBottle = new AvailableBottle();
-                    ArrayList<Integer> ratings = new ArrayList<>();
-                    for (int i = 0; i < 4; i++)
-                        ratings.add(0);
-                    newBottle.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
-                    newBottle.saveInBackground();
+
+            //Retrieve the preferences from this fragment's context.
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
+            //Pull the map_switch and return false if this value does not exist (the default value)
+            mapsVal = preferences.getBoolean("map_switch", false);
+
+
+
+            Button dismiss = (Button) view.findViewById(R.id.dismiss);
+            dismiss.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
                 }
-                else {
-                    PirateMast newMast = new PirateMast();
-                    isMast = true;
-                    ArrayList<Integer> ratings = new ArrayList<>();
-                    for (int i = 0; i < 4; i++)
-                        ratings.add(0);
-                    newMast.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
-                    newMast.saveInBackground();
-                }
-                getDialog().dismiss();
-                ((MessageActivity) getActivity()).exitWithValue(isMast);
-            }
-        });
-        Button dismiss = (Button) view.findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        if (mapsVal)
+            });
             showMapDialog(view, savedInstanceState);
-        else {
-            TextView tv = (TextView) view.findViewById(R.id.dialog_message);
-            tv.setText(message);
-            view.findViewById(R.id.map_view_dialog).setVisibility(View.GONE);
-        }
-        return view;
+            return view;
     }
 
 

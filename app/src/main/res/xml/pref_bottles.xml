@@ -33,19 +33,19 @@
             True: Adult Language Allowed
             False: Adult Language Blocked
     -->
-    <SwitchPreference
-        android:key="sailor_switch"
-        android:title="@string/sailor_mouth"
-        android:summary="@string/sailor_mouth_description"
-        android:defaultValue="false" />
+    <!--<SwitchPreference-->
+        <!--android:key="sailor_switch"-->
+        <!--android:title="@string/sailor_mouth"-->
+        <!--android:summary="@string/sailor_mouth_description"-->
+        <!--android:defaultValue="false" />-->
 
     <!-- Other Filters Menu
             Links to another menu that allows the user to type in filter entries.
     -->
-    <Preference
-        android:title="@string/filters"
-        android:summary="@string/filters_description"
-        android:fragment="com.yarmatey.messageinabottle.LogInActivityFragment"
-        />
+    <!--<Preference-->
+        <!--android:title="@string/filters"-->
+        <!--android:summary="@string/filters_description"-->
+        <!--android:fragment="com.yarmatey.messageinabottle.login.LogInActivityFragment"-->
+        <!--/>-->
 
 </PreferenceScreen>

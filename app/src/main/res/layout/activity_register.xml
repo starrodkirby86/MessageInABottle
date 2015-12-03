@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_register"
         android:src="@drawable/pirate_hat"
-        android:layout_alignBottom="@+id/etUsername"
+        android:layout_alignBottom="@+id/username_prompt"
         android:layout_marginBottom="45dp"/>
 
 
@@ -41,7 +41,7 @@
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="45dp"
-        android:id="@+id/etUsername"
+        android:id="@+id/username_prompt"
         android:layout_centerVertical="true"
         android:hint="@string/prompt_username" />
 
@@ -50,8 +50,8 @@
         android:layout_height="45dp"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/etPassword"
-        android:layout_below="@+id/etUsername"
+        android:id="@+id/password_prompt"
+        android:layout_below="@+id/username_prompt"
         android:layout_marginTop="10dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -65,7 +65,7 @@
         android:ems="10"
         android:id="@+id/etPassword2"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/etPassword"
+        android:layout_below="@+id/password_prompt"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:hint="Repeat Password" />

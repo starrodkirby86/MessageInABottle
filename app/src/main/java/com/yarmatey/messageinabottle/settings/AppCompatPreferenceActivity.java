@@ -1,4 +1,4 @@
-package com.yarmatey.messageinabottle;
+package com.yarmatey.messageinabottle.settings;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

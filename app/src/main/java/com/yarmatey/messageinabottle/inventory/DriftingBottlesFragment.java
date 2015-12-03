@@ -39,8 +39,7 @@ public class DriftingBottlesFragment extends Fragment{
      * @return A new instance of fragment DriftingBottlesFragment.
      */
     public static DriftingBottlesFragment newInstance() {
-        DriftingBottlesFragment fragment = new DriftingBottlesFragment();
-        return fragment;
+        return new DriftingBottlesFragment();
     }
 
     public DriftingBottlesFragment() {}

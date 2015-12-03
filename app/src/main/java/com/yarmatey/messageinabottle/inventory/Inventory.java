@@ -1,18 +1,22 @@
 package com.yarmatey.messageinabottle.inventory;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,9 +37,10 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
-import com.yarmatey.messageinabottle.SettingsActivity;
+import com.yarmatey.messageinabottle.settings.SettingsActivity;
 import com.yarmatey.messageinabottle.bottles.AvailableBottle;
 import com.yarmatey.messageinabottle.bottles.PickedUpBottle;
+import com.yarmatey.messageinabottle.bottles.PirateMast;
 import com.yarmatey.messageinabottle.message.MessageActivity;
 
 import java.util.List;
@@ -55,7 +60,7 @@ public class Inventory extends AppCompatActivity
     private ViewPager mViewPager;
     private GoogleApiClient mGoogleApiClient;
     private DriftingBottlesFragment driftingBottlesFragment;
-    private StaticBottlesFragment staticBottleFragment;
+    private PirateMapFragment staticBottleFragment;
     private UserPirateMastFragment userPirateMastFragment;
     public Location currentLocation;
 
@@ -164,6 +169,40 @@ public class Inventory extends AppCompatActivity
         super.onStop();
     }
 
+//TODO: Replicate the following onResume as necessary to guarantee knowledge of location services.
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocationManager lm = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {}
+        if(!gps_enabled){
+
+            //TODO: We have two options gents, we can either close the app off (replace the below with a load of noLocation.java) or continue allowing access
+            final Context context = this;
+            AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+            dialog.setMessage(context.getResources().getString(R.string.gps_network_not_enabled));
+            dialog.setPositiveButton(context.getResources().getString(R.string.open_location_settings), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    Intent myIntent = new Intent( Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    context.startActivity(myIntent);
+                }
+            });
+            dialog.setNegativeButton(context.getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+
+                }
+            });
+            dialog.show();
+            //TODO: SEE ABOVE. End of the stuff we would replace with a load of noLocation.java.
+        }
+    }
+
     public Location getCurrentLocation() {
         return currentLocation;
     }
@@ -240,7 +279,6 @@ public class Inventory extends AppCompatActivity
                         } catch (ParseException e1) {
                             e1.printStackTrace();
                         }
-                        Snackbar.make(mViewPager, pickedUpBottle.getString(AvailableBottle.MESSAGE), Snackbar.LENGTH_SHORT).show();
                         if (driftingBottlesFragment != null) {
                             driftingBottlesFragment.addBottle();
                         }
@@ -275,7 +313,7 @@ public class Inventory extends AppCompatActivity
                      driftingBottlesFragment= DriftingBottlesFragment.newInstance();
                     return driftingBottlesFragment;
                 case 1:
-                    staticBottleFragment = StaticBottlesFragment.newInstance();
+                    staticBottleFragment = PirateMapFragment.newInstance();
                     return staticBottleFragment;
                 case 2:
                     userPirateMastFragment = UserPirateMastFragment.newInstance();
@@ -298,7 +336,7 @@ public class Inventory extends AppCompatActivity
                 case 0:
                     return "Ye Own Booty";
                 case 1:
-                    return "Pirate Masts";
+                    return "Pirate Map";
                 case 2:
                     if (!ParseAnonymousUtils.isLinked(ParseUser.getCurrentUser()))
                         return ParseUser.getCurrentUser().getUsername() + "'s Locker";
@@ -320,5 +358,12 @@ public class Inventory extends AppCompatActivity
                 }
             }
         }
+    }
+
+    public void notifyStaticBottleDataChange(PirateMast mast) {
+        staticBottleFragment.notifyChange(mast);
+    }
+    public void notifyUserMastsDataChange() {
+        userPirateMastFragment.notifyChange();
     }
 }

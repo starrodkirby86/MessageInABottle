@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.yarmatey.messageinabottle.R;
-import com.yarmatey.messageinabottle.SettingsActivity;
+import com.yarmatey.messageinabottle.settings.SettingsActivity;
 
 
 public class MessageActivity extends AppCompatActivity{

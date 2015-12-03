@@ -17,6 +17,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.inventory.UserPirateMastFragment;
 
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class UserPirateMastAdapter extends RecyclerView.Adapter<UserPirateMastAd
     private ParseQueryAdapter<PirateMast> parseAdapter;
 
     private ViewGroup parseParent;
-
-    private UserPirateMastAdapter userPirateMastAdapter = this;
+    private UserPirateMastFragment fragment;
+    private UserPirateMastAdapter userPostingsFragment = this;
     public boolean isEmpty;
 
     //Declaring preferences, warning on discard to be accessed later
@@ -52,8 +53,9 @@ public class UserPirateMastAdapter extends RecyclerView.Adapter<UserPirateMastAd
         }
     };
 
-    public UserPirateMastAdapter(Context context, ViewGroup parentIn) {
+    public UserPirateMastAdapter(Context context, ViewGroup parentIn, UserPirateMastFragment fragment) {
         parseParent = parentIn;
+        this.fragment = fragment;
         ParseQueryAdapter.QueryFactory<PirateMast> factory = new ParseQueryAdapter.QueryFactory<PirateMast>() {
             @Override
             public ParseQuery<PirateMast> create() {
@@ -121,8 +123,9 @@ public class UserPirateMastAdapter extends RecyclerView.Adapter<UserPirateMastAd
                                         PirateMast oldBottle = parseAdapter.getItem(vh.getAdapterPosition());
                                         oldBottle.unpin();
                                         oldBottle.delete();
-                                        userPirateMastAdapter.notifyItemRemoved(vh.getAdapterPosition());
+                                        userPostingsFragment.notifyItemRemoved(vh.getAdapterPosition());
                                         parseAdapter.loadObjects();
+                                        fragment.sendDataChange(oldBottle);
 
                                     } catch (ParseException e) {
                                         e.printStackTrace();
@@ -136,7 +139,7 @@ public class UserPirateMastAdapter extends RecyclerView.Adapter<UserPirateMastAd
                     try {
                         parseAdapter.getItem(vh.getAdapterPosition()).unpin();
                         parseAdapter.getItem(vh.getAdapterPosition()).delete();
-                        userPirateMastAdapter.notifyItemRemoved(vh.getAdapterPosition());
+                        userPostingsFragment.notifyItemRemoved(vh.getAdapterPosition());
                         parseAdapter.loadObjects();
 
                     } catch (ParseException e) {
@@ -176,15 +179,13 @@ public class UserPirateMastAdapter extends RecyclerView.Adapter<UserPirateMastAd
         }
 
         public void onLoaded(List<PirateMast> objects, Exception e) {
-            userPirateMastAdapter.notifyDataSetChanged();
+            userPostingsFragment.notifyDataSetChanged();
             isEmpty = objects.isEmpty();
 
         }
     }
 
-    public void itemInserted() {
-        //notifyItemInserted(this.getItemCount());
+    public void reload() {
         parseAdapter.loadObjects();
-        //userPirateMastAdapter.notifyItemInserted(this.getItemCount());
     }
 }

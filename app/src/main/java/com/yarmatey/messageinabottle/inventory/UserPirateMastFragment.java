@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.bottles.PirateMast;
 import com.yarmatey.messageinabottle.bottles.UserPirateMastAdapter;
 
 /**
@@ -36,10 +37,20 @@ public class UserPirateMastFragment extends Fragment {
         mRecyclerView.setHasFixedSize(false);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
-        mAdapter = new UserPirateMastAdapter(getContext(), container);
+        mAdapter = new UserPirateMastAdapter(getContext(), container, this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.getItemAnimator().setRemoveDuration(250);
         mRecyclerView.getItemAnimator().setAddDuration(500);
         return v;
+    }
+
+
+    public void sendDataChange(PirateMast mast) {
+        ((Inventory) getActivity()).notifyStaticBottleDataChange(mast);
+    }
+
+    public void notifyChange() {
+        if(mAdapter != null) //TODO need a better way to notify when adding new mast
+            mAdapter.reload();
     }
 }
