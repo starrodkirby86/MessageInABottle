@@ -120,8 +120,6 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
         public void onBindViewHolder(ViewHolder holder, int position) {
             parseAdapter.getView(position, holder.card, parseParent);
 
-            fragment.addMarkerIfUnique(
-                    parseAdapter.getItem(holder.getAdapterPosition()));
         }
 
         @Override
@@ -244,6 +242,9 @@ public class MapBottleAdapter extends RecyclerView.Adapter<MapBottleAdapter.View
 
             public void onLoaded(List<PirateMast> objects, Exception e) {
                 pirateMastAdapter.notifyDataSetChanged();
+
+                for(PirateMast mast : objects)
+                    fragment.addMarkerIfUnique(mast);
                 //parseAdapter.notifyDataSetChanged();
                 //isEmpty = objects.isEmpty();
             }
