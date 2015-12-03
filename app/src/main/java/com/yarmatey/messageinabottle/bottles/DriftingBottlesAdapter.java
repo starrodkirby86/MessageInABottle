@@ -211,32 +211,41 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                 int newVal;
                 switch (isRated) {
                     case 1:
-                        if (v.getId() == R.id.yar_har_rating)
-                            return;
                         newVal = ratings.get(0) - 1;
                         setText(rateHolders[0], newVal, BEST_RATING);
                         ratings.set(0,newVal);
+                        if (v.getId() == R.id.yar_har_rating){
+                            bottle.setRated(0);
+                            return;
+                        }
                         break;
                     case 2:
-                        if (v.getId() == R.id.aye_rating)
-                            return;
+
                         newVal = ratings.get(1) - 1;
                         setText(rateHolders[1], newVal, GOOD_RATING);
                         ratings.set(1, newVal);
+                        if (v.getId() == R.id.aye_rating){
+                            bottle.setRated(0);
+                            return;
+                        }
                         break;
                     case 3:
-                        if (v.getId() == R.id.nay_rating)
-                            return;
                         newVal = ratings.get(2) - 1;
                         setText(rateHolders[2], newVal, BAD_RATING);
                         ratings.set(2, newVal);
+                        if (v.getId() == R.id.nay_rating) {
+                            bottle.setRated(0);
+                            return;
+                        }
                         break;
                     case 4:
-                        if (v.getId() == R.id.scurvy_rating)
-                            return;
                         newVal = ratings.get(3) - 1;
                         setText(rateHolders[3], newVal, WORST_RATING);
                         ratings.set(3, newVal);
+                        if (v.getId() == R.id.scurvy_rating){
+                            bottle.setRated(0);
+                            return;
+                        }
                         break;
                 }
             }
