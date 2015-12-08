@@ -37,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch(v.getId()) {
             case R.id.bRegister:
 
@@ -49,13 +49,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     return;
                 }
 
-                ParseUser user = new ParseUser();
+                final ParseUser user = new ParseUser();
                 user.setUsername(username);
                 user.setPassword(password);
                 user.signUpInBackground(new SignUpCallback() {
 
                     public void done(ParseException e) {
-                        Toast.makeText(getApplicationContext(), "In the thread", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), user.getUsername() + " joined the crew!", Toast.LENGTH_SHORT).show();
                         if (e == null) { //Woo!! Let them use app now.
                             Intent intent_login = new Intent(RegisterActivity.this,LogInActivity.class);
                             startActivity(intent_login);

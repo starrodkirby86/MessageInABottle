@@ -242,7 +242,8 @@ public class PirateMapAdapter extends RecyclerView.Adapter<PirateMapAdapter.View
 
             public void onLoaded(List<PirateMast> objects, Exception e) {
                 pirateMastAdapter.notifyDataSetChanged();
-
+                if (objects == null)
+                    return;
                 for(PirateMast mast : objects)
                     fragment.addMarkerIfUnique(mast);
                 //parseAdapter.notifyDataSetChanged();
