@@ -291,7 +291,7 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
     public class OnQueryLoadListener implements ParseQueryAdapter.OnQueryLoadListener<PickedUpBottle> {
 
         public void onLoading() {
-
+            //TODO add loading animation
         }
 
         public void onLoaded(List<PickedUpBottle> objects, Exception e) {

@@ -148,7 +148,7 @@ public class PirateMapFragment extends Fragment {
 
 
 
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier("x_marker", "drawable", getContext().getPackageName()));
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier("x_marker", "drawable",  getContext().getPackageName()));
         Bitmap resizedImage = Bitmap.createScaledBitmap(imageBitmap, 64, 64, false);
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(resizedImage));
         Marker marker = map.addMarker(markerOptions);
