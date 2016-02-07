@@ -37,6 +37,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.bottles.BottleAttribute;
 import com.yarmatey.messageinabottle.settings.SettingsActivity;
 import com.yarmatey.messageinabottle.bottles.AvailableBottle;
 import com.yarmatey.messageinabottle.bottles.PickedUpBottle;
@@ -268,8 +269,8 @@ public class Inventory extends AppCompatActivity
                 @Override
                 public void done(List<AvailableBottle> nearestBottle, ParseException e) {
                     if (e == null && !nearestBottle.isEmpty()) {
-                        Log.d("location", "Retrieved Lat: " + nearestBottle.get(0).getParseGeoPoint(AvailableBottle.LOCATION).getLatitude()
-                                + ", Lon: " + nearestBottle.get(0).getParseGeoPoint(AvailableBottle.LOCATION).getLongitude());
+                        Log.d("location", "Retrieved Lat: " + nearestBottle.get(0).getParseGeoPoint(BottleAttribute.Location.value).getLatitude()
+                                + ", Lon: " + nearestBottle.get(0).getParseGeoPoint(BottleAttribute.Location.value).getLongitude());
                         PickedUpBottle pickedUpBottle = new PickedUpBottle();
                         pickedUpBottle.setAll(nearestBottle.get(0));
                         try {
