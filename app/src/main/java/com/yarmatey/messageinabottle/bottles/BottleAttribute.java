@@ -4,7 +4,8 @@ package com.yarmatey.messageinabottle.bottles;
  * Created by Jonathan on 1/27/2016.
  */
 public enum BottleAttribute {
-    Location("location"),
+    Latitude("location"),
+    Longitude("longitude"),
     Message("message"),
     Status("type"),
     Author("author"),

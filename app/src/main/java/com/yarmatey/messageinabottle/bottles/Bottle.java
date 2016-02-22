@@ -3,6 +3,7 @@ package com.yarmatey.messageinabottle.bottles;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.location.Location;
+import android.util.Log;
 
 import com.yarmatey.messageinabottle.sql.BottleContract;
 
@@ -10,8 +11,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Jonathan on 1/27/2016.
@@ -48,9 +53,15 @@ public class Bottle {
         contentValues = new ContentValues();
         setMessage("Test message");
         setAuthor("Pirate");
-        setBottleType(0);
+        setBottleStatus(0);
         setLastUser("Another Pirate");
         setRated(0);
+        setLastUpdated(Calendar.getInstance());
+        setCreated(Calendar.getInstance());
+        Location location = new Location("");
+        location.setLongitude(35);
+        location.setLatitude(-120);
+        setLocation(location);
         List<Integer> array = new ArrayList<>(0);
         for (int i = 0; i < 4; i++)
             array.add(i, i);
@@ -59,35 +70,55 @@ public class Bottle {
     }
 
     public Bottle(Cursor cursor) {
-        this.message = cursor.getString(
-                cursor.getColumnIndex(BottleAttribute.Message.value));
-        this.author = cursor.getString(
-                cursor.getColumnIndex(BottleAttribute.Author.value));
-        this.status = cursor.getInt(
-                cursor.getColumnIndex(BottleAttribute.Status.value));
-        this.lastUser = cursor.getString(
-                cursor.getColumnIndex(BottleAttribute.LastUser.value));
-
-        this.lastUpdated = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US);
-        try {
-            String timeCreated = cursor.getString(
-                    cursor.getColumnIndex(BottleAttribute.Created.value));
-            String timeUpdated = cursor.getString(
-                    cursor.getColumnIndex(BottleAttribute.Date.value));
-            this.created.setTime(sdf.parse(timeCreated));
-            this.lastUpdated.setTime(sdf.parse(timeUpdated));
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        String temp = cursor.getString(cursor.getColumnIndex(BottleAttribute.Message.value));
+        if (temp == null)
+            temp = "";
+        setMessage(temp); //insert message
+        temp = cursor.getString(cursor.getColumnIndex(BottleAttribute.Author.value));
+        if (temp == null)
+            temp = "";
+        setAuthor(temp); //insert author
+        int tempInt = cursor.getInt(cursor.getColumnIndex(BottleAttribute.Status.value));
+        setBottleStatus(tempInt); //insert status
+        temp = cursor.getString(cursor.getColumnIndex(BottleAttribute.LastUser.value));
+        if (temp == null)
+            temp = "";
+        setLastUser(temp);
+        temp = cursor.getString(
+                cursor.getColumnIndex(BottleAttribute.Created.value));
+        setCreated(temp);
+        temp = cursor.getString(
+                cursor.getColumnIndex(BottleAttribute.Date.value));
+        setLastUpdated(temp);
         double lat = cursor.getDouble(
                 cursor.getColumnIndex(BottleContract.BottleEntry.COLUMN_LATITUDE));
         double lon = cursor.getDouble(
                 cursor.getColumnIndex(BottleContract.BottleEntry.COLUMN_LONGITUDE));
-        this.location = new Location("");
-        this.location.setLatitude(lat);
-        this.location.setLongitude(lon);
+        Location loc = new Location("");
+        loc.setLatitude(lat);
+        loc.setLongitude(lon);
+        setLocation(loc); //set latitude and longitude
+        temp = cursor.getString(cursor.getColumnIndex(BottleAttribute.Ratings.value));
+        if (temp == null)
+            temp = "0 0 0 0";
+        setRatings(temp); //set ratings
+    }
+
+    public boolean readyToInsert() {
+
+        Log.d("Bottle DB", "Verifying values for DB");
+        Log.d("Bottle DB", "ContentValue Length :: " + contentValues.size());
+        int size = 0;
+        for (BottleAttribute attribute : BottleAttribute.values()) {
+            if (!contentValues.containsKey(attribute.value)) {
+                Log.e("Bottle DB", "Verification FAILED: Key " + attribute.value + " is missing");
+                return false;
+            }
+            size++;
+        }
+        if (contentValues.size() != size)
+            return false;
+
     }
 
     public String getMessage() {
@@ -107,9 +138,10 @@ public class Bottle {
         return status;
     }
 
-    public void setBottleType(int t){
+    public void setBottleStatus(int status){
         // Save value to Parse
-        contentValues.put(BottleAttribute.Status.value, t);
+        this.status = status;
+        contentValues.put(BottleAttribute.Status.value, status);
     }
 
 
@@ -184,9 +216,19 @@ public class Bottle {
         return (this.ratings);
     }
 
+    public void setRatings(String ratings) {
+        String [] tempSplit = ratings.split(" ");
+        if (tempSplit.length < 4)
+            tempSplit = new String[]{"0", "0", "0", "0"};
+        ArrayList<Integer> rating = new ArrayList<>(0);
+        for (int i = 0; i < 4; i++) {
+            rating.add(Integer.valueOf(tempSplit[i]));
+        }
+    }
     public void setRatings(List<Integer> ratings) {
         // Save values locally only
         this.ratings = ratings;
+        saveRatings();
     }
 
     private void saveRatings() {
@@ -211,5 +253,46 @@ public class Bottle {
         this.rated = rated;
     }
 
+
+    public void setLocation(Location location) {
+        this.location = location;
+        contentValues.put(BottleAttribute.Latitude.value, location.getLatitude());
+        contentValues.put(BottleAttribute.Longitude.value, location.getLongitude());
+    }
+
+    public void setCreated(Calendar created) {
+        this.created = created;
+        contentValues.put(BottleAttribute.Created.value, this.created.toString());
+    }
+
+    public void setCreated(String timeCreated) {
+        if (timeCreated == null)
+            return;
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US); //insert last user
+        try {
+            Calendar time = Calendar.getInstance();
+            time.setTime(sdf.parse(timeCreated));
+            setCreated(time); //set created
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setLastUpdated(Calendar lastUpdated) {
+        this.lastUpdated = lastUpdated;
+        contentValues.put(BottleAttribute.Date.value, this.lastUpdated.toString());
+    }
+
+    public void setLastUpdated(String  timeUpdated) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US); //insert last user
+        Calendar time = Calendar.getInstance();
+        try {
+            time.setTime(sdf.parse(timeUpdated));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        setLastUpdated(time); //set last updated
+    }
 
 }

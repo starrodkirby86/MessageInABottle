@@ -5,8 +5,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,12 +33,13 @@ import com.yarmatey.messageinabottle.sql.BottleContract;
  * Use the {@link DriftingBottlesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DriftingBottlesFragment extends Fragment{
+public class DriftingBottlesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private RecyclerView mRecyclerView;
     public DriftingBottlesAdapter mAdapter;
     private TextView emptyMessage;
     private int newBottleCount;
+    public static final int BOTTLE_LOADER = 0;
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -78,15 +84,16 @@ public class DriftingBottlesFragment extends Fragment{
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.getItemAnimator().setRemoveDuration(250);
         mRecyclerView.getItemAnimator().setAddDuration(500);
-        Bottle bottle = new Bottle();
-        getContext().getContentResolver().insert(BottleContract.BottleEntry.CONTENT_URI,
-                bottle.getContentValues());
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        Bottle bottle = new Bottle();
+        getContext().getContentResolver().insert(BottleContract.BottleEntry.CONTENT_URI,
+                bottle.getContentValues());
     }
 
     @Override
@@ -125,4 +132,35 @@ public class DriftingBottlesFragment extends Fragment{
     }
 
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri bottles = BottleContract.BottleEntry.CONTENT_URI;
+        // specify an adapter (see also next example)
+        return new CursorLoader(getActivity(),
+                bottles,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(BOTTLE_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(data.getCount() > mAdapter.mCursorAdapter.getCount()) {
+            mAdapter.mCursorAdapter.swapCursor(data);
+            mAdapter.notifyItemInserted(mAdapter.getItemCount());
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.mCursorAdapter.swapCursor(null);
+    }
 }

@@ -38,7 +38,7 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
 
 
     //private ParseQueryAdapter<PickedUpBottle> parseAdapter;
-    private CursorAdapter mCursorAdapter;
+    public CursorAdapter mCursorAdapter;
     private Cursor mCursor;
     private ViewGroup parseParent;
     private BottleTest cursorHepler;
@@ -117,7 +117,7 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
             public void bindView(View view, Context context, Cursor cursor) {
                 TextView titleText = (TextView) view.findViewById(R.id.pirate_mast_title);
                 TextView description = (TextView) view.findViewById(R.id.pirate_mast_message);
-                cursorHepler = new BottleTest(cursor, context);
+                Bottle bottle = new Bottle(cursor);
                 String title="A message from ";
 //                try {
 //                    if(object.getLastUser().fetchIfNeeded().getUsername().length()<=15)
@@ -130,8 +130,8 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
 //                }
 
                 titleText.setText(title);
-                description.setText(cursorHepler.getMessage());
-                List<Integer> ratings = cursorHepler.getRatings();
+                description.setText(bottle.getMessage());
+                List<Integer> ratings = bottle.getRatings();
                 ((TextView) view.findViewById(R.id.yar_har_rating)).setText(String.format("%s%d", BEST_RATING, ratings.get(0)));
                 ((TextView) view.findViewById(R.id.aye_rating)).setText(String.format("%s%d", GOOD_RATING, ratings.get(1)));
                 ((TextView) view.findViewById(R.id.nay_rating)).setText(String.format("%s%d", BAD_RATING, ratings.get(2)));
@@ -330,7 +330,7 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                         mCursor.moveToPosition(position);
                         Bottle bottle = new Bottle(mCursor);
                         bottle.setLastUser(ParseUser.getCurrentUser().toString());
-                        bottle.setBottleType(0); //TODO ADD BOTTLE ENUM
+                        bottle.setBottleStatus(0); //TODO ADD BOTTLE ENUM
                     }
                 })
                 .setNegativeButton("Nay!", new DialogInterface.OnClickListener() {

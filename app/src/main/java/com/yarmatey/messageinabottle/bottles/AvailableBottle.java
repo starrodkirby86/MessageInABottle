@@ -39,7 +39,7 @@ public class AvailableBottle extends Bottle {
 
         //super.setPoint(point);
         super.setMessage(message);
-        super.setBottleType(type);
+        super.setBottleStatus(type);
         //super.setAuthor(author);
         //super.setLastUser(user);
         //super.setComments(comments);
