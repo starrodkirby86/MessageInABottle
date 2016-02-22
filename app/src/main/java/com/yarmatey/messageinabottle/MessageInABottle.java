@@ -24,9 +24,9 @@ public class MessageInABottle extends Application {
         defaultACL.setPublicReadAccess(true);
         defaultACL.setPublicWriteAccess(true);
         ParseACL.setDefaultACL(defaultACL, true);
-        ParseObject.registerSubclass(PickedUpBottle.class);
-        ParseObject.registerSubclass(AvailableBottle.class);
-        ParseObject.registerSubclass(PirateMast.class);
+        //ParseObject.registerSubclass(PickedUpBottle.class);
+        //ParseObject.registerSubclass(AvailableBottle.class);
+        //ParseObject.registerSubclass(PirateMast.class);
         Parse.initialize(this, "OZBa3WcZ3gwkZYGUabDMjyt9Kq3YBWY3cfoDLPnH", "IUJSIrtz1JamTw41lyBW1SDp8rWzzg04j7jV3a95");
     }
 

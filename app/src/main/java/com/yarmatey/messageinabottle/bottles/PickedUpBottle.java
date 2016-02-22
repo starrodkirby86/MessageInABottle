@@ -18,7 +18,7 @@ public class PickedUpBottle extends Bottle {
         super.setRated(0);
     }
 
-    public static ParseQuery<PickedUpBottle> getQuery() {
-        return ParseQuery.getQuery(PickedUpBottle.class);
-    }
+//    public static ParseQuery<PickedUpBottle> getQuery() {
+//        return ParseQuery.getQuery(PickedUpBottle.class);
+//    }
 }

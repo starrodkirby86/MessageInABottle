@@ -1,4 +1,8 @@
 <resources>
+
+    //Content Authority
+    <string name="content_authority">com.yarmatey.messageinabottle.sql.provider</string>
+
     <string name="app_name">Message In A Bottle</string>
     <string name="create_message">Create A Message</string>
     <string name="action_settings">Settings</string>

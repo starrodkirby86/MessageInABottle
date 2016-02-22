@@ -246,7 +246,6 @@ public class Inventory extends AppCompatActivity
         } else {
             GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this, 0).show();
         }
-
     }
 
     /**
@@ -262,36 +261,36 @@ public class Inventory extends AppCompatActivity
             currentLocation = location;
             //Create a point that Parse knows what the location is.
             ParseGeoPoint point = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
-            ParseQuery<AvailableBottle> query = AvailableBottle.getQuery(point, RANGE);
+            //ParseQuery<AvailableBottle> query = AvailableBottle.getQuery(point, RANGE);
 
             //Now to run the query:
-            query.findInBackground(new FindCallback<AvailableBottle>() {
-                @Override
-                public void done(List<AvailableBottle> nearestBottle, ParseException e) {
-                    if (e == null && !nearestBottle.isEmpty()) {
-                        Log.d("location", "Retrieved Lat: " + nearestBottle.get(0).getParseGeoPoint(BottleAttribute.Location.value).getLatitude()
-                                + ", Lon: " + nearestBottle.get(0).getParseGeoPoint(BottleAttribute.Location.value).getLongitude());
-                        PickedUpBottle pickedUpBottle = new PickedUpBottle();
-                        pickedUpBottle.setAll(nearestBottle.get(0));
-                        try {
-                            pickedUpBottle.pin();
-                            pickedUpBottle.save();
-                            AvailableBottle.deleteAll(nearestBottle);
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
-                        }
-                        if (driftingBottlesFragment != null) {
-                            driftingBottlesFragment.addBottle();
-                        }
-                    } else {
-                        if (e == null) {
-                            Log.d("location", "No Bottles!");
-                        } else {
-                            Log.d("location", "Error: " + e.getMessage());
-                        }
-                    }
-                }
-            });
+//            query.findInBackground(new FindCallback<AvailableBottle>() {
+//                @Override
+//                public void done(List<AvailableBottle> nearestBottle, ParseException e) {
+//                    if (e == null && !nearestBottle.isEmpty()) {
+//                        Log.d("location", "Retrieved Lat: " + nearestBottle.get(0).getParseGeoPoint(BottleAttribute.Location.value).getLatitude()
+//                                + ", Lon: " + nearestBottle.get(0).getParseGeoPoint(BottleAttribute.Location.value).getLongitude());
+//                        PickedUpBottle pickedUpBottle = new PickedUpBottle();
+//                        pickedUpBottle.setAll(nearestBottle.get(0));
+//                        try {
+//                            pickedUpBottle.pin();
+//                            pickedUpBottle.save();
+//                            AvailableBottle.deleteAll(nearestBottle);
+//                        } catch (ParseException e1) {
+//                            e1.printStackTrace();
+//                        }
+//                        if (driftingBottlesFragment != null) {
+//                            driftingBottlesFragment.addBottle();
+//                        }
+//                    } else {
+//                        if (e == null) {
+//                            Log.d("location", "No Bottles!");
+//                        } else {
+//                            Log.d("location", "Error: " + e.getMessage());
+//                        }
+//                    }
+//                }
+//            });
         }
     }
 

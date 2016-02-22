@@ -125,14 +125,14 @@ public class DialogMap extends DialogFragment
                             for (int i = 0; i < 4; i++)
                                 ratings.add(0);
                             newBottle.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
-                            newBottle.saveInBackground();
+                            //newBottle.saveInBackground();
                         } else {
                             PirateMast newMast = new PirateMast();
                             isMast = true;
                             ArrayList<Integer> ratings = new ArrayList<>();
                             for (int i = 0; i < 4; i++)
                                 ratings.add(0);
-                            newMast.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
+                            //newMast.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
                             newMast.saveInBackground();
                         }
                         getDialog().dismiss();

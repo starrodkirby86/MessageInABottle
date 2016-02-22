@@ -72,22 +72,22 @@ public class UserPirateMastAdapter extends RecyclerView.Adapter<UserPirateMastAd
                 TextView titleText = (TextView) v.findViewById(R.id.pirate_mast_title);
                 TextView description = (TextView) v.findViewById(R.id.pirate_mast_message);
                 String title="A message from ";
-                try {
-                    if(object.getLastUser().fetchIfNeeded().getUsername().length()<=15)
-                        title = title + object.getLastUser().fetchIfNeeded().getUsername();
-                    else
+                //try {
+//                    if(object.getParseUser().fetchIfNeeded().getUsername().length()<=15)
+//                        title = title + object.getLastUser().fetchIfNeeded().getUsername();
+//                    else
                         title=title+"a pirate";
-                } catch (ParseException e) {
-                    title = title+"a pirate";
-                    e.printStackTrace();
-                }
+                //} catch (ParseException e) {
+                    //title = title+"a pirate";
+                    //e.printStackTrace();
+                //}
                 titleText.setText(title);
-                description.setText(object.getMessage());
-                List<Integer> ratings = object.getRatings();
-                ((TextView) v.findViewById(R.id.yar_har_rating)).setText(BEST_RATING + ratings.get(0));
-                ((TextView) v.findViewById(R.id.aye_rating)).setText(GOOD_RATING + ratings.get(1));
-                ((TextView) v.findViewById(R.id.nay_rating)).setText(BAD_RATING + ratings.get(2));
-                ((TextView) v.findViewById(R.id.scurvy_rating)).setText(WORST_RATING + ratings.get(3));
+                //description.setText(object.getMessage());
+                //List<Integer> ratings = object.getRatings();
+//                ((TextView) v.findViewById(R.id.yar_har_rating)).setText(BEST_RATING + ratings.get(0));
+//                ((TextView) v.findViewById(R.id.aye_rating)).setText(GOOD_RATING + ratings.get(1));
+//                ((TextView) v.findViewById(R.id.nay_rating)).setText(BAD_RATING + ratings.get(2));
+//                ((TextView) v.findViewById(R.id.scurvy_rating)).setText(WORST_RATING + ratings.get(3));
                 return v;
             }
         };

@@ -6,11 +6,12 @@ package com.yarmatey.messageinabottle.bottles;
 public enum BottleAttribute {
     Location("location"),
     Message("message"),
-    Type("type"),
+    Status("type"),
     Author("author"),
     LastUser("user"),
-    Comments("comments"),
     Ratings("ratings"),
+    Date("date"),
+    Created("created")
     ;
 
 
@@ -24,7 +25,7 @@ public enum BottleAttribute {
      * Private constructor for Parse BottleAttribute enum.
      * @param value - Parse database column name
      */
-    private BottleAttribute(String value) {
+    BottleAttribute(String value) {
         // Save string value
         this.value = value;
     }

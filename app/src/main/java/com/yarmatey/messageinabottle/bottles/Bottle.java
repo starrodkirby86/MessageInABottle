@@ -1,18 +1,22 @@
 package com.yarmatey.messageinabottle.bottles;
 
-import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.location.Location;
 
+import com.yarmatey.messageinabottle.sql.BottleContract;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Jonathan on 1/27/2016.
  */
-public class Bottle extends ParseObject {
+public class Bottle {
     /**
      *
      */
@@ -21,7 +25,19 @@ public class Bottle extends ParseObject {
      * Latest ratings given by users.
      */
     private List<Integer> ratings;
+    private String author;
+    private String lastUser;
+    private String message;
+    private int status;
+    private Location location;
+    private Calendar created;
+    private Calendar lastUpdated;
 
+    private ContentValues contentValues;
+
+    public ContentValues getContentValues() {
+        return contentValues;
+    }
 
     /**
      * Generic Bottle class,
@@ -29,83 +45,116 @@ public class Bottle extends ParseObject {
      */
     public Bottle() {
         // Needed for Parse
-        super();
+        contentValues = new ContentValues();
+        setMessage("Test message");
+        setAuthor("Pirate");
+        setBottleType(0);
+        setLastUser("Another Pirate");
+        setRated(0);
+        List<Integer> array = new ArrayList<>(0);
+        for (int i = 0; i < 4; i++)
+            array.add(i, i);
+        setRatings(array);
+
     }
 
+    public Bottle(Cursor cursor) {
+        this.message = cursor.getString(
+                cursor.getColumnIndex(BottleAttribute.Message.value));
+        this.author = cursor.getString(
+                cursor.getColumnIndex(BottleAttribute.Author.value));
+        this.status = cursor.getInt(
+                cursor.getColumnIndex(BottleAttribute.Status.value));
+        this.lastUser = cursor.getString(
+                cursor.getColumnIndex(BottleAttribute.LastUser.value));
 
-    public ParseGeoPoint getPoint() {
-        // Get value from Parse
-        return super.getParseGeoPoint(BottleAttribute.Location.value);
+        this.lastUpdated = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US);
+        try {
+            String timeCreated = cursor.getString(
+                    cursor.getColumnIndex(BottleAttribute.Created.value));
+            String timeUpdated = cursor.getString(
+                    cursor.getColumnIndex(BottleAttribute.Date.value));
+            this.created.setTime(sdf.parse(timeCreated));
+            this.lastUpdated.setTime(sdf.parse(timeUpdated));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        double lat = cursor.getDouble(
+                cursor.getColumnIndex(BottleContract.BottleEntry.COLUMN_LATITUDE));
+        double lon = cursor.getDouble(
+                cursor.getColumnIndex(BottleContract.BottleEntry.COLUMN_LONGITUDE));
+        this.location = new Location("");
+        this.location.setLatitude(lat);
+        this.location.setLongitude(lon);
     }
-
-    public void setPoint(ParseGeoPoint p){
-        // Save value to Parse
-        super.put(BottleAttribute.Location.value, p);
-    }
-
 
     public String getMessage() {
         // Get value from Parse
-        return super.getString(BottleAttribute.Message.value);
+        return message;
     }
 
-    public void setMessage(String m){
+    public void setMessage(String message){
         // Save value to Parse
-        super.put(BottleAttribute.Message.value, m);
+        this.message = message;
+        contentValues.put(BottleAttribute.Message.value, message);
     }
 
 
-    public int getBottleType() {
+    public int getBottleStatus() {
         // Get value from Parse
-        return super.getInt(BottleAttribute.Type.value);
+        return status;
     }
 
     public void setBottleType(int t){
         // Save value to Parse
-        super.put(BottleAttribute.Type.value, t);
+        contentValues.put(BottleAttribute.Status.value, t);
     }
 
 
-    public ParseUser getLastUser() {
+    public String getLastUser() {
         // Get value from Parse
-        return super.getParseUser(BottleAttribute.LastUser.value);
+        return lastUser;
     }
 
-    public void setLastUser(ParseUser user){
+    public void setLastUser(String user){
         // Save value to Parse
-        super.put(BottleAttribute.LastUser.value, user);
+        this.lastUser = user;
+        contentValues.put(BottleAttribute.LastUser.value, user);
     }
 
 
-    public List<String> getComments() {
+//    public List<String> getComments() {
+//        // Get value from Parse
+//        return
+//    }
+
+//    public void setComments(List<String> c){
+//        // Save value to Parse
+//        super.put(BottleAttribute.Comments.value, c);
+//    }
+
+//    public void addComment(String newComment) {
+//        // In order to preserve all previous comments,
+//        // all comments must be loaded from Parse first
+//        List<String> old = this.getComments();
+//        // Then, we can append new comment to this list
+//        old.add(newComment);
+//        // And update Parse with this information
+//        this.setComments(old);
+//    }
+
+
+    public String getAuthor() {
         // Get value from Parse
-        return super.getList(BottleAttribute.Comments.value);
+        return author;
     }
 
-    public void setComments(List<String> c){
+    public void setAuthor(String author) {
         // Save value to Parse
-        super.put(BottleAttribute.Comments.value, c);
-    }
-
-    public void addComment(String newComment) {
-        // In order to preserve all previous comments,
-        // all comments must be loaded from Parse first
-        List<String> old = this.getComments();
-        // Then, we can append new comment to this list
-        old.add(newComment);
-        // And update Parse with this information
-        this.setComments(old);
-    }
-
-
-    public ParseUser getAuthor() {
-        // Get value from Parse
-        return super.getParseUser(BottleAttribute.Author.value);
-    }
-
-    public void setAuthor(ParseUser author) {
-        // Save value to Parse
-        super.put(BottleAttribute.Author.value, author);
+        this.author = author;
+        contentValues.put(BottleAttribute.Author.value, author);
     }
 
 
@@ -115,27 +164,21 @@ public class Bottle extends ParseObject {
         if (this.ratings != null)
             return (this.ratings);
         // Otherwise, attempt to get information from Parse
-        List<Object> list = super.getList(BottleAttribute.Ratings.value);
+        String values = contentValues.getAsString(BottleAttribute.Ratings.value);
         // Create empty list of ratings
         this.ratings = new ArrayList<>(4);
         // Check if there are any previous ratings
         // for this specific bottle
-        if (list == null || list.size() == 0) {
+        if (values == null || values.length() == 0) {
             // If no information, create empty list of zeros
-            list = new ArrayList<>(Arrays.asList(new Object[] {
-                0, 0, 0, 0
-            }));
+            values = "0 0 0 0";
         }
+        String [] splitValues = values.split(" ");
         // Fill local ratings list
         for (int i = 0; i < 4; i++) {
             // If any Parse information,
             // get ratings directly from there
-            if(i < list.size()) {
-                this.ratings.add((int) list.get(i));
-            } else {
-                // Otherwise, pad with zero
-                this.ratings.add(0);
-            }
+            ratings.set(i, Integer.valueOf(splitValues[i]));
         }
         // Return final list of ratings
         return (this.ratings);
@@ -147,8 +190,14 @@ public class Bottle extends ParseObject {
     }
 
     private void saveRatings() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < ratings.size(); i++) {
+            builder.append(ratings.get(i));
+            if (i + 1 < ratings.size())
+                builder.append(" ");
+        }
         // Save values to Parse
-        super.put(BottleAttribute.Ratings.value, ratings);
+        contentValues.put(BottleAttribute.Ratings.value, builder.toString());
     }
 
 
@@ -163,31 +212,4 @@ public class Bottle extends ParseObject {
     }
 
 
-    public void setAll(ParseGeoPoint point, String message, int type, ParseUser author, ParseUser user, List<String> comments, List<Integer> ratings) {
-        // Update all attributes of this bottle
-        this.setPoint(point);
-        this.setMessage(message);
-        this.setBottleType(type);
-        this.setAuthor(author);
-        this.setLastUser(user);
-        this.setComments(comments);
-        this.setRatings(ratings);
-        // NOTE: Ratings must be set and
-        // updated before they are saved here!
-        this.saveRatings();
-    }
-
-    public void setAll(Bottle newObject) {
-        // Re-use our other function for setting
-        // all attributes of this bottle
-        this.setAll(
-                newObject.getPoint(),
-                newObject.getMessage(),
-                newObject.getBottleType(),
-                newObject.getAuthor(),
-                newObject.getLastUser(),
-                newObject.getComments(),
-                newObject.getRatings()
-        );
-    }
 }

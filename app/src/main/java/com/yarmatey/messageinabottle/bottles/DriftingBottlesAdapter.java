@@ -1,14 +1,17 @@
 package com.yarmatey.messageinabottle.bottles;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +21,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.sql.BottleContract;
 
 import java.util.List;
 
@@ -33,12 +37,11 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
     private static final String WORST_RATING = "Scurvy! + ";
 
 
-    private ParseQueryAdapter<PickedUpBottle> parseAdapter;
-
+    //private ParseQueryAdapter<PickedUpBottle> parseAdapter;
+    private CursorAdapter mCursorAdapter;
+    private Cursor mCursor;
     private ViewGroup parseParent;
-
-    private DriftingBottlesAdapter driftingBottlesAdapter = this;
-    public boolean isEmpty;
+    private BottleTest cursorHepler;
 
     //Declaring preferences, warning on discard to be accessed later
     public SharedPreferences preferences;
@@ -56,47 +59,86 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
 
     public DriftingBottlesAdapter(Context context, ViewGroup parentIn) {
         parseParent = parentIn;
-        ParseQueryAdapter.QueryFactory<PickedUpBottle> factory = new ParseQueryAdapter.QueryFactory<PickedUpBottle>() {
+        mCursor = context.getContentResolver().query(
+                BottleContract.BottleEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+//        ParseQueryAdapter.QueryFactory<PickedUpBottle> factory = new ParseQueryAdapter.QueryFactory<PickedUpBottle>() {
+//            @Override
+//            public ParseQuery<PickedUpBottle> create() {
+//                ParseQuery<PickedUpBottle> query = PickedUpBottle.getQuery();
+//                query.fromLocalDatastore();
+//                return query;
+//            }
+//        };
+//        parseAdapter = new ParseQueryAdapter<PickedUpBottle>(context, factory) {
+//            @Override
+//            public View getItemView(PickedUpBottle object, View v, ViewGroup parent) {
+//                if (v == null) {
+//                    v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_bottle, parent, false);
+//                }
+//                super.getItemView(object, v, parent);
+//                TextView titleText = (TextView) v.findViewById(R.id.pirate_mast_title);
+//                TextView description = (TextView) v.findViewById(R.id.pirate_mast_message);
+//                String title="A message from ";
+//                try {
+//                    if(object.getLastUser().fetchIfNeeded().getUsername().length()<=15)
+//                        title = title + object.getLastUser().fetchIfNeeded().getUsername();
+//                    else
+//                        title=title+"a pirate";
+//                } catch (ParseException e) {
+//                    title = title+"a pirate";
+//                    e.printStackTrace();
+//                }
+//                titleText.setText(title);
+//                description.setText(object.getMessage());
+//                List<Integer> ratings = object.getRatings();
+//                ((TextView) v.findViewById(R.id.yar_har_rating)).setText(BEST_RATING + ratings.get(0));
+//                ((TextView) v.findViewById(R.id.aye_rating)).setText(GOOD_RATING + ratings.get(1));
+//                ((TextView) v.findViewById(R.id.nay_rating)).setText(BAD_RATING + ratings.get(2));
+//                ((TextView) v.findViewById(R.id.scurvy_rating)).setText(WORST_RATING + ratings.get(3));
+//                return v;
+//            }
+//        };
+        mCursorAdapter = new CursorAdapter(context, mCursor, 0) {
             @Override
-            public ParseQuery<PickedUpBottle> create() {
-                ParseQuery<PickedUpBottle> query = PickedUpBottle.getQuery();
-                query.fromLocalDatastore();
-                return query;
+            public View newView(Context context, Cursor cursor, ViewGroup parent) {
+                return LayoutInflater
+                        .from(parent.getContext()).inflate(R.layout.recyclerview_bottle, parent, false);
             }
-        };
-        parseAdapter = new ParseQueryAdapter<PickedUpBottle>(context, factory) {
-            @Override
-            public View getItemView(PickedUpBottle object, View v, ViewGroup parent) {
-                if (v == null) {
-                    v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_bottle, parent, false);
-                }
-                super.getItemView(object, v, parent);
-                TextView titleText = (TextView) v.findViewById(R.id.pirate_mast_title);
-                TextView description = (TextView) v.findViewById(R.id.pirate_mast_message);
-                String title="A message from ";
-                try {
-                    if(object.getLastUser().fetchIfNeeded().getUsername().length()<=15)
-                        title = title + object.getLastUser().fetchIfNeeded().getUsername();
-                    else
-                        title=title+"a pirate";
-                } catch (ParseException e) {
-                    title = title+"a pirate";
-                    e.printStackTrace();
-                }
-                titleText.setText(title);
-                description.setText(object.getMessage());
-                List<Integer> ratings = object.getRatings();
-                ((TextView) v.findViewById(R.id.yar_har_rating)).setText(BEST_RATING + ratings.get(0));
-                ((TextView) v.findViewById(R.id.aye_rating)).setText(GOOD_RATING + ratings.get(1));
-                ((TextView) v.findViewById(R.id.nay_rating)).setText(BAD_RATING + ratings.get(2));
-                ((TextView) v.findViewById(R.id.scurvy_rating)).setText(WORST_RATING + ratings.get(3));
-                return v;
-            }
-        };
-        parseAdapter.addOnQueryLoadListener(new OnQueryLoadListener());
-        parseAdapter.loadObjects();
-        setHasStableIds(true);
 
+            @Override
+            public void bindView(View view, Context context, Cursor cursor) {
+                TextView titleText = (TextView) view.findViewById(R.id.pirate_mast_title);
+                TextView description = (TextView) view.findViewById(R.id.pirate_mast_message);
+                cursorHepler = new BottleTest(cursor, context);
+                String title="A message from ";
+//                try {
+//                    if(object.getLastUser().fetchIfNeeded().getUsername().length()<=15)
+//                        title = title + object.getLastUser().fetchIfNeeded().getUsername();
+//                    else
+//                        title=title+"a pirate";
+//                } catch (ParseException e) {
+//                    title = title+"a pirate";
+//                    e.printStackTrace();
+//                }
+
+                titleText.setText(title);
+                description.setText(cursorHepler.getMessage());
+                List<Integer> ratings = cursorHepler.getRatings();
+                ((TextView) view.findViewById(R.id.yar_har_rating)).setText(String.format("%s%d", BEST_RATING, ratings.get(0)));
+                ((TextView) view.findViewById(R.id.aye_rating)).setText(String.format("%s%d", GOOD_RATING, ratings.get(1)));
+                ((TextView) view.findViewById(R.id.nay_rating)).setText(String.format("%s%d", BAD_RATING, ratings.get(2)));
+                ((TextView) view.findViewById(R.id.scurvy_rating)).setText(String.format("%s%d", WORST_RATING, ratings.get(3)));
+            }
+        };
+        setHasStableIds(true);
     }
 
     @Override
@@ -126,34 +168,23 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //Proceed
-                                    try {
-                                        PickedUpBottle oldBottle = parseAdapter.getItem(vh.getAdapterPosition());
-                                        AvailableBottle newBottle = new AvailableBottle();
-                                        newBottle.setAll(oldBottle);
-                                        newBottle.saveEventually();
-                                        oldBottle.unpin();
-                                        oldBottle.delete();
-                                        driftingBottlesAdapter.notifyItemRemoved(vh.getAdapterPosition());
-                                        parseAdapter.loadObjects();
-
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
+                                    //PickedUpBottle oldBottle = (PickedUpBottle) mCursorAdapter.getItem(vh.getAdapterPosition());
+                                    //AvailableBottle newBottle = new AvailableBottle();
+                                    //TODO SEND REQUEST TO HTTPS TO UPDATE BOTTLE
+                                    //TODO CHANGE STATUS TO AVAILABLE
+                                    //driftingBottlesAdapter.notifyItemRemoved(vh.getAdapterPosition())
                                 }
                             })
                             .setNegativeButton("No", null)
                             .show();
                 else {
                     //Proceed
-                    try {
-                        parseAdapter.getItem(vh.getAdapterPosition()).unpin();
-                        parseAdapter.getItem(vh.getAdapterPosition()).delete();
-                        driftingBottlesAdapter.notifyItemRemoved(vh.getAdapterPosition());
-                        parseAdapter.loadObjects();
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    //Proceed
+                    //PickedUpBottle oldBottle = (PickedUpBottle) mCursorAdapter.getItem(vh.getAdapterPosition());
+                    //AvailableBottle newBottle = new AvailableBottle();
+                    //TODO SEND REQUEST TO HTTPS TO UPDATE BOTTLE
+                    //TODO CHANGE STATUS TO AVAILABLE
+                    //driftingBottlesAdapter.notifyItemRemoved(vh.getAdapterPosition())
                 }
             }
         });
@@ -173,12 +204,12 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        parseAdapter.getView(position, holder.card, parseParent);
+        mCursorAdapter.getView(position, holder.card, parseParent);
     }
 
     @Override
     public int getItemCount() {
-        return parseAdapter.getCount();
+        return mCursorAdapter.getCount();
     }
 
 
@@ -203,7 +234,8 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
         }
         @Override
         public void onClick(View v) {
-            PickedUpBottle bottle = parseAdapter.getItem(vh.getAdapterPosition());
+            mCursor.move(vh.getAdapterPosition());
+            Bottle bottle = new Bottle(mCursor);
             if (ratings == null)
                 ratings = bottle.getRatings();
             isRated = bottle.getRated();
@@ -215,7 +247,7 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                         setText(rateHolders[0], newVal, BEST_RATING);
                         ratings.set(0,newVal);
                         if (v.getId() == R.id.yar_har_rating){
-                            bottle.setRated(0);
+                            cursorHepler.setRated(0);
                             return;
                         }
                         break;
@@ -288,24 +320,6 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
         }
     }
 
-    public class OnQueryLoadListener implements ParseQueryAdapter.OnQueryLoadListener<PickedUpBottle> {
-
-        public void onLoading() {
-            //TODO add loading animation
-        }
-
-        public void onLoaded(List<PickedUpBottle> objects, Exception e) {
-            driftingBottlesAdapter.notifyDataSetChanged();
-            isEmpty = objects.isEmpty();
-
-        }
-    }
-
-    public void itemInserted() {
-        //notifyItemInserted(this.getItemCount());
-        parseAdapter.loadObjects();
-        //driftingBottlesAdapter.notifyItemInserted(this.getItemCount());
-    }
     public void showDropBottleDialog(Context context, final int position) {
         new AlertDialog.Builder(context)
                 .setTitle("Cast yer bottle?")
@@ -313,20 +327,10 @@ public class DriftingBottlesAdapter extends RecyclerView.Adapter<DriftingBottles
                 .setPositiveButton("Aye!", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        PickedUpBottle pickedUpBottle = parseAdapter.getItem(position);
-                        ParseGeoPoint point = pickedUpBottle.getPoint(); //currentLocation.getLatitude(), currentLocation.getLongitude());
-                        AvailableBottle newBottle = new AvailableBottle();
-                        newBottle.setAll(pickedUpBottle);
-                        newBottle.setLastUser(ParseUser.getCurrentUser());
-                        newBottle.setPoint(point);
-                        newBottle.saveInBackground();
-                        try {
-                            pickedUpBottle.delete();
-                            driftingBottlesAdapter.notifyItemRemoved(position);
-                            parseAdapter.loadObjects();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        mCursor.moveToPosition(position);
+                        Bottle bottle = new Bottle(mCursor);
+                        bottle.setLastUser(ParseUser.getCurrentUser().toString());
+                        bottle.setBottleType(0); //TODO ADD BOTTLE ENUM
                     }
                 })
                 .setNegativeButton("Nay!", new DialogInterface.OnClickListener() {

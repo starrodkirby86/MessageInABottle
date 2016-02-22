@@ -80,9 +80,11 @@ public class PirateMapFragment extends Fragment {
         Inventory activity = (Inventory) getActivity();
         Location currentLocation = activity.getCurrentLocation();
         ParseGeoPoint geoPoint = new ParseGeoPoint();
+        //TODO Remove geoPoint and
         if (currentLocation == null) {
-            LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            currentLocation = new Location("");
+            currentLocation.setLatitude(36.8184227);
+            currentLocation.setLongitude(-119.7631122);
         }
         geoPoint.setLatitude(currentLocation.getLatitude());
         geoPoint.setLongitude(currentLocation.getLongitude());
@@ -133,18 +135,18 @@ public class PirateMapFragment extends Fragment {
     public Marker addMarker(PirateMast mast) {
         MarkerOptions markerOptions = new MarkerOptions();
         String title="A message from ";
-        try {
-            if(mast.getLastUser().fetchIfNeeded().getUsername().length()<=15)
-                title = title + mast.getLastUser().fetchIfNeeded().getUsername();
-            else
-                title=title+"a pirate";
-        } catch (ParseException e) {
-            title = title+"a pirate";
-            e.printStackTrace();
-        }
-        markerOptions.title(title);
-        markerOptions.snippet(mast.getMessage());
-        markerOptions.position(new LatLng(mast.getPoint().getLatitude(), mast.getPoint().getLongitude()));
+//        try {
+//            if(mast.getLastUser().fetchIfNeeded().getUsername().length()<=15)
+//                title = title + mast.getLastUser().fetchIfNeeded().getUsername();
+//            else
+//                title=title+"a pirate";
+//        } catch (ParseException e) {
+//            title = title+"a pirate";
+//            e.printStackTrace();
+//        }
+//        markerOptions.title(title);
+//        markerOptions.snippet(mast.getMessage());
+//        markerOptions.position(new LatLng(mast.getPoint().getLatitude(), mast.getPoint().getLongitude()));
 
 
 

@@ -2,6 +2,7 @@ package com.yarmatey.messageinabottle.bottles;
 
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -9,7 +10,7 @@ import com.parse.ParseUser;
  * Created by Jason on 11/27/2015.
  */
 @ParseClassName("PirateMast")
-public class PirateMast extends Bottle {
+public class PirateMast extends ParseObject {
 
     public PirateMast() {
         // Initialize superclass

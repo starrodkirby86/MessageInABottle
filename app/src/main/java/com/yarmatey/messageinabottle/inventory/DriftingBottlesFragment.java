@@ -18,7 +18,9 @@ import android.widget.TextView;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
+import com.yarmatey.messageinabottle.bottles.Bottle;
 import com.yarmatey.messageinabottle.bottles.DriftingBottlesAdapter;
+import com.yarmatey.messageinabottle.sql.BottleContract;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,7 +78,9 @@ public class DriftingBottlesFragment extends Fragment{
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.getItemAnimator().setRemoveDuration(250);
         mRecyclerView.getItemAnimator().setAddDuration(500);
-
+        Bottle bottle = new Bottle();
+        getContext().getContentResolver().insert(BottleContract.BottleEntry.CONTENT_URI,
+                bottle.getContentValues());
         return v;
     }
 
@@ -92,7 +96,7 @@ public class DriftingBottlesFragment extends Fragment{
     }
 
     public void addBottle () {
-        mAdapter.itemInserted();
+        //mAdapter.itemInserted();
         //Create an explicit intent to go to Inventory
         Intent resultIntent = new Intent(getContext(), Inventory.class);
         PendingIntent contentIntent = PendingIntent.getActivity(getContext(),
