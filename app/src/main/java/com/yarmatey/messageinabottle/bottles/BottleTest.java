@@ -53,7 +53,7 @@ public class BottleTest {
     }
 
     public Location getLocation() {
-        // Get value from Pars
+        // Get state from Pars
         Location location = new Location("");
         location.setLatitude(mCursor.getDouble(latCol));
         location.setLongitude(mCursor.getDouble(longCol));
@@ -61,51 +61,51 @@ public class BottleTest {
     }
 
 //    public void setPoint(ParseGeoPoint p){
-//        // Save value to Parse
-//        super.put(BottleAttribute.Location.value, p);
+//        // Save state to Parse
+//        super.put(BottleAttribute.Location.state, p);
 //    }
 
 
     public String getMessage() {
-        // Get value from Parse
+        // Get state from Parse
         return mCursor.getString(messageCol);
     }
 
 //    public void setMessage(String m){
-//        // Save value to Parse
-//        super.put(BottleAttribute.Message.value, m);
+//        // Save state to Parse
+//        super.put(BottleAttribute.Message.state, m);
 //    }
 
 
     public int getBottleType() {
-        // Get value from Parse
+        // Get state from Parse
         return mCursor.getInt(statusCol);
     }
 
 //    public void setBottleType(int t){
-//        // Save value to Parse
-//        super.put(BottleAttribute.Status.value, t);
+//        // Save state to Parse
+//        super.put(BottleAttribute.Status.state, t);
 //    }
 
 
 //    public ParseUser getLastUser() {
-//        // Get value from Parse
-//        return super.getParseUser(BottleAttribute.LastUser.value);
+//        // Get state from Parse
+//        return super.getParseUser(BottleAttribute.LastUser.state);
 //    }
 
 //    public void setLastUser(ParseUser user){
-//        // Save value to Parse
-//        super.put(BottleAttribute.LastUser.value, user);
+//        // Save state to Parse
+//        super.put(BottleAttribute.LastUser.state, user);
 //    }
 
 //    public List<String> getComments() {
-//        // Get value from Parse
-//        return getList(BottleAttribute.Comments.value);
+//        // Get state from Parse
+//        return getList(BottleAttribute.Comments.state);
 //    }
 //
 //    public void setComments(List<String> c){
-//        // Save value to Parse
-//        super.put(BottleAttribute.Comments.value, c);
+//        // Save state to Parse
+//        super.put(BottleAttribute.Comments.state, c);
 //    }
 //
 //    public void addComment(String newComment) {
@@ -120,13 +120,13 @@ public class BottleTest {
 
 
     public String getAuthor() {
-        // Get value from Parse
+        // Get state from Parse
         return mCursor.getString(authorCol);
     }
 
 //    public void setAuthor(ParseUser author) {
-//        // Save value to Parse
-//        super.put(BottleAttribute.Author.value, author);
+//        // Save state to Parse
+//        super.put(BottleAttribute.Author.state, author);
 //    }
 
 
@@ -161,17 +161,17 @@ public class BottleTest {
 
 //    private void saveRatings() {
 //        // Save values to Parse
-//        super.put(BottleAttribute.Ratings.value, ratings);
+//        super.put(BottleAttribute.Ratings.state, ratings);
 //    }
 
 
     public int getRated() {
-        // Get local value
+        // Get local state
         return (this.rated);
     }
 
     public void setRated(int rated) {
-        // Save value locally
+        // Save state locally
         this.rated = rated;
     }
 

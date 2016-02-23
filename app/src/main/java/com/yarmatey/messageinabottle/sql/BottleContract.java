@@ -40,9 +40,9 @@ public class BottleContract {
 
         public static final String COLUMN_LASTUSER = BottleAttribute.LastUser.value;
 
-        public static final String COLUMN_LATITUDE = "latitude";
+        public static final String COLUMN_LATITUDE = BottleAttribute.Latitude.value;
 
-        public static final String COLUMN_LONGITUDE = "longitude";
+        public static final String COLUMN_LONGITUDE = BottleAttribute.Longitude.value;
 
         public static final String COLUMN_DATE = BottleAttribute.Date.value;
 

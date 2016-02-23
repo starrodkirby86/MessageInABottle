@@ -20,7 +20,7 @@ public class PirateMast extends ParseObject {
 
     public static ParseQuery<PirateMast> getQuery(ParseGeoPoint point, double range, int maxPosts) {
         ParseQuery<PirateMast> query = ParseQuery.getQuery(PirateMast.class);
-        query.whereWithinKilometers(BottleAttribute.Location.value, point, range);
+        //query.whereWithinKilometers(BottleAttribute.Location.state, point, range);
         query.setLimit(maxPosts);
         return (query);
     }

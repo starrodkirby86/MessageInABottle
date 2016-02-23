@@ -1,8 +1,6 @@
 package com.yarmatey.messageinabottle.bottles;
 
-import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.List;
@@ -11,7 +9,6 @@ import java.util.List;
  * Created by Jason on 11/25/2015.
  */
 
-@ParseClassName("AvailableBottle")
 public class AvailableBottle extends Bottle {
 
     public AvailableBottle() {
@@ -22,11 +19,11 @@ public class AvailableBottle extends Bottle {
 
 //    public static ParseQuery<AvailableBottle> getQuery(ParseGeoPoint point, double range) {
 //        ParseQuery<AvailableBottle> query = ParseQuery.getQuery(AvailableBottle.class);
-//        query.whereNear(BottleAttribute.Location.value, point);
+//        query.whereNear(BottleAttribute.Location.state, point);
 //        //Retrieve 1 PickedUpBottle. Do not proceed unto 2.
 //        query.setLimit(1);
-//        query.whereWithinKilometers(BottleAttribute.Location.value, point, range);
-//        query.whereNotEqualTo(BottleAttribute.LastUser.value, ParseUser.getCurrentUser());
+//        query.whereWithinKilometers(BottleAttribute.Location.state, point, range);
+//        query.whereNotEqualTo(BottleAttribute.LastUser.state, ParseUser.getCurrentUser());
 //        return (query);
 //    }
 
@@ -39,7 +36,7 @@ public class AvailableBottle extends Bottle {
 
         //super.setPoint(point);
         super.setMessage(message);
-        super.setBottleStatus(type);
+        super.setStatus(type);
         //super.setAuthor(author);
         //super.setLastUser(user);
         //super.setComments(comments);

@@ -5,16 +5,19 @@ package com.yarmatey.messageinabottle.bottles;
  */
 public enum BottleStatus {
 
-    Available("available"),
-    PickedUp("picked_up"),
-    Map("map");
+    Available(0), //Keep lowest state if need to change
+    PickedUp(1),
+    Map(2); //Keep highest state, since independent of bottle types
 
-    public final String value;
+    public final int state;
 
+    BottleStatus(int value) {
+        // Save string state
+        this.state = value;
+    }
 
-    BottleStatus(String value) {
-        // Save string value
-        this.value = value;
+    public static boolean valid (int value) {
+        return !(value > Map.state || value < Available.state);
     }
 
 }

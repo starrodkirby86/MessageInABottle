@@ -81,6 +81,7 @@ public class DriftingBottlesFragment extends Fragment implements LoaderManager.L
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new DriftingBottlesAdapter(getContext(), container);
+        mAdapter.setHasStableIds(false);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.getItemAnimator().setRemoveDuration(250);
         mRecyclerView.getItemAnimator().setAddDuration(500);
@@ -156,6 +157,26 @@ public class DriftingBottlesFragment extends Fragment implements LoaderManager.L
         if(data.getCount() > mAdapter.mCursorAdapter.getCount()) {
             mAdapter.mCursorAdapter.swapCursor(data);
             mAdapter.notifyItemInserted(mAdapter.getItemCount());
+        }
+        else if (data.getCount() < mAdapter.mCursorAdapter.getCount()) {
+            mAdapter.mCursorAdapter.swapCursor(data);
+            if (mAdapter.removed > 0 && mAdapter.removed < mAdapter.getItemCount())
+                mAdapter.notifyItemRemoved(mAdapter.removed);
+            else
+                mAdapter.notifyDataSetChanged();
+            mAdapter.removed = -1;
+        }
+        else {
+            mAdapter.mCursorAdapter.swapCursor(data);
+            mAdapter.notifyDataSetChanged();
+        }
+        if (mAdapter.getItemCount() == 0){
+            mRecyclerView.setVisibility(View.GONE);
+            //emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            //emptyView.setVisibility(View.GONE);
         }
     }
 

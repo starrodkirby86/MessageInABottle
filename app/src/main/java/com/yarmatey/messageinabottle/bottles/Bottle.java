@@ -11,23 +11,33 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Jonathan on 1/27/2016.
  */
 public class Bottle {
+
     /**
+     * Generic Bottle class,
+     * built on top of Parse layer.
      *
-     */
-    private int rated;
-    /**
-     * Latest ratings given by users.
+     * Values of the bottle class:
+     *
+     *  Message: The message in the bottle
+     *  Author: The person who wrote the message
+     *  Location: The location at which the message was last dropped
+     *  Status: The current status of the bottle, see BottleStatus for more
+     *  LastUser: The last user to have seen the bottle
+     *  Created: The date the bottle was created
+     *  LastUpdated: The date the bottle was last dropped
+     *  Ratings: The current ratings of the message
+     *
+     * Helper Values:
+     *
+     *  previousRating: value that was previously rated, See BottleRatings for more
+     *  contentValues: Formats values to insert into database
      */
     private List<Integer> ratings;
     private String author;
@@ -37,25 +47,20 @@ public class Bottle {
     private Location location;
     private Calendar created;
     private Calendar lastUpdated;
-
     private ContentValues contentValues;
+    private int previousRating;
 
-    public ContentValues getContentValues() {
-        return contentValues;
-    }
+    public static final SimpleDateFormat DATE_STRING_FORMAT
+            = new SimpleDateFormat("EEE MMM dd HH:mm:ss.SSS z yyyy", Locale.US);
 
-    /**
-     * Generic Bottle class,
-     * built on top of Parse layer.
-     */
     public Bottle() {
         // Needed for Parse
         contentValues = new ContentValues();
         setMessage("Test message");
         setAuthor("Pirate");
-        setBottleStatus(0);
+        setStatus(BottleStatus.Available.state);
         setLastUser("Another Pirate");
-        setRated(0);
+        setPreviousRating(0);
         setLastUpdated(Calendar.getInstance());
         setCreated(Calendar.getInstance());
         Location location = new Location("");
@@ -64,32 +69,41 @@ public class Bottle {
         setLocation(location);
         List<Integer> array = new ArrayList<>(0);
         for (int i = 0; i < 4; i++)
-            array.add(i, i);
+            array.add(i, 0);
         setRatings(array);
 
     }
 
     public Bottle(Cursor cursor) {
+
+        contentValues = new ContentValues();
+
+        //set Message
         String temp = cursor.getString(cursor.getColumnIndex(BottleAttribute.Message.value));
-        if (temp == null)
-            temp = "";
-        setMessage(temp); //insert message
+        setMessage(temp);
+        //Set Author
         temp = cursor.getString(cursor.getColumnIndex(BottleAttribute.Author.value));
-        if (temp == null)
-            temp = "";
-        setAuthor(temp); //insert author
+        setAuthor(temp);
+
+        //Set status
         int tempInt = cursor.getInt(cursor.getColumnIndex(BottleAttribute.Status.value));
-        setBottleStatus(tempInt); //insert status
+        setStatus(tempInt);
+
+        //set Last user
         temp = cursor.getString(cursor.getColumnIndex(BottleAttribute.LastUser.value));
-        if (temp == null)
-            temp = "";
         setLastUser(temp);
+
+        //Set created date
         temp = cursor.getString(
                 cursor.getColumnIndex(BottleAttribute.Created.value));
         setCreated(temp);
+
+        //Set date last updated
         temp = cursor.getString(
                 cursor.getColumnIndex(BottleAttribute.Date.value));
         setLastUpdated(temp);
+
+        //Set location
         double lat = cursor.getDouble(
                 cursor.getColumnIndex(BottleContract.BottleEntry.COLUMN_LATITUDE));
         double lon = cursor.getDouble(
@@ -97,11 +111,17 @@ public class Bottle {
         Location loc = new Location("");
         loc.setLatitude(lat);
         loc.setLongitude(lon);
-        setLocation(loc); //set latitude and longitude
+        setLocation(loc);
+
+        //Set ratings
         temp = cursor.getString(cursor.getColumnIndex(BottleAttribute.Ratings.value));
         if (temp == null)
             temp = "0 0 0 0";
-        setRatings(temp); //set ratings
+        setRatings(temp);
+    }
+
+    public ContentValues getContentValues() {
+        return contentValues;
     }
 
     public boolean readyToInsert() {
@@ -118,101 +138,89 @@ public class Bottle {
         }
         if (contentValues.size() != size)
             return false;
-
+        else
+            return true;
     }
 
+
+    // ------------ Message Getter and Setters ------------ \\
     public String getMessage() {
-        // Get value from Parse
+        // Get state from Parse
         return message;
     }
 
     public void setMessage(String message){
-        // Save value to Parse
+        // Save state to Parse
+        if (message == null)
+            return;
         this.message = message;
         contentValues.put(BottleAttribute.Message.value, message);
     }
 
 
-    public int getBottleStatus() {
-        // Get value from Parse
+    // ------------ Status Getter and Setters ------------ \\
+
+    public int getStatus() {
+        // Get state from Parse
         return status;
     }
 
-    public void setBottleStatus(int status){
-        // Save value to Parse
+    public void setStatus(int status){
+        if (!BottleStatus.valid(status))
+            return;
         this.status = status;
         contentValues.put(BottleAttribute.Status.value, status);
     }
 
+    // ------------ Last User Getter and Setters ------------ \\
 
     public String getLastUser() {
-        // Get value from Parse
+        // Get state from Parse
         return lastUser;
     }
 
     public void setLastUser(String user){
-        // Save value to Parse
+        if (user == null)
+            return;
+        // Save state to Parse
         this.lastUser = user;
         contentValues.put(BottleAttribute.LastUser.value, user);
     }
 
 
-//    public List<String> getComments() {
-//        // Get value from Parse
-//        return
-//    }
-
-//    public void setComments(List<String> c){
-//        // Save value to Parse
-//        super.put(BottleAttribute.Comments.value, c);
-//    }
-
-//    public void addComment(String newComment) {
-//        // In order to preserve all previous comments,
-//        // all comments must be loaded from Parse first
-//        List<String> old = this.getComments();
-//        // Then, we can append new comment to this list
-//        old.add(newComment);
-//        // And update Parse with this information
-//        this.setComments(old);
-//    }
-
+    // ------------ Author Getter and Setters ------------ \\
 
     public String getAuthor() {
-        // Get value from Parse
+
+        // Get state from Parse
         return author;
     }
 
     public void setAuthor(String author) {
-        // Save value to Parse
+        if (author == null)
+            return;
         this.author = author;
         contentValues.put(BottleAttribute.Author.value, author);
     }
 
 
+    // ------------ Ratings Getter and Setters ------------ \\
+
+
     public List<Integer> getRatings() {
-        // If ratings have already been loaded,
-        // return list of ratings immediately
+
+        //TODO FIX THIS, IT IS BAD
         if (this.ratings != null)
             return (this.ratings);
-        // Otherwise, attempt to get information from Parse
         String values = contentValues.getAsString(BottleAttribute.Ratings.value);
-        // Create empty list of ratings
         this.ratings = new ArrayList<>(4);
-        // Check if there are any previous ratings
-        // for this specific bottle
         if (values == null || values.length() == 0) {
-            // If no information, create empty list of zeros
             values = "0 0 0 0";
         }
         String [] splitValues = values.split(" ");
-        // Fill local ratings list
         for (int i = 0; i < 4; i++) {
-            // If any Parse information,
-            // get ratings directly from there
             ratings.set(i, Integer.valueOf(splitValues[i]));
         }
-        // Return final list of ratings
         return (this.ratings);
     }
 
@@ -224,9 +232,9 @@ public class Bottle {
         for (int i = 0; i < 4; i++) {
             rating.add(Integer.valueOf(tempSplit[i]));
         }
+        this.ratings = rating;
     }
     public void setRatings(List<Integer> ratings) {
-        // Save values locally only
         this.ratings = ratings;
         saveRatings();
     }
@@ -238,21 +246,21 @@ public class Bottle {
             if (i + 1 < ratings.size())
                 builder.append(" ");
         }
-        // Save values to Parse
         contentValues.put(BottleAttribute.Ratings.value, builder.toString());
     }
 
 
-    public int getRated() {
-        // Get local value
-        return (this.rated);
+    // ------------ Rated Getter and Setters ------------ \\
+
+    public int getPreviousRating() {
+        return (this.previousRating);
     }
 
-    public void setRated(int rated) {
-        // Save value locally
-        this.rated = rated;
+    public void setPreviousRating(int previousRating) {
+        this.previousRating = previousRating;
     }
 
+    // ------------ Location Getter and Setters ------------ \\
 
     public void setLocation(Location location) {
         this.location = location;
@@ -260,18 +268,24 @@ public class Bottle {
         contentValues.put(BottleAttribute.Longitude.value, location.getLongitude());
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
+
+    // ------------ Created Date Getter and Setters ------------ \\
+
     public void setCreated(Calendar created) {
         this.created = created;
-        contentValues.put(BottleAttribute.Created.value, this.created.toString());
+        contentValues.put(BottleAttribute.Created.value, DATE_STRING_FORMAT.format(this.created.getTime()));
     }
 
     public void setCreated(String timeCreated) {
         if (timeCreated == null)
             return;
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US); //insert last user
         try {
             Calendar time = Calendar.getInstance();
-            time.setTime(sdf.parse(timeCreated));
+            time.setTime(DATE_STRING_FORMAT.parse(timeCreated));
             setCreated(time); //set created
 
         } catch (ParseException e) {
@@ -279,20 +293,31 @@ public class Bottle {
         }
     }
 
+    public Calendar getCreated() {
+        return created;
+    }
+
+
+    // ------------ LastedUpdated Getter and Setters ------------ \\
+
     public void setLastUpdated(Calendar lastUpdated) {
         this.lastUpdated = lastUpdated;
         contentValues.put(BottleAttribute.Date.value, this.lastUpdated.toString());
     }
 
     public void setLastUpdated(String  timeUpdated) {
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US); //insert last user
         Calendar time = Calendar.getInstance();
         try {
-            time.setTime(sdf.parse(timeUpdated));
+            time.setTime(DATE_STRING_FORMAT.parse(timeUpdated));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         setLastUpdated(time); //set last updated
+    }
+
+
+    public Calendar getLastUpdated() {
+        return lastUpdated;
     }
 
 }

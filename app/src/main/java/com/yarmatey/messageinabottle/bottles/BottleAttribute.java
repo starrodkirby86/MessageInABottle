@@ -17,7 +17,7 @@ public enum BottleAttribute {
 
 
     /**
-     * String value of specified
+     * String state of specified
      * Parse BottleAttribute (database column name).
      */
     public final String value;
@@ -27,7 +27,7 @@ public enum BottleAttribute {
      * @param value - Parse database column name
      */
     BottleAttribute(String value) {
-        // Save string value
+        // Save string state
         this.value = value;
     }
 }

@@ -148,7 +148,7 @@ public class DialogMap extends DialogFragment
 
             //Retrieve the preferences from this fragment's context.
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-            //Pull the map_switch and return false if this value does not exist (the default value)
+            //Pull the map_switch and return false if this state does not exist (the default state)
             mapsVal = preferences.getBoolean("map_switch", false);
 
 
@@ -225,7 +225,7 @@ public class DialogMap extends DialogFragment
 
         //Retrieve the preferences from this fragment's context.
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        //Pull the map_switch and return false if this value does not exist (the default value)
+        //Pull the map_switch and return false if this state does not exist (the default state)
         mapsVal = preferences.getBoolean("map_switch", false);
 
         if(!mapsVal){

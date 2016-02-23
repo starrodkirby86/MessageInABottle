@@ -1,7 +1,6 @@
 package com.yarmatey.messageinabottle.bottles;
 
 import com.parse.ParseClassName;
-import com.parse.ParseQuery;
 
 
 /**
@@ -15,7 +14,7 @@ public class PickedUpBottle extends Bottle {
         // Needed for Parse
         super();
         // Initialize rated to zero
-        super.setRated(0);
+        super.setPreviousRating(0);
     }
 
 //    public static ParseQuery<PickedUpBottle> getQuery() {

@@ -152,7 +152,7 @@ public class PirateMapAdapter extends RecyclerView.Adapter<PirateMapAdapter.View
                 //PirateMast bottle = parseAdapter.getItem(vh.getAdapterPosition());
 //                if (ratings == null)
 //                    ratings = bottle.getRatings();
-//                isRated = bottle.getRated();
+//                isRated = bottle.getPreviousRating();
                 if (isRated > 0) {
                     int newVal;
                     switch (isRated) {
@@ -161,7 +161,7 @@ public class PirateMapAdapter extends RecyclerView.Adapter<PirateMapAdapter.View
                             setText(rateHolders[0], newVal, BEST_RATING);
                             ratings.set(0,newVal);
                             if (v.getId() == R.id.yar_har_rating){
-                                //bottle.setRated(0);
+                                //bottle.setPreviousRating(0);
                                 return;
                             }
                             break;
@@ -171,7 +171,7 @@ public class PirateMapAdapter extends RecyclerView.Adapter<PirateMapAdapter.View
                             setText(rateHolders[1], newVal, GOOD_RATING);
                             ratings.set(1, newVal);
                             if (v.getId() == R.id.aye_rating){
-                                //bottle.setRated(0);
+                                //bottle.setPreviousRating(0);
                                 return;
                             }
                             break;
@@ -180,7 +180,7 @@ public class PirateMapAdapter extends RecyclerView.Adapter<PirateMapAdapter.View
                             setText(rateHolders[2], newVal, BAD_RATING);
                             ratings.set(2, newVal);
                             if (v.getId() == R.id.nay_rating) {
-                                //bottle.setRated(0);
+                                //bottle.setPreviousRating(0);
                                 return;
                             }
                             break;
@@ -189,7 +189,7 @@ public class PirateMapAdapter extends RecyclerView.Adapter<PirateMapAdapter.View
                             setText(rateHolders[3], newVal, WORST_RATING);
                             ratings.set(3, newVal);
                             if (v.getId() == R.id.scurvy_rating){
-                                //bottle.setRated(0);
+                                //bottle.setPreviousRating(0);
                                 return;
                             }
                             break;
@@ -202,25 +202,25 @@ public class PirateMapAdapter extends RecyclerView.Adapter<PirateMapAdapter.View
                         rate = ratings.get(0) + 1;
                         ratings.set(0, rate);
                         base = BEST_RATING;
-                        //bottle.setRated(1);
+                        //bottle.setPreviousRating(1);
                         break;
                     case R.id.aye_rating:
                         rate = ratings.get(1) + 1;
                         ratings.set(1, rate);
                         base = GOOD_RATING;
-                        //bottle.setRated(2);
+                        //bottle.setPreviousRating(2);
                         break;
                     case R.id.nay_rating:
                         rate = ratings.get(2) + 1;
                         ratings.set(2, rate);
                         base = BAD_RATING;
-                        //bottle.setRated(3);
+                        //bottle.setPreviousRating(3);
                         break;
                     case R.id.scurvy_rating:
                         rate = ratings.get(3) + 1;
                         ratings.set(3, rate);
                         base = WORST_RATING;
-                        //bottle.setRated(4);
+                        //bottle.setPreviousRating(4);
                         break;
                     default:
                         return;

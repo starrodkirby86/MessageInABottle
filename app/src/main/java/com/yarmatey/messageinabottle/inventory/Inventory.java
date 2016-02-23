@@ -77,7 +77,7 @@ public class Inventory extends AppCompatActivity
     public SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals("pickupFreq_list")) {
-                //If the the pickupFrequency Interval has changed, we set it to the new value.
+                //If the the pickupFrequency Interval has changed, we set it to the new state.
                 interval=Integer.parseInt(preferences.getString("pickupFreq_list", "600"))*100;
             }
         }
@@ -268,8 +268,8 @@ public class Inventory extends AppCompatActivity
 //                @Override
 //                public void done(List<AvailableBottle> nearestBottle, ParseException e) {
 //                    if (e == null && !nearestBottle.isEmpty()) {
-//                        Log.d("location", "Retrieved Lat: " + nearestBottle.get(0).getParseGeoPoint(BottleAttribute.Location.value).getLatitude()
-//                                + ", Lon: " + nearestBottle.get(0).getParseGeoPoint(BottleAttribute.Location.value).getLongitude());
+//                        Log.d("location", "Retrieved Lat: " + nearestBottle.get(0).getParseGeoPoint(BottleAttribute.Location.state).getLatitude()
+//                                + ", Lon: " + nearestBottle.get(0).getParseGeoPoint(BottleAttribute.Location.state).getLongitude());
 //                        PickedUpBottle pickedUpBottle = new PickedUpBottle();
 //                        pickedUpBottle.setAll(nearestBottle.get(0));
 //                        try {

@@ -47,7 +47,7 @@ public class UserPirateMastAdapter extends RecyclerView.Adapter<UserPirateMastAd
     public SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals("discardWarning_switch")) {
-                //If the switch has changed, we make it the new value. Note that if we cannot retrieve, set the warning to true anyways.
+                //If the switch has changed, we make it the new state. Note that if we cannot retrieve, set the warning to true anyways.
                 discardWarn = preferences.getBoolean("discardWarning_switch",true);
             }
         }

@@ -81,32 +81,32 @@ public class SettingsActivity extends AppCompatPreferenceActivity
                                           String key) {
         if (key.equals(discardWarn)) {
             Preference connectionPref = findPreference(key);
-            // Set summary to be the user-description for the selected value
+            // Set summary to be the user-description for the selected state
             connectionPref.setSummary(sharedPreferences.getString(key, ""));
         }
         else if (key.equals(pickupFreq)) {
             Preference connectionPref = findPreference(key);
-            // Set summary to be the user-description for the selected value
+            // Set summary to be the user-description for the selected state
             connectionPref.setSummary(sharedPreferences.getString(key, ""));
         }
         else if (key.equals(maps)) {
             Preference connectionPref = findPreference(key);
-            // Set summary to be the user-description for the selected value
+            // Set summary to be the user-description for the selected state
             connectionPref.setSummary(sharedPreferences.getString(key, ""));
         }
         else if (key.equals(sailor)) {
             Preference connectionPref = findPreference(key);
-            // Set summary to be the user-description for the selected value
+            // Set summary to be the user-description for the selected state
             connectionPref.setSummary(sharedPreferences.getString(key, ""));
         }
         else if (key.equals(pirate)) {
             Preference connectionPref = findPreference(key);
-            // Set summary to be the user-description for the selected value
+            // Set summary to be the user-description for the selected state
             connectionPref.setSummary(sharedPreferences.getString(key, ""));
         }
         else if (key.equals(colors)) {
             Preference connectionPref = findPreference(key);
-            // Set summary to be the user-description for the selected value
+            // Set summary to be the user-description for the selected state
             connectionPref.setSummary(sharedPreferences.getString(key, ""));
         }
     }
@@ -171,8 +171,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity
     }
     */
     /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
+     * A preference state change listener that updates the preference's summary
+     * to reflect its new state.
      */
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
@@ -180,19 +180,19 @@ public class SettingsActivity extends AppCompatPreferenceActivity
             String stringValue = value.toString();
 
             if (preference instanceof ListPreference) {
-                // For list preferences, look up the correct display value in
+                // For list preferences, look up the correct display state in
                 // the preference's 'entries' list.
                 ListPreference listPreference = (ListPreference) preference;
                 int index = listPreference.findIndexOfValue(stringValue);
 
-                // Set the summary to reflect the new value.
+                // Set the summary to reflect the new state.
                 preference.setSummary(
                         index >= 0
                                 ? listPreference.getEntries()[index]
                                 : null);
 
             } else if (preference instanceof RingtonePreference) {
-                // For ringtone preferences, look up the correct display value
+                // For ringtone preferences, look up the correct display state
                 // using RingtoneManager.
                 if (TextUtils.isEmpty(stringValue)) {
                     // Empty values correspond to 'silent' (no ringtone).
@@ -214,7 +214,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity
                 }
 
             } else {
-                // For all other preferences, set the summary to the value's
+                // For all other preferences, set the summary to the state's
                 // simple string representation.
                 preference.setSummary(stringValue);
             }
@@ -223,20 +223,20 @@ public class SettingsActivity extends AppCompatPreferenceActivity
     };
 
     /**
-     * Binds a preference's summary to its value. More specifically, when the
-     * preference's value is changed, its summary (line of text below the
-     * preference title) is updated to reflect the value. The summary is also
+     * Binds a preference's summary to its state. More specifically, when the
+     * preference's state is changed, its summary (line of text below the
+     * preference title) is updated to reflect the state. The summary is also
      * immediately updated upon calling this method. The exact display format is
      * dependent on the type of preference.
      *
      * @see #sBindPreferenceSummaryToValueListener
      */
     private static void bindPreferenceSummaryToValue(Preference preference) {
-        // Set the listener to watch for value changes.
+        // Set the listener to watch for state changes.
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
         // Trigger the listener immediately with the preference's
-        // current value.
+        // current state.
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
@@ -265,7 +265,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity
 
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
+            // updated to reflect the new state, per the Android Design
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("pickupFreq_list"));
             //bindPreferenceSummaryToValue(findPreference("color_list"));
