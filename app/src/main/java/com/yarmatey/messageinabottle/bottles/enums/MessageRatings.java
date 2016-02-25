@@ -5,16 +5,32 @@ package com.yarmatey.messageinabottle.bottles.enums;
  */
 public enum MessageRatings {
 
-    NoRating(0),
-    Worst(1),
-    Bad(2),
-    Good(3),
-    Best(4);
+    NoRating(-1, ""),
+    Worst(0, "Scurvy!"),
+    Bad(1, "Nay"),
+    Good(2, "Aye"),
+    Best(3, "Yar har!");
 
-    public final int value;
+    public final int index;
+    public final String value;
 
-
-    MessageRatings(int value) {
+    MessageRatings(int index, String value) {
+        this.index = index;
         this.value = value;
+    }
+
+    public static String getRating(int index) {
+        switch (index){
+            case 0:
+                return Worst.value;
+            case 1:
+                return Bad.value;
+            case 2:
+                return Good.value;
+            case 3:
+                return Best.value;
+            default:
+                return NoRating.value;
+        }
     }
 }

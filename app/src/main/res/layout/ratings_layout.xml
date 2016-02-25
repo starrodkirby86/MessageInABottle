@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="24dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:id="@+id/best_rating"
+            android:text="Yar Har! +0"
+            android:singleLine="true"
+            android:textColor="@color/colorAccent"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:singleLine="true"
+            android:id="@+id/good_rating"
+            android:textColor="@color/colorAccent"
+            android:text="Aye +0" />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:singleLine="true"
+            android:id="@+id/bad_rating"
+            android:textColor="@color/colorAccent"
+            android:text="Nay +0 " />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:singleLine="true"
+            android:id="@+id/worst_rating"
+            android:textColor="@color/colorAccent"
+            android:text="Scurvy! +0" />
+
+</LinearLayout>

@@ -30,12 +30,18 @@ import java.util.Locale;
 public abstract class PirateMessage {
     protected ContentValues contentValues;
     private int previousRating;
+    private boolean isDirty; //TODO implement this!
 
     public static final SimpleDateFormat DATE_STRING_FORMAT
             = new SimpleDateFormat("EEE MMM dd HH:mm:ss.SSS z yyyy", Locale.US);
 
     public ContentValues getContentValues() {
         return contentValues;
+    }
+
+
+    public PirateMessage() {
+        previousRating = -1;
     }
 
     // ------------ Message Getter and Setters ------------ \\
@@ -113,6 +119,16 @@ public abstract class PirateMessage {
 
     public void setPreviousRating(int previousRating) {
         this.previousRating = previousRating;
+    }
+
+    public void overwriteRating(int newIndex) {
+        List<Integer> current = getRatings();
+        if (previousRating >= 0)
+            current.set(previousRating, current.get(previousRating) - 1);
+        int value = current.get(newIndex) + 1;
+        current.set(newIndex, value);
+        setRatings(current);
+        setPreviousRating(newIndex);
     }
 
     // ------------ Location Getter and Setters ------------ \\

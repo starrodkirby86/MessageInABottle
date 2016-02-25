@@ -26,7 +26,6 @@ public class Bottle extends PirateMessage {
      *
      */
     public Bottle() {
-        // Needed for Parse
         contentValues = new ContentValues();
         setMessage("Test message");
         setAuthor("Pirate");
@@ -147,5 +146,4 @@ public class Bottle extends PirateMessage {
         }
         return time;
     }
-
 }
