@@ -5,7 +5,7 @@ import android.location.Location;
 import android.test.AndroidTestCase;
 
 import com.yarmatey.messageinabottle.bottles.Bottle;
-import com.yarmatey.messageinabottle.bottles.BottleStatus;
+import com.yarmatey.messageinabottle.bottles.enums.MessageStatus;
 import com.yarmatey.messageinabottle.sql.BottleContract;
 
 import junit.framework.Assert;
@@ -49,7 +49,7 @@ public class BottleTest extends AndroidTestCase {
     }
 
     public void testBottleStatus() throws Exception {
-        int testStatus = BottleStatus.Map.state;
+        int testStatus = MessageStatus.Map.state;
         testBottle.setStatus(testStatus);
         assertEquals(testStatus, testBottle.getStatus());
     }
@@ -59,7 +59,8 @@ public class BottleTest extends AndroidTestCase {
         testLocation.setLatitude(12);
         testLocation.setLongitude(12);
         testBottle.setLocation(testLocation);
-        assertEquals(testLocation, testBottle.getLocation());
+        assertEquals(testLocation.getLatitude(), testBottle.getLocation().getLatitude());
+        assertEquals(testLocation.getLongitude(), testBottle.getLocation().getLongitude());
     }
 
     public void testBottleCreatedDate() throws Exception {

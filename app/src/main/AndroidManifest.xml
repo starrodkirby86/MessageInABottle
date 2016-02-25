@@ -55,24 +55,24 @@
         <activity
             android:name=".message.MessageActivity"
             android:label="@string/title_activity_message"
-            android:parentActivityName=".inventory.Inventory"
+            android:parentActivityName=".displays.Inventory"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".inventory.Inventory" />
+                android:value=".displays.Inventory" />
         </activity>
         <activity
-            android:name=".inventory.Inventory"
+            android:name=".displays.Inventory"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".inventory.Inventory">
+            android:parentActivityName=".displays.Inventory">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.yarmatey.messageinabottle.inventory.Inventory" />
+                android:value="com.yarmatey.messageinabottle.displays.Inventory" />
         </activity>
         <activity
             android:name=".login.RegisterActivity"

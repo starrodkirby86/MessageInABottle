@@ -29,10 +29,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
-import com.yarmatey.messageinabottle.bottles.AvailableBottle;
+import com.yarmatey.messageinabottle.bottles.Bottle;
 import com.yarmatey.messageinabottle.bottles.PirateMast;
 
 import java.util.ArrayList;
@@ -118,22 +116,11 @@ public class DialogMap extends DialogFragment
                 public void onClick(View v) {
                     if(currentLocation!=null) {
                         boolean isMast = false;
-                        ParseGeoPoint point = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude()); //currentLocation.getLatitude(), currentLocation.getLongitude());
                         if (isBottle) {
-                            AvailableBottle newBottle = new AvailableBottle();
-                            ArrayList<Integer> ratings = new ArrayList<>();
-                            for (int i = 0; i < 4; i++)
-                                ratings.add(0);
-                            newBottle.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
+                            Bottle newBottle = new Bottle();
                             //newBottle.saveInBackground();
                         } else {
                             PirateMast newMast = new PirateMast();
-                            isMast = true;
-                            ArrayList<Integer> ratings = new ArrayList<>();
-                            for (int i = 0; i < 4; i++)
-                                ratings.add(0);
-                            //newMast.setAll(point, message, 0, ParseUser.getCurrentUser(), ParseUser.getCurrentUser(), new ArrayList<String>(), ratings);
-                            newMast.saveInBackground();
                         }
                         getDialog().dismiss();
                         ((MessageActivity) getActivity()).exitWithValue(isMast);

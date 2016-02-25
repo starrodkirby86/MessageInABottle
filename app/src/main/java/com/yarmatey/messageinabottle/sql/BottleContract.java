@@ -5,7 +5,7 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.yarmatey.messageinabottle.bottles.BottleAttribute;
+import com.yarmatey.messageinabottle.bottles.enums.BottleAttribute;
 
 /**
  * Created by jason on 2/16/16.

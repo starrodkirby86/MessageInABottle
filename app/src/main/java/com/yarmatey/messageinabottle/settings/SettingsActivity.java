@@ -20,7 +20,6 @@ import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
 import com.yarmatey.messageinabottle.login.LogInActivity;
 
@@ -277,9 +276,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity
                 public boolean onPreferenceClick(Preference preference) {
 
 
-                    if (ParseUser.getCurrentUser() != null) {
+                    if ("Hello" != null) { //TODO ADD USER
                         //Snackbar.make(getView(), "Logging out of: " + ParseUser.getCurrentUser().getUsername(), Snackbar.LENGTH_SHORT).show();
-                        ParseUser.logOut();
                     }
 
                     startActivity(new Intent(getActivity(), LogInActivity.class));

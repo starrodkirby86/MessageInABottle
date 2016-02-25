@@ -9,9 +9,8 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
-import com.parse.ParseUser;
 import com.yarmatey.messageinabottle.R;
-import com.yarmatey.messageinabottle.inventory.Inventory;
+import com.yarmatey.messageinabottle.displays.Inventory;
 import com.yarmatey.messageinabottle.login.LogInActivity;
 
 public class noLocation extends AppCompatActivity {
@@ -63,7 +62,7 @@ public class noLocation extends AppCompatActivity {
         }
 
         else {
-            if (ParseUser.getCurrentUser() != null)
+            if ("hello" != null) //TODO ADD USER
                  startActivity(new Intent(noLocation.this, Inventory.class));
             else
                  startActivity(new Intent(noLocation.this, LogInActivity.class));

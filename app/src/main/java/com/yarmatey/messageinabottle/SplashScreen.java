@@ -9,8 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.parse.ParseUser;
-import com.yarmatey.messageinabottle.inventory.Inventory;
+import com.yarmatey.messageinabottle.displays.Inventory;
 import com.yarmatey.messageinabottle.login.LogInActivity;
 import com.yarmatey.messageinabottle.settings.noLocation;
 
@@ -39,7 +38,7 @@ public class SplashScreen extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (ParseUser.getCurrentUser() != null)
+                    if ("Hello" != null) //TODO ADD CURRENT USER
                         startActivity(new Intent(SplashScreen.this, Inventory.class));
                     else {
                         startActivity(new Intent(SplashScreen.this, LogInActivity.class));

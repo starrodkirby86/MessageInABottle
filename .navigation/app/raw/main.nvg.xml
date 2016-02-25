@@ -30,7 +30,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "com.yarmatey.messageinabottle.inventory.Inventory"/>
+        className = "com.yarmatey.messageinabottle.displays.Inventory"/>
       <point      
         x = "420"      
         y = "684"/>
